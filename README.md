@@ -1,2 +1,2 @@
-# truenas-dasboard
+# truenas-dashboard
 TrueNAS Dashboard
