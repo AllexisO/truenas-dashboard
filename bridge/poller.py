@@ -1,3 +1,11 @@
+"""
+poller.py - TrueNAS Data Poller
+
+Connects to TrueNAS via unix socket (/run/middleware/middlewared.sock)
+and subscribes to real-time metrics (CPU, RAM, Network, Disks, Pools).
+Broadcasts data to all connected WebSocket clients.
+"""
+
 import asyncio
 import json
 import sys
