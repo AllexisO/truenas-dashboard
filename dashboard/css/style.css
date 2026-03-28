@@ -1,0 +1,54 @@
+/* 
+ * style.css - Dashboard Styles
+ * Main stylesheet for TrueNAS Dashboard
+ */
+
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+ }
+
+ body {
+    background: #0A0F18;
+    color: #E2E8F0;
+    font-family: monospace;
+ }
+
+ .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+ }
+
+ header h1 {
+    font-size: 24px;
+    margin-bottom: 24px;
+ }
+
+ .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+ }
+
+ .card {
+    background: #0D1520;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 20px;
+ }
+
+ .card h2 {
+    font-size: 14px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+ }
+
+ .cpu-total {
+    font-size: 48px;
+    font-weight: 600;
+    color: #38BDF8;
+ }
