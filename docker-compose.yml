@@ -1,0 +1,17 @@
+# docker-compose.yml
+# Starts the TrueNAS Dashboard container.
+# Configure .env file before running.
+# Usage: docker compose up -d
+
+services:
+  truenas-dashboard:
+    build: ./bridge
+    container_name: truenas-dashboard
+    network_mode: host
+    volumes:
+      - /run/middleware/middlewared.sock:/run/middleware/middlewared.sock
+      - ./dashboard:/dashboard
+      - ./config.yml:/config/config.yml
+    env_file:
+      - .env
+    restart: unless-stopped
