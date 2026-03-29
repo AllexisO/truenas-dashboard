@@ -33,7 +33,7 @@ function buildCoresGrid(cores) {
         if (key === "cpu") return;
 
         const clone = template.content.cloneNode(true);
-        clone.querySelector(".core-name").textContent = key.replace("cpu", "C");
+        clone.querySelector(".core-name").textContent = "C" + (parseInt(key.replace("cpu", "")) + 1);
         clone.querySelector(".core-pct").id = `pct-${key}`;
         clone.querySelector(".core-bar").id = `bar-${key}`;
         grid.appendChild(clone);
