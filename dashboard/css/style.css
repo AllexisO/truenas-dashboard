@@ -52,3 +52,53 @@
     font-weight: 600;
     color: #38BDF8;
  }
+
+ .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+ }
+
+ .card-header span {
+    font-size: 11px;
+    color: #475569;
+ }
+
+ .cores-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+ }
+
+ .core {
+    flex: 1 1 calc(25% - 10px);
+    min-width: calc(25% - 10px);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+ }
+
+ .core-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-family: monospace;
+ }
+
+ .core-name {
+    color: #475569;
+ }
+
+ .core-bar-wrap {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 99px;
+    overflow: hidden;
+ }
+
+ .core-bar {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease, background-color 0.4s ease;
+ }
