@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
+  
+  <!-- Rack frame -->
+  <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
+
+  <!-- Server units -->
+  <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
+  <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
+  <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
+  <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
+
+  <!-- LEDs -->
+  <circle cx="20" cy="14" r="2.5" fill="#1D9E75"/>
+  <circle cx="20" cy="26" r="2.5" fill="#1D9E75"/>
+  <circle cx="20" cy="38" r="2.5" fill="#EF9F27"/>
+  <circle cx="20" cy="50" r="2.5" fill="#e94a1e"/>
+
+</svg>
