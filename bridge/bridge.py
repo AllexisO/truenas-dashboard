@@ -37,6 +37,8 @@ class Bridge:
             return web.FileResponse("/dashboard/css/style.css")
         elif path == "/js/app.js":
             return web.FileResponse("/dashboard/js/app.js")
+        elif path == '/icon.svg':
+            return web.FileResponse('/dashboard/icon.svg')
         else:
             return web.Response(status=404, text="Not found")
     
