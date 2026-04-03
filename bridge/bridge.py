@@ -37,7 +37,7 @@ class Bridge:
             return web.FileResponse("/dashboard/css/style.css")
         elif path == "/js/app.js":
             return web.FileResponse("/dashboard/js/app.js")
-        elif path == '/icon.svg':
+        elif path == "/icon.svg":
             return web.FileResponse("/dashboard/icon.svg")
         else:
             return web.Response(status=404, text="Not found")
@@ -49,6 +49,7 @@ class Bridge:
         app.router.add_get("/index.html", self.http_handler)
         app.router.add_get("/css/style.css", self.http_handler)
         app.router.add_get("/js/app.js", self.http_handler)
+        app.router.add_get("/icon.svg", self.http_handler)
 
         runner = web.AppRunner(app)
         await runner.setup()
