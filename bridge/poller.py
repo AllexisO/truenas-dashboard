@@ -85,6 +85,14 @@ class Poller:
         }))
         response = json.loads(await ws.recv())
         self.latest_data["interfaces"] = response.get("result", [])
+
+        # Getting system info
+        await ws.send(json.dumps({
+            "id": "7", "msg": "method",
+            "method": "system.info", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        self.latest_data["system"] = response.get("result", [])
         
         print("Static data fetched", flush=True)
 
