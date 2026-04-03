@@ -31,25 +31,20 @@ class Bridge:
     async def http_handler(self, request):
         path = request.path
 
-        if path == "/" or path == "/index.html":
-            return web.FileResponse("/dashboard/index.html")
-        elif path == "/css/style.css":
-            return web.FileResponse("/dashboard/css/style.css")
-        elif path == "/js/app.js":
-            return web.FileResponse("/dashboard/js/app.js")
-        elif path == "/icon.svg":
-            return web.FileResponse("/dashboard/icon.svg")
-        else:
+        if path == "/":
+            path = "/index.html"
+        
+        filePath = "/dashboard" + path
+
+        try:
+            return web.FileResponse(filePath)
+        except:
             return web.Response(status=404, text="Not found")
     
     async def start(self):
         # HTTP Server
         app = web.Application()
-        app.router.add_get("/", self.http_handler)
-        app.router.add_get("/index.html", self.http_handler)
-        app.router.add_get("/css/style.css", self.http_handler)
-        app.router.add_get("/js/app.js", self.http_handler)
-        app.router.add_get("/icon.svg", self.http_handler)
+        app.router.add_get('/{path_info:.*}', self.http_handler)
 
         runner = web.AppRunner(app)
         await runner.setup()
