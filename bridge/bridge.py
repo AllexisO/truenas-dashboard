@@ -41,10 +41,14 @@ class Bridge:
         except:
             return web.Response(status=404, text="Not found")
     
+    async def config_handler(self, request):
+        return web.json_response(self.config)
+    
     async def start(self):
         # HTTP Server
         app = web.Application()
-        app.router.add_get('/{path_info:.*}', self.http_handler)
+        app.router.add_get("/config", self.config_handler)
+        app.router.add_get("/{path_info:.*}", self.http_handler)
 
         runner = web.AppRunner(app)
         await runner.setup()

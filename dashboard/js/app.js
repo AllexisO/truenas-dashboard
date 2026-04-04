@@ -15,6 +15,8 @@ function updateCPU(data) {
     document.querySelector("#cpu-usage").textContent = Math.round(cpu.cpu.usage);
 
     updateCores(cpu);
+
+    // console.log(data);
 }
 
 function getCoreColor(usage) {
@@ -67,6 +69,11 @@ function updateCores(cores) {
     document.querySelector("#cpu-threads").textContent = threadCount + " threads";
 }
 
+async function loadConfig() {
+    const response = await fetch("/config");
+    return await response.json();
+}
+
 function connect() {
     const ws = new WebSocket(WS_URL);
 
@@ -89,4 +96,16 @@ function connect() {
     }
 }
 
-connect();
+loadConfig().then(config => {
+    if (!config.widgets.cpu.enabled) {
+        document.querySelector("#cpu-card").remove();
+    }
+
+    if (!config.widgets.cpu.show_cores) {
+        document.querySelector("#cpu-cores-card").remove();
+    }
+
+    console.log(config)
+
+    connect();
+ });

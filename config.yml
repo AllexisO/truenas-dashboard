@@ -5,7 +5,7 @@ dashboard:
 widgets:
   cpu:
     enabled: true
-    show_cores: true
+    show_cores: false
     show_temperature: true
 
   memory:
