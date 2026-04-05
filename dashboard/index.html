@@ -6,43 +6,61 @@
     <title>TrueNAS Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>TrueNAS Dashboard</h1>
+            <div class="header-left">
+                <img src="/icon.svg" alt="TrueNAS Dashboard" class="header-logo">
+                <div class="header-title">
+                    <h1>TrueNAS Dashboard</h1>
+                    <span id="server-version"></span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span id="server-ip"></span>
+                <span id="server-uptime"></span>
+                <div class="hedaer-status">
+                    <div class="status-dot" id="status-dot"></div>
+                    <span id="status-text">Connecting ...</span>
+                </div>
+            </div>
         </header>
 
-        <div class="cards">
-            <!-- CPU Card -->
-            <div class="card" id="cpu-card">
-                <h2>CPU</h2>
-                <div class="cpu-total">
-                    <span id="cpu-usage">--</span>%
-                </div>
-            </div>
-
-             <!-- CPU Cores -->
-            <div class="card" id="cpu-cores-card">
-                <div class="card-header">
-                    <h2>CPU Cores</h2>
-                    <span id="cpu-threads"></span>
-                </div>
-                <div class="cores-grid" id="cores-grid"></div>
-            </div>
-
-            <template id="core-template">
-                <div class="core">
-                    <div class="core-top">
-                        <span class="core-name"></span>
-                        <span class="core-pct">0%</span>
-                    </div>
-                    <div class="core-bar-wrap">
-                        <div class="core-bar"></div>
+        <main>
+            <div class="cards">
+                <!-- CPU Card -->
+                <div class="card" id="cpu-card">
+                    <h2>CPU</h2>
+                    <div class="cpu-total">
+                        <span id="cpu-usage">--</span>%
                     </div>
                 </div>
-            </template>
-        </div>
+
+                <!-- CPU Cores -->
+                <div class="card" id="cpu-cores-card">
+                    <div class="card-header">
+                        <h2>CPU Cores</h2>
+                        <span id="cpu-threads"></span>
+                    </div>
+                    <div class="cores-grid" id="cores-grid"></div>
+                </div>
+
+                <template id="core-template">
+                    <div class="core">
+                        <div class="core-top">
+                            <span class="core-name"></span>
+                            <span class="core-pct">0%</span>
+                        </div>
+                        <div class="core-bar-wrap">
+                            <div class="core-bar"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
     </div>
 
     <script src="/js/app.js"></script>

@@ -8,15 +8,50 @@
 const WS_PORT = 8765;
 const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
+function updateHeader(data) {
+    if (!data.system) return;
+
+    let serverVersion = document.querySelector("#server-version");
+    let serverIp = document.querySelector("#server-ip");
+
+    if (serverVersion) serverVersion.textContent = data.system.version;
+    if (serverIp) {
+        let _interface = data.interfaces?.[0]?.state?.aliases?.find(a => a.type === "INET");
+        if (_interface) serverIp.textContent = _interface.address;
+    }
+
+    let uptime = document.querySelector("#server-uptime");
+    let systemUptime = data.system.uptime;
+    if (uptime && systemUptime) {
+        uptime.textContent = "Uptime: " + formatUptime(systemUptime);
+    }
+}
+
+function formatUptime(uptime) {
+    let parts = uptime.split(", ");
+    let days = parts.length > 1 ? parts[0] : "0 days";
+    let time = parts.length > 1 ? parts[1].split(".")[0] : parts[0].split(".")[0];
+    let [hours, minutes] = time.split(":");
+
+    let d = parseInt(days);
+    let h = parseInt(hours);
+    let m = parseInt(minutes);
+
+    if (d > 0) return `${d}d ${h}h ${m}m`;
+    if (h > 0) return `${h}h ${m}m`;
+
+    return `${m}m`;
+}
+
 function updateCPU(data) {
     if (!data.realtime || !data.realtime.cpu) return;
 
-    const cpu = data.realtime.cpu;
+    let cpu = data.realtime.cpu;
     document.querySelector("#cpu-usage").textContent = Math.round(cpu.cpu.usage);
 
     updateCores(cpu);
 
-    // console.log(data);
+    console.log(data);
 }
 
 function getCoreColor(usage) {
@@ -26,7 +61,10 @@ function getCoreColor(usage) {
 }
 
 function buildCoresGrid(cores) {
-    const grid = document.querySelector("#cores-grid");
+    let grid = document.querySelector("#cores-grid");
+
+    if (!grid) return;
+
     if (grid.children.length > 0) return;
 
     const template = document.querySelector("#core-template");
@@ -65,8 +103,12 @@ function updateCores(cores) {
         }
     });
 
-    const threadCount = Object.keys(cores).filter(key => key !== "cpu").length;
-    document.querySelector("#cpu-threads").textContent = threadCount + " threads";
+    let threadCount = Object.keys(cores).filter(key => key !== "cpu").length;
+    let cpuThreads = document.querySelector("#cpu-threads");
+
+    if (cpuThreads) {
+        cpuThreads.textContent = threadCount + " threads";
+    }
 }
 
 async function loadConfig() {
@@ -79,15 +121,20 @@ function connect() {
 
     ws.onopen = () => {
         console.log("Connected to TrueNAS Dashboard");
+        document.querySelector("#status-dot").className = "status-dot online";
+        document.querySelector("#status-text").textContent = "Online";
     };
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        updateHeader(data);
         updateCPU(data);
     };
 
     ws.onclose = () => {
         console.log('Disconnected, reconnecting in 3s ...');
+        document.querySelector("#status-dot").className = "status-dot offline";
+        document.querySelector("#status-text").textContent = "Offline";
         setTimeout(connect, 3000);
     }
 
