@@ -9,6 +9,7 @@ all connected browsers via WebSocket.
 import asyncio
 import json
 import os
+import yaml
 import websockets
 from aiohttp import web
 
@@ -44,10 +45,23 @@ class Bridge:
     async def config_handler(self, request):
         return web.json_response(self.config)
     
+    async def config_save_handler(self, request):
+        try:
+            new_config = await request.json()
+            self.config.update(new_config)
+
+            with open("/config/config.yml", "w") as file:
+                yaml.dump(self.config, file)
+            
+            return web.json_response({"success": True})
+        except Exception as error:
+            return web.json_response({"success": False, "error": str(error)}, status=500)
+    
     async def start(self):
         # HTTP Server
         app = web.Application()
         app.router.add_get("/config", self.config_handler)
+        app.router.add_post("/config", self.config_save_handler)
         app.router.add_get("/{path_info:.*}", self.http_handler)
 
         runner = web.AppRunner(app)

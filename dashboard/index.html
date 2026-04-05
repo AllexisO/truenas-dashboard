@@ -26,10 +26,28 @@
                     <div class="status-dot" id="status-dot"></div>
                     <span id="status-text">Connecting ...</span>
                 </div>
+                <button class="settings-btn" id="settings-btn">⚙</button>
             </div>
         </header>
 
         <main>
+            <div class="settings-panel" id="settings-panel">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button class="settings-close" id="settings-close">x</button>
+                </div>
+                <div class="settings-body">
+                    <div class="settings-item">
+                        <label>CPU</label>
+                        <input type="checkbox" id="settings-cpu" data-widget="cpu" data-key="enabled">
+                    </div>
+                    <div class="settings-item">
+                        <label>CPU Cores</label>
+                        <input type="checkbox" id="settings-cpu-cores" data-widget="cpu" data-key="show_cores">
+                    </div>
+                </div>
+                <button class="settings-save" id="settings-save">Save</button>
+            </div>
             <div class="cards">
                 <!-- CPU Card -->
                 <div class="card" id="cpu-card">

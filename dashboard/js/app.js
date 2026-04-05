@@ -43,6 +43,38 @@ function formatUptime(uptime) {
     return `${m}m`;
 }
 
+function initSettings(config) {
+    let settingsBtn = document.querySelector("#settings-btn");
+    let settingsPanel = document.querySelector("#settings-panel");
+    let settingsClose = document.querySelector("#settings-close");
+    let settingsSave = document.querySelector("#settings-save");
+
+    document.querySelector("#settings-cpu").checked = config.widgets.cpu.enabled;
+    document.querySelector("#settings-cpu-cores").checked = config.widgets.cpu.show_cores;
+
+    settingsBtn.addEventListener("click", () => {
+        settingsPanel.classList.add("open");
+    });
+
+    settingsClose.addEventListener("click", () => {
+        settingsPanel.classList.remove("open");
+    });
+
+    settingsSave.addEventListener("click", async () => {
+        config.widgets.cpu.enabled = document.querySelector("#setting-cpu").checked;
+        config.widgets.cpu.show_cores = document.querySelector("#setting-cpu-cores").checked;
+
+        await fetch("/config", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(config)
+        });
+
+        settingsPanel.classList.remove("open");
+        location.reload();
+    });
+}
+
 function updateCPU(data) {
     if (!data.realtime || !data.realtime.cpu) return;
 
@@ -144,6 +176,8 @@ function connect() {
 }
 
 loadConfig().then(config => {
+    initSettings(config);
+    
     if (!config.widgets.cpu.enabled) {
         document.querySelector("#cpu-card").remove();
     }

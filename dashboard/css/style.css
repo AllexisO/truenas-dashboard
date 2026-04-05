@@ -89,6 +89,97 @@ header {
    50% { opacity: 0.4; }
 }
 
+
+/* ------------- Settings ------------- */
+.settings-btn {
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.07);
+   color: #475569;
+   border-radius: 6px;
+   padding: 4px 8px;
+   cursor: pointer;
+   font-size: 14px;
+}
+
+.settings-btn:hover {
+   color: #E2E8F0;
+   border-color: rgba(255, 255, 255, 0.15);
+}
+
+.settings-panel {
+   display: none;
+   position: fixed;
+   top: 0;
+   right: 0;
+   width: 280px;
+   height: 100vh;
+   background: #0F1520;
+   border-left: 1px solid rgba(255, 255, 255, 0.07);
+   padding: 24px;
+   z-index: 100;
+}
+
+.settings-panel.open {
+   display: flex;
+   flex-direction: column;
+}
+
+.settings-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 24px;
+}
+
+.settings-header h2 {
+   font-size: 16px;
+   color: #E2E8F0;
+}
+
+.settings-close {
+   background-color: transparent;
+   border: none;
+   color: #475569;
+   cursor: pointer;
+   font-size: 16px;
+}
+
+.settings-close:hover {
+   color: #E2E8F0;
+}
+
+.settings-body {
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.settings-item {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 13px;
+   color: #94A3B8;
+}
+
+.settings-save {
+   background: #38BDF8;
+   color: #000000;
+   border: none;
+   border-radius: 6px;
+   padding: 10px;
+   font-size: 13px;
+   font-weight: 600;
+   cursor: pointer;
+   margin-top: 24px;
+}
+
+.settings-save:hover {
+   background: #7DD3FC;
+}
+
+
 .cards {
     display: flex;
     flex-wrap: wrap;
