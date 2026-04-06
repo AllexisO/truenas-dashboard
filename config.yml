@@ -1,31 +1,25 @@
 dashboard:
-  title: "TrueNAS Dashboard"
-  refresh_interval: 1 # in seconds
-
+  refresh_interval: 1
+  title: TrueNAS Dashboard
 widgets:
   cpu:
     enabled: true
     show_cores: false
     show_temperature: true
-
+  disks:
+    devices:
+    - all
+    enabled: true
+    show_io: true
+    show_temperature: true
   memory:
     enabled: true
     show_arc: true
-
   network:
     enabled: true
     interfaces:
-      - all # or eno1, eth0
-    
-  disks:
-    enabled: true
-    show_temperature: true
-    show_io: true
-    devices:
-      - all # or sda, sdb
-      
+    - all
   pools:
     enabled: true
-  
   vms:
     enabled: false

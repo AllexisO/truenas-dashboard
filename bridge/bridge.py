@@ -49,6 +49,7 @@ class Bridge:
         try:
             new_config = await request.json()
             self.config.update(new_config)
+            self.poller.config = self.config
 
             with open("/config/config.yml", "w") as file:
                 yaml.dump(self.config, file)

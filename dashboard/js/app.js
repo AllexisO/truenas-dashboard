@@ -61,16 +61,19 @@ function initSettings(config) {
     });
 
     settingsSave.addEventListener("click", async () => {
-        config.widgets.cpu.enabled = document.querySelector("#setting-cpu").checked;
-        config.widgets.cpu.show_cores = document.querySelector("#setting-cpu-cores").checked;
-
-        await fetch("/config", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        config.widgets.cpu.show_cores = document.getElementById('settings-cpu-cores').checked;
+        console.log('Saving config:', config);
+    
+        const response = await fetch('/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(config)
         });
-
-        settingsPanel.classList.remove("open");
+        
+        const result = await response.json();
+        console.log('Save result:', result);
+        
+        settingsPanel.classList.remove('open');
         location.reload();
     });
 }
@@ -83,7 +86,7 @@ function updateCPU(data) {
 
     updateCores(cpu);
 
-    console.log(data);
+    // console.log(data);
 }
 
 function getCoreColor(usage) {
@@ -113,6 +116,10 @@ function buildCoresGrid(cores) {
 }
 
 function updateCores(cores) {
+    if (!appConfig || !appConfig.widgets.cpu.show_cores) return;
+    const grid = document.querySelector("#cores-grid");
+    if (!grid) return;
+
     buildCoresGrid(cores);
 
     Object.keys(cores).forEach(key => {
@@ -145,7 +152,10 @@ function updateCores(cores) {
 
 async function loadConfig() {
     const response = await fetch("/config");
-    return await response.json();
+    const config = await response.json();
+    console.log('Config loaded:', config);
+    // return await response.json();
+    return config;
 }
 
 function connect() {
@@ -175,7 +185,13 @@ function connect() {
     }
 }
 
+let appConfig = null;
+
 loadConfig().then(config => {
+    appConfig = config;
+    console.log('cpu enabled:', config.widgets.cpu.enabled);
+    console.log('show_cores:', config.widgets.cpu.show_cores);
+
     initSettings(config);
     
     if (!config.widgets.cpu.enabled) {
@@ -183,10 +199,13 @@ loadConfig().then(config => {
     }
 
     if (!config.widgets.cpu.show_cores) {
-        document.querySelector("#cpu-cores-card").remove();
+        console.log('Removing cpu-cores-card...');
+        const card = document.getElementById('cpu-cores-card');
+        console.log('Card found:', card);
+        if (card) card.remove();
     }
 
-    console.log(config)
+    // console.log(config)
 
     connect();
  });
