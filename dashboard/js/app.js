@@ -10,12 +10,24 @@ const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
 let appConfig = null;
 
-function createWidget(templateId) {
+function createWidget(templateId, order) {
     const template = document.getElementById(templateId);
     if(!template) return;
 
     const clone = template.content.cloneNode(true);
-    document.querySelector("#cards").appendChild(clone);
+    const cards = document.querySelector("#cards");
+
+    let firstChild = clone.firstElementChild;
+    if (firstChild) firstChild.dataset.order = order;
+
+    const allCards = [...cards.children];
+    const insertBefore = allCards.find(card => parseInt(card.dataset.order) > order);
+
+    if (insertBefore) {
+        cards.insertBefore(clone, insertBefore);
+    } else {
+        cards.appendChild(clone);
+    }
 }
 
 function destroyWidget(cardId) {
@@ -79,22 +91,19 @@ function initSettings(config) {
     });
     
     settingsSave.addEventListener("click", async () => {
-        // config.widgets.cpu.enabled = document.querySelector("#settings-cpu").checked;
-        // config.widgets.cpu.show_cores = document.querySelector("#settings-cpu-cores").checked;
-
         let newCpuEnabled = document.querySelector("#settings-cpu").checked;
         let newCpuCores = document.querySelector("#settings-cpu-cores").checked;
 
         // CPU Card
         if (newCpuEnabled && !appConfig.widgets.cpu.enabled) {
-            createWidget("cpu-card-template");
+            createWidget("cpu-card-template", 1);
         } else if (!newCpuEnabled && appConfig.widgets.cpu.enabled) {
             destroyWidget("cpu-card");
         }
 
         // CPU Cores Card
         if (newCpuCores && !appConfig.widgets.cpu.show_cores) {
-            createWidget("cpu-cores-card-template");
+            createWidget("cpu-cores-card-template", 2);
         } else if (!newCpuCores && appConfig.widgets.cpu.show_cores) {
             destroyWidget("cpu-cores-card");
         }
@@ -227,24 +236,12 @@ loadConfig().then(config => {
 
     initSettings(config);
 
-    // let card;
-    
-    // if (!config.widgets.cpu.enabled) {
-    //     // document.querySelector("#cpu-card").remove();
-    //     card = document.querySelector("#cpu-card");
-    //     if (card) card.remove();
-    // }
-
-    // if (!config.widgets.cpu.show_cores) {
-    //     card = document.querySelector("#cpu-cores-card");
-    //     if (card) card.remove();
-    // }
     if (config.widgets.cpu.enabled) {
-        createWidget('cpu-card-template');
+        createWidget('cpu-card-template', 1);
     }
 
     if (config.widgets.cpu.show_cores) {
-        createWidget('cpu-cores-card-template');
+        createWidget('cpu-cores-card-template', 2);
     }
 
     // console.log(config)
