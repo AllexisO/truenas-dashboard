@@ -10,6 +10,73 @@ const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
 let appConfig = null;
 
+/* --- Animation for Logo --- */
+function getLedColor(percent) {
+    let ratio, r, g, b;
+
+    if (percent <= 50) {
+        ratio = percent / 50;
+        r = Math.round(29 + (239 - 29) * ratio);
+        g = Math.round(158 + (159 - 158) * ratio);
+        b = Math.round(117 + (39 - 117) * ratio);
+        return `rgb(${r},${g},${b})`;
+    } else {
+        ratio = (percent - 50) / 50;
+        r = Math.round(239 + (233 - 239) * ratio);
+        g = Math.round(159 + (74 - 159) * ratio);
+        b = Math.round(39 + (30 - 39) * ratio);
+        return `rgb(${r},${g},${b})`;
+    }
+}
+
+function updateLeds(data) {
+    if (!data.realtime) return;
+
+    let cpu = data.realtime.cpu?.cpu?.usage || 0;
+    let memoryTotal = data.realtime.memory?.physical_memory_total || 1;
+    let memoryAvailable = data.realtime.memory?.physical_memory_available || 0;
+    let ram = ((memoryTotal - memoryAvailable) / memoryTotal) * 100;
+    let disk = data.realtime.disks?.busy || 0;
+    let netMax = 1000 * 1024 * 1024 / 8;
+    let netRx = data.realtime.interfaces?.eno1?.received_bytes_rate || 0;
+    let netTx = data.realtime.interfaces?.eno1?.sent_bytes_rate || 0;
+    let network = ((netRx - netTx) / netMax) * 100;
+
+    const leds = {
+        "led-cpu": { value: cpu, label: "CPU" },
+        "led-ram": { value: ram, label: "RAM" },
+        "led-disk": { value: disk, label: "Disks" },
+        "led-network": { value: network, label: "Network" }
+    };
+
+    Object.entries(leds).forEach(([id, info]) => {
+        let led = document.getElementById(id);
+        if (!led) return;
+        led.style.fill = getLedColor(info.value);
+        led.dataset.tooltip = `${info.label}: ${Math.round(info.value)}%`;
+    });
+}
+function initTooltips() {
+    const tooltip = document.getElementById('tooltip');
+    
+    document.querySelectorAll('[data-tooltip]').forEach(el => {
+        el.addEventListener('mouseenter', (event) => {
+            tooltip.textContent = el.dataset.tooltip;
+            tooltip.style.display = 'block';
+        });
+
+        el.addEventListener('mousemove', (event) => {
+            tooltip.style.left = (event.clientX + 12) + 'px';
+            tooltip.style.top = (event.clientY + 12) + 'px';
+        });
+
+        el.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+    });
+}
+
+/* --- Widget Creation Logic --- */
 function createWidget(templateId, order) {
     const template = document.getElementById(templateId);
     if(!template) return;
@@ -129,7 +196,6 @@ function updateCPU(data) {
     let cpu = data.realtime.cpu;
     let cpuUsage = document.querySelector("#cpu-usage");
     if (cpuUsage) cpuUsage.textContent = Math.round(cpu.cpu.usage);
-    // document.querySelector("#cpu-usage").textContent = Math.round(cpu.cpu.usage);
 
     updateCores(cpu);
 
@@ -216,6 +282,7 @@ function connect() {
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         updateHeader(data);
+        updateLeds(data);
         updateCPU(data);
     };
 
@@ -243,6 +310,8 @@ loadConfig().then(config => {
     if (config.widgets.cpu.show_cores) {
         createWidget('cpu-cores-card-template', 2);
     }
+
+    initTooltips();
 
     // console.log(config)
 

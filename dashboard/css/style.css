@@ -251,8 +251,72 @@ header {
     overflow: hidden;
  }
 
- .core-bar {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 0.4s ease, background-color 0.4s ease;
- }
+.core-bar {
+   height: 100%;
+   border-radius: 99px;
+   transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+[data-tooltip] {
+   position: relative;
+   cursor: pointer;
+}
+
+[data-tooltip]:hover::after {
+   content: attr(data-tooltip);
+   position: absolute;
+   top: 20px;
+   left: 0;
+   background: #0d1520;
+   color: #e2e8f0;
+   font-size: 11px;
+   font-family: monospace;
+   padding: 4px 8px;
+   border-radius: 4px;
+   border: 1px solid rgba(255,255,255,0.1);
+   white-space: nowrap;
+   z-index: 100;
+}
+
+.tooltip {
+   display: none;
+   position: fixed;
+   background: #0d1520;
+   color: #e2e8f0;
+   font-size: 11px;
+   font-family: monospace;
+   padding: 4px 8px;
+   border-radius: 4px;
+   border: 1px solid rgba(255,255,255,0.1);
+   white-space: nowrap;
+   z-index: 100;
+   pointer-events: none;
+}
+
+@keyframes led-hdd {
+    0%   { opacity: 0; }
+    25%  { opacity: 1; }
+    50%  { opacity: 0; }
+    75%  { opacity: 1; }
+    90%  { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+#led-cpu {
+    animation: led-hdd 0.5s steps(2, start) infinite;
+}
+
+#led-ram {
+    animation: led-hdd 0.5s steps(2, start) infinite;
+    animation-delay: 0.1s;
+}
+
+#led-disk {
+    animation: led-hdd 0.5s steps(2, start) infinite;
+    animation-delay: 0.2s;
+}
+
+#led-net {
+    animation: led-hdd 0.5s steps(2, start) infinite;
+    animation-delay: 0.3s;
+}
