@@ -4,7 +4,7 @@ dashboard:
 widgets:
   cpu:
     enabled: true
-    show_cores: false
+    show_cores: true
     show_temperature: true
   disks:
     devices:

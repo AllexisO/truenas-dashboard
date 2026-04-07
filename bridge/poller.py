@@ -102,33 +102,8 @@ class Poller:
     async def broadcast(self):
         if not self.clients:
             return
-
-        filtered_data = {}
-
-        if self.config["widgets"]["cpu"]["enabled"]:
-            filtered_data["realtime"] = {
-                "cpu": self.latest_data.get("realtime", {}).get("cpu", {})
-            }
         
-        if self.config["widgets"]["memory"]["enabled"]:
-            filtered_data.setdefault("realtime", {})
-            filtered_data["realtime"]["memory"] = self.latest_data.get("realtime", {}).get("memory", {})
-
-        if self.config["widgets"]["network"]["enabled"]:
-            filtered_data.setdefault("realtime", {})
-            filtered_data["realtime"]["interfaces"] = self.latest_data.get("realtime", {}).get("interfaces", {})
-        
-        if self.config["widgets"]["disks"]["enabled"]:
-            filtered_data["disks"] = self.latest_data.get("disks", [])
-            filtered_data.setdefault("realtime", {})
-            filtered_data["realtime"]["disks"] = self.latest_data.get("realtime", {}).get("disks", {})
-
-        if self.config["widgets"]["pools"]["enabled"]:
-            filtered_data["pools"] = self.latest_data.get("pools", [])
-
-        filtered_data["system"] = self.latest_data.get("system", {})
-        
-        message = json.dumps(filtered_data)
+        message = json.dumps(self.latest_data)
 
         disconnected = set()
         for client in self.clients:

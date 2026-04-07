@@ -8,6 +8,22 @@
 const WS_PORT = 8765;
 const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
+let appConfig = null;
+
+function createWidget(templateId) {
+    const template = document.getElementById(templateId);
+    if(!template) return;
+
+    const clone = template.content.cloneNode(true);
+    document.querySelector("#cards").appendChild(clone);
+}
+
+function destroyWidget(cardId) {
+    const card = document.getElementById(cardId);
+    if (card) card.remove();
+}
+
+/* --- Header Logic --- */
 function updateHeader(data) {
     if (!data.system) return;
 
@@ -27,6 +43,7 @@ function updateHeader(data) {
     }
 }
 
+/* --- Uptime Logic --- */
 function formatUptime(uptime) {
     let parts = uptime.split(", ");
     let days = parts.length > 1 ? parts[0] : "0 days";
@@ -43,6 +60,7 @@ function formatUptime(uptime) {
     return `${m}m`;
 }
 
+/* --- Settings Logic --- */
 function initSettings(config) {
     let settingsBtn = document.querySelector("#settings-btn");
     let settingsPanel = document.querySelector("#settings-panel");
@@ -59,30 +77,50 @@ function initSettings(config) {
     settingsClose.addEventListener("click", () => {
         settingsPanel.classList.remove("open");
     });
-
-    settingsSave.addEventListener("click", async () => {
-        config.widgets.cpu.show_cores = document.getElementById('settings-cpu-cores').checked;
-        console.log('Saving config:', config);
     
-        const response = await fetch('/config', {
+    settingsSave.addEventListener("click", async () => {
+        // config.widgets.cpu.enabled = document.querySelector("#settings-cpu").checked;
+        // config.widgets.cpu.show_cores = document.querySelector("#settings-cpu-cores").checked;
+
+        let newCpuEnabled = document.querySelector("#settings-cpu").checked;
+        let newCpuCores = document.querySelector("#settings-cpu-cores").checked;
+
+        // CPU Card
+        if (newCpuEnabled && !appConfig.widgets.cpu.enabled) {
+            createWidget("cpu-card-template");
+        } else if (!newCpuEnabled && appConfig.widgets.cpu.enabled) {
+            destroyWidget("cpu-card");
+        }
+
+        // CPU Cores Card
+        if (newCpuCores && !appConfig.widgets.cpu.show_cores) {
+            createWidget("cpu-cores-card-template");
+        } else if (!newCpuCores && appConfig.widgets.cpu.show_cores) {
+            destroyWidget("cpu-cores-card");
+        }
+
+        appConfig.widgets.cpu.enabled = newCpuEnabled;
+        appConfig.widgets.cpu.show_cores = newCpuCores;
+    
+        await fetch('/config', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(config)
         });
-        
-        const result = await response.json();
-        console.log('Save result:', result);
-        
+                
         settingsPanel.classList.remove('open');
-        location.reload();
+        // location.reload();
     });
 }
 
+/* --- CPU Loader Preview --- */
 function updateCPU(data) {
     if (!data.realtime || !data.realtime.cpu) return;
 
     let cpu = data.realtime.cpu;
-    document.querySelector("#cpu-usage").textContent = Math.round(cpu.cpu.usage);
+    let cpuUsage = document.querySelector("#cpu-usage");
+    if (cpuUsage) cpuUsage.textContent = Math.round(cpu.cpu.usage);
+    // document.querySelector("#cpu-usage").textContent = Math.round(cpu.cpu.usage);
 
     updateCores(cpu);
 
@@ -117,7 +155,8 @@ function buildCoresGrid(cores) {
 
 function updateCores(cores) {
     if (!appConfig || !appConfig.widgets.cpu.show_cores) return;
-    const grid = document.querySelector("#cores-grid");
+
+    let grid = document.querySelector("#cores-grid");
     if (!grid) return;
 
     buildCoresGrid(cores);
@@ -125,11 +164,11 @@ function updateCores(cores) {
     Object.keys(cores).forEach(key => {
         if (key === "cpu") return;
 
-        const usage = Math.round(cores[key].usage);
-        const color = getCoreColor(usage);
+        let usage = Math.round(cores[key].usage);
+        let color = getCoreColor(usage);
 
-        const bar = document.getElementById(`bar-${key}`);
-        const pct = document.getElementById(`pct-${key}`);
+        let bar = document.getElementById(`bar-${key}`);
+        let pct = document.getElementById(`pct-${key}`);
 
         if (bar) {
             bar.style.width = usage + "%";
@@ -153,8 +192,6 @@ function updateCores(cores) {
 async function loadConfig() {
     const response = await fetch("/config");
     const config = await response.json();
-    console.log('Config loaded:', config);
-    // return await response.json();
     return config;
 }
 
@@ -185,24 +222,29 @@ function connect() {
     }
 }
 
-let appConfig = null;
-
 loadConfig().then(config => {
     appConfig = config;
-    console.log('cpu enabled:', config.widgets.cpu.enabled);
-    console.log('show_cores:', config.widgets.cpu.show_cores);
 
     initSettings(config);
+
+    // let card;
     
-    if (!config.widgets.cpu.enabled) {
-        document.querySelector("#cpu-card").remove();
+    // if (!config.widgets.cpu.enabled) {
+    //     // document.querySelector("#cpu-card").remove();
+    //     card = document.querySelector("#cpu-card");
+    //     if (card) card.remove();
+    // }
+
+    // if (!config.widgets.cpu.show_cores) {
+    //     card = document.querySelector("#cpu-cores-card");
+    //     if (card) card.remove();
+    // }
+    if (config.widgets.cpu.enabled) {
+        createWidget('cpu-card-template');
     }
 
-    if (!config.widgets.cpu.show_cores) {
-        console.log('Removing cpu-cores-card...');
-        const card = document.getElementById('cpu-cores-card');
-        console.log('Card found:', card);
-        if (card) card.remove();
+    if (config.widgets.cpu.show_cores) {
+        createWidget('cpu-cores-card-template');
     }
 
     // console.log(config)
