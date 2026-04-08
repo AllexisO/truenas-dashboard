@@ -53,9 +53,11 @@ function connect() {
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log('has cpu:', !!data.realtime?.cpu);
         updateHeader(data);
         updateLeds(data);
         updateCPU(data);
+        updateCores(data.realtime?.cpu);
     };
 
     ws.onclose = () => {

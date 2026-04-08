@@ -3,7 +3,7 @@ dashboard:
   title: TrueNAS Dashboard
 widgets:
   cpu:
-    enabled: false
+    enabled: true
     show_cores: true
     show_temperature: true
   disks:

@@ -4,15 +4,12 @@
  * Handles CPU usage card updates.
  */
 
-/* --- CPU Loader Preview --- */
 function updateCPU(data) {
     if (!data.realtime || !data.realtime.cpu) return;
 
     let cpu = data.realtime.cpu;
     let cpuUsage = document.querySelector("#cpu-usage");
     if (cpuUsage) cpuUsage.textContent = Math.round(cpu.cpu.usage);
-
-    updateCores(cpu);
 }
 
 function getCoreColor(usage) {
@@ -22,6 +19,8 @@ function getCoreColor(usage) {
 }
 
 function buildCoresGrid(cores) {
+    if (!cores) return;
+
     let grid = document.querySelector("#cores-grid");
 
     if (!grid) return;
@@ -42,6 +41,8 @@ function buildCoresGrid(cores) {
 }
 
 function updateCores(cores) {
+    console.log('cores:', cores);
+    if (!cores) return;
     if (!appConfig || !appConfig.widgets.cpu.show_cores) return;
 
     let grid = document.querySelector("#cores-grid");

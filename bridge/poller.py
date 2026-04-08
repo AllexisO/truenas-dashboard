@@ -102,7 +102,7 @@ class Poller:
     async def broadcast(self):
         if not self.clients:
             return
-        
+                
         message = json.dumps(self.latest_data)
 
         disconnected = set()
