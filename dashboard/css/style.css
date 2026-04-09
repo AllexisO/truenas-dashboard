@@ -62,32 +62,6 @@ header {
    color: #475569;
 }
 
-.header-status {
-   display: flex;
-   align-items: center;
-   gap: 6px;
-}
-
-.status-dot {
-   width: 7px;
-   height: 7px;
-   border-radius: 50%;
-   background: #334155;
-}
-
-.status-dot.online {
-   background: #34D399;
-   animation: pulse 2s infinite;
-}
-
-.status-dot.offline {
-   background: #F43F5E;
-}
-
-@keyframes pulse {
-   0%, 100% { opacity: 1; }
-   50% { opacity: 0.4; }
-}
 
 
 /* ------------- Settings ------------- */
@@ -319,4 +293,116 @@ header {
 #led-net {
     animation: led-hdd 0.5s steps(2, start) infinite;
     animation-delay: 0.3s;
+}
+
+/* ---------------------- */
+
+.main-container {
+   width: 100%;
+   display: block;
+   background: #0d1117;
+   min-height: calc(100vh - 40px);
+}
+
+.main-sidebar {
+   display: flex;
+   flex-direction: column;
+   width: 260px;
+   top: 0;
+   bottom: 0;
+   position: fixed;
+   background: #0a0e16;
+   border-right: 1px solid #1a2535;
+   padding: 20px 15px;
+   overflow-y: auto;
+}
+
+.sidebar-logo {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   border-bottom: 1px solid #1a2535;
+   padding-bottom: 10px;
+}
+
+.server-logo {
+   width: 85px;
+   height: 85px;
+}
+
+.server-logo svg {
+   filter: drop-shadow(0 0 8px rgba(59, 139, 212, 0.5));
+}
+
+.server-logo-text {
+   font-size: 16px;
+   font-weight: 700;
+   color: #FFFFFF;
+}
+
+.server-logo-version {
+   font-size: 10px;
+   color: #3d5470;
+   letter-spacing: 0.05em;
+   margin-top: 4px;
+}
+
+.server-sidebar-info {
+   margin-top: auto;
+   border-top: 1px solid #1a2535;
+   padding: 10px 20px;
+   font-size: 12px;
+   color: #3d5470;
+}
+
+.server-full-width {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   padding-bottom: 10px;
+}
+
+.server-full-width:last-child {
+   padding-bottom: 0px;
+}
+
+.server-status__connection {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+}
+
+.server-status-dot {
+   width: 7px;
+   height: 7px;
+   border-radius: 50%;
+   background: #334155;
+}
+
+.server-status-dot.online {
+   background: #34D399;
+   animation: pulse 1.5s infinite;
+}
+
+.server-status-text.online {
+   color: #34D399;
+}
+
+.server-status-dot.offline {
+   background: #F43F5E;
+}
+
+.server-status-text.offline {
+   background: #F43F5E;
+}
+
+@keyframes pulse {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0.3; }
+}
+
+
+.main-panel {
+   display: flex;
+   width: 100%;
 }

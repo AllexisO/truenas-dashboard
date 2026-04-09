@@ -21,7 +21,7 @@ function updateHeader(data) {
     let uptime = document.querySelector("#server-uptime");
     let systemUptime = data.system.uptime;
     if (uptime && systemUptime) {
-        uptime.textContent = "Uptime: " + formatUptime(systemUptime);
+        uptime.textContent = formatUptime(systemUptime);
     }
 }
 

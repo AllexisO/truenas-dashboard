@@ -47,8 +47,9 @@ function connect() {
 
     ws.onopen = () => {
         console.log("Connected to TrueNAS Dashboard");
-        document.querySelector("#status-dot").className = "status-dot online";
-        document.querySelector("#status-text").textContent = "Online";
+        document.querySelector("#server-status-dot").className = "server-status-dot online";
+        document.querySelector("#server-status-text").className = "server-status-text online";
+        document.querySelector("#server-status-text").textContent = "Online";
     };
 
     ws.onmessage = (event) => {
@@ -62,8 +63,9 @@ function connect() {
 
     ws.onclose = () => {
         console.log('Disconnected, reconnecting in 3s ...');
-        document.querySelector("#status-dot").className = "status-dot offline";
-        document.querySelector("#status-text").textContent = "Offline";
+        document.querySelector("#server-status-dot").className = "server-status-dot offline";
+        document.querySelector("#server-status-text").className = "server-status-text offline";
+        document.querySelector("#server-status-text").textContent = "Offline";
         setTimeout(connect, 3000);
     }
 
