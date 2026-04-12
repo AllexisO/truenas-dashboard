@@ -58,8 +58,7 @@ function connect() {
         updateLeds(data);
         updateCPU(data);
         updateCores(data.realtime?.cpu);
-
-        console.log(data);
+        updateRam(data);
     };
 
     ws.onclose = () => {
@@ -86,6 +85,10 @@ loadConfig().then(config => {
 
     if (config.widgets.cpu.show_cores) {
         createWidget('cpu-cores-card-template', 2);
+    }
+
+    if (config.widgets.memory.enabled) {
+        createWidget('ram-card-template', 3);
     }
 
     initTooltips();

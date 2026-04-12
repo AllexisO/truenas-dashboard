@@ -376,3 +376,33 @@
    flex-wrap: wrap;
    align-self: flex-start;
 }
+
+/* --- RAM Card --- */
+.ram-used {
+   font-size: 32px;
+   font-weight: 600;
+   color: #A78BFA;
+   margin-bottom: 8px;
+}
+
+.bar-wrap {
+   height: 3px;
+   background: rgba(255, 255, 255, 0.06);
+   border-radius: 99px;
+   overflow: hidden;
+   margin-bottom: 8px;
+}
+
+.bar-fill {
+   height: 100%;
+   background: #A78BFA;
+   border-radius: 99px;
+   transition: width 0.3 ease;
+}
+
+.ram-details {
+   display: flex;
+   justify-content: space-between;
+   font-size: 11px;
+   color: #475569;
+}
