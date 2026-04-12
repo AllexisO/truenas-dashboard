@@ -54,11 +54,12 @@ function connect() {
 
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log('has cpu:', !!data.realtime?.cpu);
         updateHeader(data);
         updateLeds(data);
         updateCPU(data);
         updateCores(data.realtime?.cpu);
+
+        console.log(data);
     };
 
     ws.onclose = () => {
@@ -89,7 +90,7 @@ loadConfig().then(config => {
 
     initTooltips();
 
-    // console.log(config)
+    console.log(config)
 
     connect();
  });

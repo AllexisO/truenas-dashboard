@@ -11,33 +11,6 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="header-left">
-                <div class="header-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
-                        <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
-                        <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
-                        <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
-                        <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
-                        <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
-                        <circle id="led-cpu" cx="20" cy="14" r="2.5" fill="#1D9E75" data-tooltip="CPU: --"></circle>
-                        <circle id="led-ram" cx="20" cy="26" r="2.5" fill="#1D9E75" data-tooltip="RAM: --"></circle>
-                        <circle id="led-disk" cx="20" cy="38" r="2.5" fill="#1D9E75" data-tooltip="Disks: --"></circle>
-                        <circle id="led-net" cx="20" cy="50" r="2.5" fill="#1D9E75" data-tooltip="Network: --"></circle>
-                    </svg>
-                </div>
-                <div class="header-title">
-                    <h1>TrueNAS Dashboard</h1>
-                    <span id="server-version-"></span>
-                </div>
-            </div>
-            <div class="header-right">
-                <span id="server-ip-"></span>
-                <span id="server-uptime-"></span>
-                <button class="settings-btn" id="settings-btn">⚙</button>
-            </div>
-        </header>
-
         <main>
             <div class="settings-panel" id="settings-panel">
                 <div class="settings-header">
@@ -57,6 +30,96 @@
                 <button class="settings-save" id="settings-save">Save</button>
             </div>
            
+            
+        </main>
+    </div>
+
+
+    <div class="main-container">
+        <div class="main-sidebar">
+            <div class="sidebar-header">
+                <div class="server-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
+                        <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
+                        <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
+                        <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
+                        <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
+                        <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
+                        <circle id="led-cpu" cx="20" cy="14" r="2.5" fill="#1D9E75" data-tooltip="CPU: --"></circle>
+                        <circle id="led-ram" cx="20" cy="26" r="2.5" fill="#1D9E75" data-tooltip="RAM: --"></circle>
+                        <circle id="led-disk" cx="20" cy="38" r="2.5" fill="#1D9E75" data-tooltip="Disks: --"></circle>
+                        <circle id="led-network" cx="20" cy="50" r="2.5" fill="#1D9E75" data-tooltip="Network: --"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <div class="server-logo-text">TrueNAS Dashboard</div>
+                    <div class="server-logo-version">Dashboard v0.1</div>
+                </div>
+            </div>
+            <div class="sidebar-body">
+                <div class="server-full-width sidebar-cpu">
+                    <div class="sidebar-cpu-header">
+                        <p>CPU</p>
+                    </div>
+                    <div class="sidebar-cpu-body">
+                        <div class="sidebard-cpu-load">
+                            <span>Load</span>
+                            <span id="sidebar-cpu-usage">--</span>%
+                        </div>
+                        <div class="sidebard-cpu-temperature">
+                            <span>Temperature</span>
+                            <span id="sidebar-cpu-temp">--</span>°C
+                        </div>
+                    </div>
+                </div>
+                <div class="server-full-width sidebar-ram">
+                    <div class="sidebar-ram-header">
+                        <p>RAM</p>
+                    </div>
+                    <div class="sidebar-ram-body">
+                        <div class="sidebard-ram-total">
+                            <span>Total</span>
+                            <span id="sidebard-ram-total">--</span>
+                        </div>
+                        <div class="sidebar-ram-free">
+                            <span>Free</span>
+                            <span id="sidebard-ram-free">--</span>
+                        </div>
+                        <div class="sidebar-ram-">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="server-full-width">
+                    <span>Status</span>
+                    <div class="server-status__connection">
+                        <div class="server-status-dot" id="server-status-dot"></div>
+                        <span id="server-status-text" id="server-status-text">Connecting ...</span>
+                    </div>
+                </div>
+                <div class="server-full-width">
+                    <span>HOST</span>
+                    <span id="server-ip"></span>
+                </div>
+                <div class="server-full-width">
+                    <span>Server Version</span>
+                    <span id="server-version"></span>
+                </div>
+                <div class="server-full-width">
+                    <span>Updatime</span>
+                    <span id="server-uptime"></span>
+                </div>
+                <div class="server-full-width">
+                    <button class="settings-btn" id="settings-btn">⚙</button>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <div class="main-content">
             <template id="cpu-card-template">
                 <div class="card" id="cpu-card">
                     <h2>CPU</h2>
@@ -86,60 +149,7 @@
                     </div>
                 </template>
             </template>
-
             <div class="cards" id="cards"></div>
-        </main>
-    </div>
-
-
-    <div class="main-container">
-        <div class="main-sidebar">
-            <div class="sidebar-logo">
-                <div class="server-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
-                        <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
-                        <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
-                        <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
-                        <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
-                        <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
-                        <circle id="led-cpu" cx="20" cy="14" r="2.5" fill="#1D9E75" data-tooltip="CPU: --"></circle>
-                        <circle id="led-ram" cx="20" cy="26" r="2.5" fill="#1D9E75" data-tooltip="RAM: --"></circle>
-                        <circle id="led-disk" cx="20" cy="38" r="2.5" fill="#1D9E75" data-tooltip="Disks: --"></circle>
-                        <circle id="led-net" cx="20" cy="50" r="2.5" fill="#1D9E75" data-tooltip="Network: --"></circle>
-                    </svg>
-                </div>
-                <div>
-                    <div class="server-logo-text">TrueNAS Dashboard</div>
-                    <div class="server-logo-version">Dashboard v0.1</div>
-                </div>
-            </div>
-            <div class="dummy">
-                
-            </div>
-            <div class="server-sidebar-info">
-                <div class="server-full-width">
-                    <span>Status</span>
-                    <div class="server-status__connection">
-                        <div class="server-status-dot" id="server-status-dot"></div>
-                        <span id="server-status-text" id="server-status-text">Connecting ...</span>
-                    </div>
-                </div>
-                <div class="server-full-width">
-                    <span>HOST</span>
-                    <span id="server-ip"></span>
-                </div>
-                <div class="server-full-width">
-                    <span>Server Version</span>
-                    <span id="server-version"></span>
-                </div>
-                <div class="server-full-width">
-                    <span>Updatime</span>
-                    <span id="server-uptime"></span>
-                </div>
-            </div>
-        </div>
-        <div class="main-panel">
-
         </div>
     </div>
 
