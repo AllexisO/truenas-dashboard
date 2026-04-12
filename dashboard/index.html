@@ -91,6 +91,24 @@
                 </template>
             </template>
 
+            <!-- RAM -->
+            <template id="ram-card-template">
+                <div class="card" id="ram-card">
+                    <div class="card-header">
+                        <h2>RAM</h2>
+                        <span id="ram-total"></span>
+                    </div>
+                    <div class="ram-used" id="ram-used">--</div>
+                    <div class="bar-wrap">
+                        <div class="bar-fill" id="ram-bar"></div>
+                    </div>
+                    <div class="ram-details">
+                        <span>Free: <span id="ram-free">--</span></span>
+                        <span>ARC: <span id="ram-arc">--</span></span>
+                    </div>
+                </div>
+            </template>
+
             <div class="cards" id="cards"></div>
         </main>
     </div>
@@ -107,6 +125,7 @@
     <script src="/js/header.js"></script>
     <script src="/js/settings.js"></script>
     <script src="/js/widgets/cpu-widget.js"></script>
+    <script src="/js/widgets/ram-widget.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>
