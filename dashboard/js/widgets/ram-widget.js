@@ -24,16 +24,15 @@ function updateRam(data) {
     let usedPercent = (used / total) * 100;
 
     let ramTotal = document.querySelector("#ram-total");
-    let ramTotalSidebar = document.querySelector("#sidebard-ram-total");
 
     let ramFree = document.querySelector("#ram-free");
-    let ramFreeSedibar = document.querySelector("#sidebard-ram-free");
+    let ramFreeSedibar = document.querySelector("#sidebar-ram-free");
 
     let ramUsed = document.querySelector("#ram-used");
-    let ramUsedSidebar = document.querySelector("#sidebard-ram-used");
+    let ramUsedSidebar = document.querySelector("#sidebar-ram-used");
     
     let ramArc = document.querySelector("#ram-arc");
-    let ramArcSidebar = document.querySelector("#sidebard-ram-arc");
+    let ramArcSidebar = document.querySelector("#sidebar-ram-arc");
 
     let ramBar = document.querySelector("#ram-bar");
 
@@ -45,7 +44,6 @@ function updateRam(data) {
     ramArc.textContent = formatBytes(arc);
     ramBar.style.width = usedPercent.toFixed(0) + "%";
 
-    ramTotalSidebar.textContent = formatBytes(total);
     ramFreeSedibar.textContent = formatBytes(available);
     ramUsedSidebar.textContent = formatBytes(used);
     ramArcSidebar.textContent = formatBytes(arc);

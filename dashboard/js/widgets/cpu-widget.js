@@ -13,8 +13,8 @@ function updateCPU(data) {
     let cputempSidebar = document.querySelector("#sidebar-cpu-temp");
 
     if (cpuUsage) cpuUsage.textContent = Math.round(cpu.cpu.usage);
-    if (cpuUsageSidebar) cpuUsageSidebar.textContent = Math.round(cpu.cpu.usage);
-    if (cputempSidebar) cputempSidebar.textContent = cpu.cpu.temp;
+    if (cpuUsageSidebar) cpuUsageSidebar.textContent = Math.round(cpu.cpu.usage) + "%";
+    if (cputempSidebar) cputempSidebar.textContent = cpu.cpu.temp + "°C";
 }
 
 function getCoreColor(usage) {

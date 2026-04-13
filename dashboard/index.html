@@ -34,7 +34,6 @@
         </main>
     </div>
 
-
     <div class="main-container">
         <div class="main-sidebar">
             <div class="sidebar-header">
@@ -57,41 +56,47 @@
                 </div>
             </div>
             <div class="sidebar-body">
-                <div class="server-full-width sidebar-cpu">
-                    <div class="sidebar-cpu-header">
+                <div class="server-full-width sidebar-border sidebar-cpu">
+                    <div class="sidebar-data-header">
                         <p>CPU</p>
                     </div>
                     <div class="sidebar-cpu-body">
-                        <div class="sidebard-cpu-load">
+                        <div class="sidebar-cpu-load sidebar-data-server">
                             <span>Load</span>
-                            <span id="sidebar-cpu-usage">--</span>%
+                            <div class="sidebar-status">
+                                <span id="sidebar-cpu-usage">--</span>
+                            </div>
                         </div>
-                        <div class="sidebard-cpu-temperature">
+                        <div class="sidebar-cpu-temperature sidebar-data-server">
                             <span>Temperature</span>
-                            <span id="sidebar-cpu-temp">--</span>°C
+                            <div class="sidebar-status">
+                                <span id="sidebar-cpu-temp">--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="server-full-width sidebar-ram">
-                    <div class="sidebar-ram-header">
+                <div class="server-full-width sidebar-border sidebar-ram">
+                    <div class="sidebar-data-header">
                         <p>RAM</p>
                     </div>
                     <div class="sidebar-ram-body">
-                        <div class="sidebard-ram-total">
-                            <span>Total</span>
-                            <span id="sidebard-ram-total">--</span>
-                        </div>
-                        <div class="sidebar-ram-used">
+                        <div class="sidebar-ram-used sidebar-data-server">
                             <span>Used</span>
-                            <span id="sidebard-ram-used">--</span>
+                            <div class="sidebar-status">
+                                <span id="sidebar-ram-used">--</span>
+                            </div>
                         </div>
-                        <div class="sidebar-ram-free">
+                        <div class="sidebar-ram-free sidebar-data-server">
                             <span>Free</span>
-                            <span id="sidebard-ram-free">--</span>
+                            <div class="sidebar-status">
+                                <span id="sidebar-ram-free">--</span>
+                            </div>
                         </div>
-                        <div class="sidebar-ram-arc">
+                        <div class="sidebar-ram-arc sidebar-data-server">
                             <span>ARC</span>
-                            <span id="sidebard-ram-arc">--</span>
+                            <div class="sidebar-status">
+                                <span id="sidebar-ram-arc">--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -122,9 +127,8 @@
             </div>
         </div>
 
-
-        
         <div class="main-content">
+            <!-- CPU -->
             <template id="cpu-card-template">
                 <div class="card" id="cpu-card">
                     <h2>CPU</h2>
@@ -134,6 +138,7 @@
                 </div>
             </template>
 
+            <!-- CPU Cores -->
             <template id="cpu-cores-card-template">
                 <div class="card" id="cpu-cores-card">
                     <div class="card-header">
