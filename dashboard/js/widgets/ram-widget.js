@@ -1,4 +1,3 @@
-ram-widget.js
 /**
  * ram-widget.js - RAM Widget Logic
  * 
