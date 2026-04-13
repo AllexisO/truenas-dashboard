@@ -21,7 +21,7 @@ function updateHeader(data) {
     let uptime = document.querySelector("#server-uptime");
     let systemUptime = data.system.uptime;
     if (uptime && systemUptime) {
-        uptime.textContent = "Uptime: " + formatUptime(systemUptime);
+        uptime.textContent = formatUptime(systemUptime);
     }
 }
 
@@ -70,9 +70,9 @@ function updateLeds(data) {
     let ram = ((memoryTotal - memoryAvailable) / memoryTotal) * 100;
     let disk = data.realtime.disks?.busy || 0;
     let netMax = 1000 * 1024 * 1024 / 8;
-    let netRx = data.realtime.interfaces?.eno1?.received_bytes_rate || 0;
-    let netTx = data.realtime.interfaces?.eno1?.sent_bytes_rate || 0;
-    let network = ((netRx - netTx) / netMax) * 100;
+    let netRx = data.realtime?.interfaces?.eno1?.received_bytes_rate || 0;
+    let netTx = data.realtime?.interfaces?.eno1?.sent_bytes_rate || 0;
+    let network = ((netRx + netTx) / netMax) * 100;
 
     const leds = {
         "led-cpu": { value: cpu, label: "CPU" },

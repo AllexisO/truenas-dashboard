@@ -13,80 +13,9 @@
    background: #0A0F18;
    color: #E2E8F0;
    font-family: 'Figtree', Arial, monospace;
-}
-
-.container {
-   max-width: 1400px;
-   margin: 0 auto;
-   padding: 24px;
-}
-
-header {
    display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 24px;
-   padding-bottom: 16px;
-   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.header-left {
-   display: flex;
-   align-items: center;
-   gap: 12px;
-
-}
-
-.header-logo {
-   width: 38px;
-   height: 38px;
-}
-
-.header-title h1 {
-   font-size: 18px;
-   font-weight: 600;
-   color: #E2E8F0;
-}
-
-.header-title span {
-   font-size: 11px;
-   color: #475569;
-}
-
-.header-right {
-   display: flex;
-   align-items: center;
-   gap: 20px;
-   font-size: 12px;
-   font-family: monospace;
-   color: #475569;
-}
-
-.header-status {
-   display: flex;
-   align-items: center;
-   gap: 6px;
-}
-
-.status-dot {
-   width: 7px;
-   height: 7px;
-   border-radius: 50%;
-   background: #334155;
-}
-
-.status-dot.online {
-   background: #34D399;
-   animation: pulse 2s infinite;
-}
-
-.status-dot.offline {
-   background: #F43F5E;
-}
-
-@keyframes pulse {
-   0%, 100% { opacity: 1; }
-   50% { opacity: 0.4; }
+   flex-direction: column;
+   min-height: 100vh;
 }
 
 
@@ -180,75 +109,76 @@ header {
 }
 
 
+/* --- Cards --- */
 .cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 16px;
 }
 
  .card {
-    background: #0D1520;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 20px;
+   background: #0D1520;
+   border: 1px solid rgba(255,255,255,0.07);
+   border-radius: 12px;
+   padding: 20px;
  }
 
  .card h2 {
-    font-size: 14px;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+   font-size: 14px;
+   color: #475569;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+   margin-bottom: 12px;
  }
 
  .cpu-total {
-    font-size: 48px;
-    font-weight: 600;
-    color: #38BDF8;
+   font-size: 48px;
+   font-weight: 600;
+   color: #38BDF8;
  }
 
  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 14px;
  }
 
  .card-header span {
-    font-size: 11px;
-    color: #475569;
+   font-size: 11px;
+   color: #475569;
  }
 
  .cores-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
  }
 
  .core {
-    flex: 1 1 calc(25% - 10px);
-    min-width: calc(25% - 10px);
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+   flex: 1 1 calc(25% - 10px);
+   min-width: calc(25% - 10px);
+   display: flex;
+   flex-direction: column;
+   gap: 3px;
  }
 
  .core-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
-    font-family: monospace;
+   display: flex;
+   justify-content: space-between;
+   font-size: 10px;
+   font-family: monospace;
  }
 
  .core-name {
-    color: #475569;
+   color: #475569;
  }
 
  .core-bar-wrap {
-    height: 3px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 99px;
-    overflow: hidden;
+   height: 3px;
+   background: rgba(255, 255, 255, 0.06);
+   border-radius: 99px;
+   overflow: hidden;
  }
 
 .core-bar {
@@ -294,31 +224,217 @@ header {
 }
 
 @keyframes led-hdd {
-    0%   { opacity: 0; }
-    25%  { opacity: 1; }
-    50%  { opacity: 0; }
-    75%  { opacity: 1; }
-    90%  { opacity: 0; }
-    100% { opacity: 1; }
+   0%   { opacity: 0; }
+   25%  { opacity: 1; }
+   50%  { opacity: 0; }
+   75%  { opacity: 1; }
+   90%  { opacity: 0; }
+   100% { opacity: 1; }
 }
 
 #led-cpu {
-    animation: led-hdd 0.5s steps(2, start) infinite;
+   animation: led-hdd 0.5s steps(2, start) infinite;
 }
 
 #led-ram {
-    animation: led-hdd 0.5s steps(2, start) infinite;
-    animation-delay: 0.1s;
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.1s;
 }
 
 #led-disk {
-    animation: led-hdd 0.5s steps(2, start) infinite;
-    animation-delay: 0.2s;
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.2s;
 }
 
 #led-net {
-    animation: led-hdd 0.5s steps(2, start) infinite;
-    animation-delay: 0.3s;
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.3s;
+}
+
+
+
+/* ---------------------- */
+
+.main-container {
+   width: 100%;
+   display: flex;
+   align-items: stretch;
+   background: #0d1117;
+   flex: 1;
+}
+
+.main-sidebar {
+   display: flex;
+   flex-direction: column;
+   width: 260px;
+   flex-shrink: 0;
+   background: #0a0e16;
+   border-right: 1px solid #1a2535;
+   overflow-y: auto;
+   padding: 20px 0;
+}
+
+.sidebar-header {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   border-bottom: 1px solid #1a2535;
+   padding-bottom: 10px;
+}
+
+.server-logo {
+   width: 85px;
+   height: 85px;
+}
+
+.server-logo svg {
+   filter: drop-shadow(0 0 8px rgba(59, 139, 212, 0.5));
+}
+
+.server-logo-text {
+   font-size: 16px;
+   font-weight: 700;
+   color: #FFFFFF;
+}
+
+.server-logo-version {
+   font-size: 10px;
+   color: #3d5470;
+   letter-spacing: 0.05em;
+   margin-top: 4px;
+}
+
+.sidebar-body {
+   display: flex;
+   flex-wrap: wrap;
+   padding: 20px 10px 5px;
+}
+
+.sidebar-cpu,
+.sidebar-ram {
+   flex-direction: column;
+}
+
+.sidebar-ram {
+   padding-top: 20px;
+}
+
+.sidebar-data-header {
+   font-size: 12px;
+   font-weight: bold;
+   letter-spacing: 1.2px;
+   color: #3d5470;
+   margin-bottom: 10px;
+}
+
+.sidebar-data-server {
+   display: flex;
+   justify-content: space-between;
+   margin-bottom: 6px;
+}
+
+.sidebar-data-server {
+   font-size: 11px;
+   color: #475569;
+   font-weight: 400;
+}
+
+.sidebar-status {
+   font-size: 16px;
+   font-weight: 600;
+}
+
+#sidebar-cpu-usage {
+   color: #F97316;
+}
+
+#sidebar-cpu-temp {
+   color: #4ADE80;
+}
+
+#sidebar-ram-used {
+   color: #38BDF8;
+}
+
+#sidebar-ram-free {
+   color: #A3E635;
+}
+
+#sidebar-ram-arc {
+   color: #818CF8;
+}
+
+.sidebar-border {
+   border-bottom: 1px solid #1a2535;
+}
+
+.sidebar-border:last-child {
+   border-bottom: none;
+}
+
+.sidebar-footer {
+   display: flex;
+   flex-wrap: wrap;
+   margin-top: auto;
+   border-top: 1px solid #1a2535;
+   padding: 20px 10px 5px;
+   font-size: 12px;
+   color: #3d5470;
+}
+
+.server-full-width {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   padding-bottom: 10px;
+}
+
+.server-full-width:last-child {
+   padding-bottom: 0px;
+}
+
+.server-status__connection {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+}
+
+.server-status-dot {
+   width: 7px;
+   height: 7px;
+   border-radius: 50%;
+   background: #334155;
+}
+
+.server-status-dot.online {
+   background: #34D399;
+   animation: pulse 1.5s infinite;
+}
+
+.server-status-text.online {
+   color: #34D399;
+}
+
+.server-status-dot.offline {
+   background: #F43F5E;
+}
+
+.server-status-text.offline {
+   background: #F43F5E;
+}
+
+@keyframes pulse {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0.3; }
+}
+
+
+.main-content {
+   display: flex;
+   flex: 1;
+   flex-wrap: wrap;
+   align-self: flex-start;
+   padding: 20px;
 }
 
 /* --- RAM Card --- */
@@ -350,4 +466,3 @@ header {
    font-size: 11px;
    color: #475569;
 }
-

@@ -9,7 +9,12 @@ function updateCPU(data) {
 
     let cpu = data.realtime.cpu;
     let cpuUsage = document.querySelector("#cpu-usage");
+    let cpuUsageSidebar = document.querySelector("#sidebar-cpu-usage");
+    let cputempSidebar = document.querySelector("#sidebar-cpu-temp");
+
     if (cpuUsage) cpuUsage.textContent = Math.round(cpu.cpu.usage);
+    if (cpuUsageSidebar) cpuUsageSidebar.textContent = Math.round(cpu.cpu.usage) + "%";
+    if (cputempSidebar) cputempSidebar.textContent = cpu.cpu.temp + "°C";
 }
 
 function getCoreColor(usage) {
@@ -41,7 +46,6 @@ function buildCoresGrid(cores) {
 }
 
 function updateCores(cores) {
-    console.log('cores:', cores);
     if (!cores) return;
     if (!appConfig || !appConfig.widgets.cpu.show_cores) return;
 
