@@ -59,6 +59,8 @@ function connect() {
         updateCPU(data);
         updateCores(data.realtime?.cpu);
         updateRam(data);
+
+        console.log(data)
     };
 
     ws.onclose = () => {
