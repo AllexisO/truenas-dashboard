@@ -43,15 +43,15 @@ class Poller:
                 sys.exit(1)
             print("Auth OK", flush=True)
 
+            # Get initial data
+            await self.fetch_static_data(ws)
+
             # Subscribe to realtime
             await ws.send(json.dumps({
                 "id": "3", "msg": "sub",
                 "name": "reporting.realtime", "params": []
             }))
             print("Subscribed to reporting.realtime", flush=True)
-
-            # Get initial data
-            await self.fetch_static_data(ws)
 
             # Listen for realtime data
             async for msg in ws:
