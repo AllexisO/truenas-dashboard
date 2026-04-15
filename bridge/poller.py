@@ -93,8 +93,32 @@ class Poller:
         }))
         response = json.loads(await ws.recv())
         self.latest_data["system"] = response.get("result", [])
+
+        # Getting top processes
+        await self.fetch_processes()
         
         print("Static data fetched", flush=True)
+    
+    async def fetch_processes(self):
+        import subprocess
+        result = subprocess.run(
+            ['ps', 'aux', '--sort=-%cpu'],
+            capture_output=True, text=True
+        )
+        lines = result.stdout.strip().split('\n')
+        processes = []
+        for line in lines[1:11]: # top 10, skip header
+            parts = line.split(None, 10)
+            if len(parts) >= 11:
+                processes.append({
+                    'user': parts[0],
+                    'pid': parts[1],
+                    'cpu': parts[2],
+                    'mem': parts[3],
+                    'command': parts[10][:50]
+                })
+                self.latest_data['processes'] = processes
+
 
     # Sending data to all connected browsers
     # If no connected browser - do nothing
@@ -118,7 +142,15 @@ class Poller:
     async def start(self):
         while True:
             try:
-                await self.connect()
+                await asyncio.gather(
+                    self.connect(),
+                    self.update_processes_loop()
+                )
             except Exception as error:
                 print(f"Connection lost: {error}, reconnecting in 5s ...", flush=True)
                 await asyncio.sleep(5)
+    
+    async def update_processes_loop(self):
+        while True:
+            await self.fetch_processes()
+            await asyncio.sleep(10)
