@@ -178,6 +178,30 @@
                 </div>
             </template>
 
+            <!-- NETWORK -->
+            <template id="network-card-template">
+                <div class="card" id="network-card">
+                    <div class="card-header">
+                        <h2>Network</h2>
+                        <span id="network-status"></span>
+                    </div>
+                    <div class="network-rows">
+                        <div class="network-row">
+                            <span class="network-label">▼ RX</span>
+                            <span class="network-value" id="network-rx">--</span>
+                        </div>
+                        <div class="network-row">
+                            <span class="network-label">▲ TX</span>
+                            <span class="network-value" id="network-tx">--</span>
+                        </div>
+                        <div class="network-row">
+                            <span class="network-label">Speed</span>
+                            <span class="network-value" id="network-speed">--</span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
             <div class="cards" id="cards"></div>
         </div>
     </div>
@@ -187,6 +211,7 @@
     <script src="/js/settings.js"></script>
     <script src="/js/widgets/cpu-widget.js"></script>
     <script src="/js/widgets/ram-widget.js"></script>
+    <script src="/js/widgets/network-widget.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

@@ -59,6 +59,7 @@ function connect() {
         updateCPU(data);
         updateCores(data.realtime?.cpu);
         updateRam(data);
+        updateNetwork(data);
 
         console.log(data)
     };
@@ -91,6 +92,10 @@ loadConfig().then(config => {
 
     if (config.widgets.memory.enabled) {
         createWidget('ram-card-template', 3);
+    }
+
+    if (config.widgets.memory.enabled) {
+        createWidget('network-card-template', 4);
     }
 
     initTooltips();

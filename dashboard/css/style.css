@@ -466,3 +466,30 @@
    font-size: 11px;
    color: #475569;
 }
+
+
+/* --- Network Card --- */
+.network-rows {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   margin-top: 8px;
+}
+
+.network-row {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 13px;
+}
+
+.network-label {
+   color: #475569;
+   font-family: monospace;
+}
+
+.network-value {
+   color: #e2e8f0;
+   font-family: monospace;
+   font-weight: 500;
+}
