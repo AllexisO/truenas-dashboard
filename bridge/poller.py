@@ -8,6 +8,7 @@ Broadcasts data to all connected WebSocket clients.
 
 import asyncio
 import json
+import subprocess
 import sys
 import websockets
 
@@ -94,13 +95,41 @@ class Poller:
         response = json.loads(await ws.recv())
         self.latest_data["system"] = response.get("result", [])
 
+        # Getting disk temperatures
+        await ws.send(json.dumps({
+            "id": "8", "msg": "method",
+            "method": "disk.temperatures", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        self.latest_data["disk_temps"] = response.get("result", {})
+
+        await ws.send(json.dumps({
+            "id": "9", "msg": "method",
+            "method": "boot.get_disks", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        self.latest_data["boot_disks"] = response.get("result", [])
+
+        # Getting disk usage via df
+        result = subprocess.run(
+            ['df', '-B1', '/'],
+            capture_output=True, text=True
+        )
+        lines = result.stdout.strip().split('\n')
+        if len(lines) >= 2:
+            parts = lines[1].split()
+            self.latest_data["boot_disk"] = {
+                "total": int(parts[1]),
+                "used": int(parts[2]),
+                "free": int(parts[3])
+            }
+
         # Getting top processes
         await self.fetch_processes()
         
         print("Static data fetched", flush=True)
     
     async def fetch_processes(self):
-        import subprocess
         result = subprocess.run(
             ['ps', 'aux', '--sort=-%cpu'],
             capture_output=True, text=True

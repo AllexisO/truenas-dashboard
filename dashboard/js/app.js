@@ -60,6 +60,7 @@ function connect() {
         updateCores(data.realtime?.cpu);
         updateRam(data);
         updateNetwork(data);
+        updateDisks(data);
 
         console.log(data)
     };
@@ -96,6 +97,10 @@ loadConfig().then(config => {
 
     if (config.widgets.memory.enabled) {
         createWidget('network-card-template', 4);
+    }
+
+    if (config.widgets.disks.enabled) {
+        createWidget('disks-card-template', 5);
     }
 
     initTooltips();
