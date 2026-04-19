@@ -15,7 +15,7 @@ function formatDiskSize(bytes) {
 
 function getDiskColor(percent) {
     if (percent >= 90) return "#E24B4A";
-    if (percent >= 70) return "#BA7517";
+    if (percent >= 60) return "#BA7517";
     return "#1D9E75";
 }
 
@@ -102,6 +102,37 @@ function buildDiskGrid(data) {
 
     let count = document.querySelector(".disk-count");
     if (count) count.textContent = disk.length + " disks";
+}
+
+function buildPoolsSidebar(data) {
+    console.log('buildPoolsSidebar called');
+    console.log('pools:', data.pools);
+
+    let grid = document.querySelector("#disks-sidebar-grid");
+    console.log('grid:', grid);
+    if (!grid) return;
+    if (grid.children.length > 0) return;
+
+    const pools = data.pools;
+    if (!pools || !pools.length) return;
+
+    const template = document.querySelector("#pool-sidebar-item-template");
+    pools.forEach(pool => {
+        let percent = Math.round((pool.allocated / pool.size) * 100);
+        let color = getDiskColor(percent);
+
+        const clone = template.content.cloneNode(true);
+
+        clone.querySelector(".pool-sidebar-name").textContent = pool.name;
+        clone.querySelector(".pool-sidebar-percent").textContent = percent + "%";
+        clone.querySelector(".pool-sidebar-percent").style.color = color;
+        clone.querySelector(".pool-sidebar-bar").style.width =  percent + "%";
+        clone.querySelector(".pool-sidebar-bar").style.background = color;
+        clone.querySelector(".pool-sidebar-used").textContent = formatDiskSize(pool.allocated);
+        clone.querySelector(".pool-sidebar-size").textContent = formatDiskSize(pool.size);
+
+        grid.appendChild(clone);
+    });
 }
 
 function updateDisks(data) {

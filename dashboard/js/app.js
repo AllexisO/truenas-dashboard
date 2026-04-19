@@ -61,8 +61,9 @@ function connect() {
         updateRam(data);
         updateNetwork(data);
         updateDisks(data);
+        buildPoolsSidebar(data);
 
-        console.log(data)
+        // console.log(data)
     };
 
     ws.onclose = () => {
