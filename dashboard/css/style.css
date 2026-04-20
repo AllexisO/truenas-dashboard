@@ -311,11 +311,13 @@
 }
 
 .sidebar-cpu,
-.sidebar-ram {
+.sidebar-ram,
+.sidebar-disk {
    flex-direction: column;
 }
 
-.sidebar-ram {
+.sidebar-ram,
+.sidebar-disk {
    padding-top: 20px;
 }
 
@@ -362,6 +364,40 @@
 
 #sidebar-ram-arc {
    color: #818CF8;
+}
+
+/* Sidebar - HDDs */
+.pool-sidebar-item {
+   margin-bottom: 14px;
+}
+
+.pool-sidebar-row {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 4px;
+}
+
+.pool-sidebar-name {
+   font-size: 12px;
+   font-weight: 500;
+   color: #e2e8f0;
+   font-family: monospace;
+}
+
+.pool-sidebar-percent {
+   font-size: 12px;
+   font-family: monospace;
+   font-weight: 500;
+}
+
+.pool-sidebar-details {
+   display: flex;
+   justify-content: space-between;
+   font-size: 10px;
+   color: #475569;
+   font-family: monospace;
+   margin-top: 4px;
 }
 
 .sidebar-border {
@@ -493,3 +529,77 @@
    font-family: monospace;
    font-weight: 500;
 }
+
+
+/* --- Disks Card --- */
+.disks-grid {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+   margin-top: 8px;
+}
+
+.disk-item {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   border-bottom: 1px solid #1a2535;
+   padding-bottom: 15px;
+}
+
+.disk-item:last-child {
+   border-bottom: none;
+}
+
+.disk-item-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+}
+
+.disk-item-left {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+}
+
+.disk-name {
+   font-size: 13px;
+   font-weight: 500;
+   color: #e2e8f0;
+   font-family: monospace;
+}
+
+.disk-model {
+   font-size: 10px;
+   color: #475569;
+}
+
+.disk-item-right {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-end;
+   gap: 2px;
+}
+
+.disk-temp {
+   font-size: 16px;
+   font-weight: 600;
+   font-family: monospace;
+}
+
+.disk-type {
+   font-size: 9px;
+   color: #334155;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+}
+
+.disk-usage {
+   display: flex;
+   justify-content: space-between;
+   font-size: 10px;
+   color: #475569;
+   font-family: monospace;
+}
+

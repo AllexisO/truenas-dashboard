@@ -60,8 +60,10 @@ function connect() {
         updateCores(data.realtime?.cpu);
         updateRam(data);
         updateNetwork(data);
+        updateDisks(data);
+        buildPoolsSidebar(data);
 
-        console.log(data)
+        // console.log(data)
     };
 
     ws.onclose = () => {
@@ -96,6 +98,10 @@ loadConfig().then(config => {
 
     if (config.widgets.memory.enabled) {
         createWidget('network-card-template', 4);
+    }
+
+    if (config.widgets.disks.enabled) {
+        createWidget('disks-card-template', 5);
     }
 
     initTooltips();
