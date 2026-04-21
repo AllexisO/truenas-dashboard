@@ -105,28 +105,27 @@ function buildDiskGrid(data) {
 }
 
 function buildPoolsSidebar(data) {
-    console.log('buildPoolsSidebar called');
-    console.log('pools:', data.pools);
-
-    let grid = document.querySelector("#disks-sidebar-grid");
-    console.log('grid:', grid);
+    const grid = document.getElementById("disks-sidebar-grid");
     if (!grid) return;
-    if (grid.children.length > 0) return;
 
     const pools = data.pools;
     if (!pools || !pools.length) return;
 
-    const template = document.querySelector("#pool-sidebar-item-template");
+    // Clear and rebuild
+    grid.innerHTML = "";
+
+    const template = document.getElementById("pool-sidebar-item-template");
+
     pools.forEach(pool => {
-        let percent = Math.round((pool.allocated / pool.size) * 100);
-        let color = getDiskColor(percent);
+        const percent = Math.round((pool.allocated / pool.size) * 100);
+        const color = getDiskColor(percent);
 
         const clone = template.content.cloneNode(true);
 
         clone.querySelector(".pool-sidebar-name").textContent = pool.name;
         clone.querySelector(".pool-sidebar-percent").textContent = percent + "%";
         clone.querySelector(".pool-sidebar-percent").style.color = color;
-        clone.querySelector(".pool-sidebar-bar").style.width =  percent + "%";
+        clone.querySelector(".pool-sidebar-bar").style.width = percent + "%";
         clone.querySelector(".pool-sidebar-bar").style.background = color;
         clone.querySelector(".pool-sidebar-used").textContent = formatDiskSize(pool.allocated);
         clone.querySelector(".pool-sidebar-size").textContent = formatDiskSize(pool.size);

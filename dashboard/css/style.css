@@ -456,7 +456,8 @@
 }
 
 .server-status-text.offline {
-   background: #F43F5E;
+   color: #F43F5E;
+   animation: pulse 2.5s infinite;
 }
 
 @keyframes pulse {
