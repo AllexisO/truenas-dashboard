@@ -55,11 +55,19 @@ class Poller:
             print("Subscribed to reporting.realtime", flush=True)
 
             # Listen for realtime data
+            last_static_update = 0
             async for msg in ws:
                 data = json.loads(msg)
                 if data.get("msg") == "added":
                     self.latest_data["realtime"] = data["fields"]
                     await self.broadcast()
+
+                now = asyncio.get_event_loop().time()
+                if now - last_static_update > 5:
+                    await self.fetch_pools(ws)
+                    last_static_update = now
+                    await self.broadcast()
+
                 await asyncio.sleep(self.config["dashboard"]["refresh_interval"])
 
     async def fetch_static_data(self, ws):
@@ -72,12 +80,7 @@ class Poller:
         self.latest_data["disks"] = response.get("result", [])
 
         # Getting pools
-        await ws.send(json.dumps({
-            "id": "5", "msg": "method",
-            "method": "pool.query", "params": []
-        }))
-        response = json.loads(await ws.recv())
-        self.latest_data["pools"] = response.get("result", [])
+        await self.fetch_pools(ws)
 
         # Getting interfaces
         await ws.send(json.dumps({
@@ -128,6 +131,14 @@ class Poller:
         await self.fetch_processes()
         
         print("Static data fetched", flush=True)
+
+    async def fetch_pools(self, ws):
+        await ws.send(json.dumps({
+            "id": "5", "msg": "method",
+            "method": "pool.query", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        self.latest_data["pools"] = response.get("result", [])
     
     async def fetch_processes(self):
         result = subprocess.run(

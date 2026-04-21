@@ -63,7 +63,7 @@ function connect() {
         updateDisks(data);
         buildPoolsSidebar(data);
 
-        // console.log(data)
+        console.log(data)
     };
 
     ws.onclose = () => {
@@ -105,8 +105,6 @@ loadConfig().then(config => {
     }
 
     initTooltips();
-
-    console.log(config)
 
     connect();
  });
