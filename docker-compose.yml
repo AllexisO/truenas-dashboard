@@ -13,6 +13,7 @@ services:
       - /run/middleware/middlewared.sock:/run/middleware/middlewared.sock
       - ./dashboard:/dashboard
       - ./config.yml:/config/config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env
     restart: unless-stopped

@@ -10,6 +10,7 @@ import asyncio
 import json
 import subprocess
 import sys
+import docker
 import websockets
 
 class Poller:
@@ -129,6 +130,9 @@ class Poller:
 
         # Getting top processes
         await self.fetch_processes()
+
+        # Getting docker images
+        await self.fetch_docker_containers()
         
         print("Static data fetched", flush=True)
 
@@ -159,6 +163,23 @@ class Poller:
                 })
                 self.latest_data['processes'] = processes
 
+    async def fetch_docker_containers(self):
+        try:
+            client = docker.from_env()
+            containers = client.containers.list()
+            self.latest_data["containers"] = [
+                {
+                    "id": c.short_id,
+                    "name": c.name,
+                    "image": c.image.tags[0] if c.image.tags else c.image.short_id,
+                    "status": c.status,
+                    "state": c.attrs["State"]["Status"],
+                    "uptime": c.attrs["State"]["StartedAt"]
+                }
+                for c in containers
+            ]
+        except Exception as error:
+            print(f"Docker error: {error}", flush=True)
 
     # Sending data to all connected browsers
     # If no connected browser - do nothing
