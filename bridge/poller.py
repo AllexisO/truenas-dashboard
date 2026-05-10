@@ -23,7 +23,7 @@ class Poller:
     async def connect(self):
         uri = "ws://localhost/websocket"
         async with websockets.unix_connect(
-            "/run/middleware/middlewared.sock", uri=uri
+            "/run/middleware/middlewared.sock", uri=uri, open_timeout=10
         ) as ws:
             # Handshake
             await ws.send(json.dumps({
@@ -64,12 +64,10 @@ class Poller:
                     await self.broadcast()
 
                 now = asyncio.get_event_loop().time()
-                if now - last_static_update > 5:
+                if now - last_static_update > 15:
                     await self.fetch_pools(ws)
                     last_static_update = now
                     await self.broadcast()
-
-                await asyncio.sleep(self.config["dashboard"]["refresh_interval"])
 
     async def fetch_static_data(self, ws):
         # Getting the list of HDD
