@@ -604,3 +604,71 @@
    font-family: monospace;
 }
 
+
+/* --- CPU Dashboard --- */
+.page-header {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   margin-bottom: 24px;
+}
+
+.back-btn {
+   font-size: 12px;
+   color: #475569;
+   text-decoration: none;
+   font-family: monospace;
+   padding: 6px 12px;
+   border: 0.5px solid rgba(255, 255, 255, 0.07);
+   border-radius: 6px;
+}
+
+.back-btn:hover {
+   color: #e2e8f0;
+   border-color: rgba(255, 255, 255, 0.15);
+}
+
+.chart-card {
+   width: 100%;
+   background: #0d1520;
+   border: 0.5px solid rgba(255, 255, 255, 0.07);
+   border-radius: 12px;
+   padding: 16px 20px;
+   margin-bottom: 16px;
+}
+
+.chart-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 16px;
+}
+
+.chart-title {
+   font-size: 11px;
+   font-family: monospace;
+   color: #475569;
+   letter-spacing: 0.1em;
+}
+
+.time-buttons {
+   display: flex;
+   gap: 6px;
+}
+
+.time-btn {
+   font-size: 11px;
+   font-family: monospace;
+   padding: 4px 10px;
+   border-radius: 6px;
+   border: 0.5px solid rgba(255, 255, 255, 0.07);
+   background: transparent;
+   color: #475569;
+   cursor: pointer;
+}
+
+.time-btn.active {
+   background: rgba(55,138,221,0.15);
+   color: #378ADD;
+   border-color: rgba(55,138,221,0.3);
+}

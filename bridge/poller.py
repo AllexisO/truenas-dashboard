@@ -178,6 +178,37 @@ class Poller:
             ]
         except Exception as error:
             print(f"Docker error: {error}", flush=True)
+    
+    async def fetch_history(self, graph, start, end):
+        uri = "ws://localhost/websocket"
+        async with websockets.unix_connect(
+            "/run/middleware/middlewared.sock", uri=uri
+        ) as ws:
+            # Handshake
+            await ws.send(json.dumps({
+                "id": "1", "msg": "connect",
+                "version": "1", "support": ["1"]
+            }))
+            await ws.recv()
+
+            # Auth
+            await ws.send(json.dumps({
+                "id": "2", "msg": "method",
+                "method": "auth.login_with_api_key",
+                "params": [self.api_key]
+            }))
+            await ws.recv()
+
+            # Fetch History
+            await ws.send(json.dumps({
+                "id": "3", "msg": "method",
+                "method": "reporting.netdata_get_data",
+                "params": [[{"name": graph}], {"start": start, "end": end}]
+            }))
+
+            response = json.loads(await ws.recv())
+            return response.get("result", [])
+
 
     # Sending data to all connected browsers
     # If no connected browser - do nothing

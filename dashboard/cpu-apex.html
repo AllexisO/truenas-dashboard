@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU — TrueNAS Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.2/apexcharts.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="main-content" style="padding: 24px;">
+            <div class="page-header">
+                <a href="/" class="back-btn">← Back</a>
+                <h1>CPU</h1>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">CPU Temperature</span>
+                    <div class="time-buttons">
+                        <button class="time-btn active" onclick="loadChart(1, this)">1h</button>
+                        <button class="time-btn" onclick="loadChart(6, this)">6h</button>
+                        <button class="time-btn" onclick="loadChart(24, this)">24h</button>
+                    </div>
+                </div>
+                <div id="temp-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/cpu-apex.js"></script>
+</body>
+</html>
