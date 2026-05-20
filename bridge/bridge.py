@@ -62,11 +62,15 @@ class Bridge:
     async def history_handler(self, request):
         try:
             graph = request.query.get('graph', 'cputemp')
-            hours = int(request.query.get('hours', 1))
+            hours = float(request.query.get('hours', 1))
+            live = request.query.get('live', 'false') == 'true'
 
-            interval = 60
-            end = (int(time.time()) // interval) * interval
-            start = end - (hours * 3600)
+            end = int(time.time())
+            if not live:
+                interval = 60
+                end = (end // interval) * interval
+
+            start = int(end - (hours * 3600))
 
             result = await self.poller.fetch_history(graph, start, end)
             return web.json_response(result)

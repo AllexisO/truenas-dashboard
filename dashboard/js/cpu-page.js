@@ -81,6 +81,16 @@ async function loadChart(hours, btn) {
                     }
                 }
             },
+            segment: {
+                borderColor: ctx => {
+                    const value = ctx.p1.parsed.y;
+                    if (value >= 70) return '#EF302A';
+                    if (value >= 60) return '#E58B26';
+                    if (value >= 50) return '#E5DF26';
+                    if (value >= 40) return '#179FE7';
+                    return '#28A95D';
+                }
+            },
             scales: {
                 x: {
                     grid: { display: false },

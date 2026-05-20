@@ -672,3 +672,23 @@
    color: #378ADD;
    border-color: rgba(55,138,221,0.3);
 }
+
+.live-stats {
+   display: flex;
+   align-items: baseline;
+   gap: 4px;
+   margin-bottom: 8px;
+}
+
+.live-value {
+   font-size: 48px;
+   font-weight: 600;
+   color: #378ADD;
+   font-family: monospace;
+}
+
+.live-unit {
+   font-size: 20px;
+   color: #475569;
+   font-family: monospace;
+}

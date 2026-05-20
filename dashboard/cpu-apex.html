@@ -19,6 +19,16 @@
             </div>
             <div class="chart-card">
                 <div class="chart-header">
+                    <span class="chart-title">CPU TEMPERATURE LIVE</span>
+                </div>
+                <div class="live-stats">
+                    <span class="live-value" id="live-temp">--</span>
+                    <span class="live-unit">°C</span>
+                </div>
+                <div id="live-temp-chart"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
                     <span class="chart-title">CPU Temperature</span>
                     <div class="time-buttons">
                         <button class="time-btn active" onclick="loadChart(1, this)">1h</button>
@@ -27,6 +37,30 @@
                     </div>
                 </div>
                 <div id="temp-chart"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">CPU Load</span>
+                    <div class="time-buttons">
+                        <button class="time-btn-load active" onclick="loadLoadChart(1, this)">1h</button>
+                        <button class="time-btn-load" onclick="loadLoadChart(6, this)">6h</button>
+                        <button class="time-btn-load" onclick="loadLoadChart(24, this)">24h</button>
+                    </div>
+                </div>
+                <div id="load-chart"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">CPU Load & Temperature</span>
+                    <div class="time-buttons">
+                        <button class="time-btn-combo active" onclick="loadComboChart(1, this)">1h</button>
+                        <button class="time-btn-combo" onclick="loadComboChart(6, this)">6h</button>
+                        <button class="time-btn-combo" onclick="loadComboChart(24, this)">24h</button>
+                    </div>
+                </div>
+                <div id="combo-chart"></div>
             </div>
         </div>
     </div>
