@@ -9,6 +9,7 @@ all connected browsers via WebSocket.
 import asyncio
 import json
 import os
+import time
 import yaml
 import websockets
 from aiohttp import web
@@ -58,11 +59,30 @@ class Bridge:
         except Exception as error:
             return web.json_response({"success": False, "error": str(error)}, status=500)
     
+    async def history_handler(self, request):
+        try:
+            graph = request.query.get('graph', 'cputemp')
+            hours = float(request.query.get('hours', 1))
+            live = request.query.get('live', 'false') == 'true'
+
+            end = int(time.time())
+            if not live:
+                interval = 60
+                end = (end // interval) * interval
+
+            start = int(end - (hours * 3600))
+
+            result = await self.poller.fetch_history(graph, start, end)
+            return web.json_response(result)
+        except Exception as error:
+            return web.json_response({"error": str(error)}, status=500)
+    
     async def start(self):
         # HTTP Server
         app = web.Application()
         app.router.add_get("/config", self.config_handler)
         app.router.add_post("/config", self.config_save_handler)
+        app.router.add_get("/history", self.history_handler)
         app.router.add_get("/{path_info:.*}", self.http_handler)
 
         runner = web.AppRunner(app)
