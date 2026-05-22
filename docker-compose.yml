@@ -9,6 +9,7 @@ services:
     container_name: truenas-dashboard
     network_mode: host
     pid: host
+    privileged: true
     volumes:
       - /run/middleware/middlewared.sock:/run/middleware/middlewared.sock
       - ./dashboard:/dashboard
