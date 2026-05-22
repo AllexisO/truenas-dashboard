@@ -13,6 +13,8 @@ import sys
 import docker
 import websockets
 
+uri = "ws://localhost/websocket"
+
 class Poller:
     def __init__(self, api_key, config):
         self.api_key = api_key
@@ -20,11 +22,12 @@ class Poller:
         self.latest_data = {}
         self.clients = set()
 
+    # Connection to TrueNAS with Websocket
     async def connect(self):
-        uri = "ws://localhost/websocket"
         async with websockets.unix_connect(
             "/run/middleware/middlewared.sock", uri=uri, open_timeout=10
         ) as ws:
+
             # Handshake
             await ws.send(json.dumps({
                "id": "1", "msg": "connect",
@@ -69,6 +72,7 @@ class Poller:
                     last_static_update = now
                     await self.broadcast()
 
+    # Fetching Static Data
     async def fetch_static_data(self, ws):
         # Getting the list of HDD
         await ws.send(json.dumps({
@@ -126,14 +130,18 @@ class Poller:
                 "free": int(parts[3])
             }
 
-        # Getting top processes
+        # Getting TOP processes
         await self.fetch_processes()
 
-        # Getting docker images
+        # Getting Docker images
         await self.fetch_docker_containers()
+
+        # Getting RAM information
+        await self.fetch_memory_info()
         
         print("Static data fetched", flush=True)
 
+    # Fetching HDD Pools
     async def fetch_pools(self, ws):
         await ws.send(json.dumps({
             "id": "5", "msg": "method",
@@ -142,6 +150,7 @@ class Poller:
         response = json.loads(await ws.recv())
         self.latest_data["pools"] = response.get("result", [])
     
+    # Fetching Server Top 10 Processes
     async def fetch_processes(self):
         result = subprocess.run(
             ['ps', 'aux', '--sort=-%cpu'],
@@ -161,6 +170,7 @@ class Poller:
                 })
                 self.latest_data['processes'] = processes
 
+    # Fetching Docker Containers Info
     async def fetch_docker_containers(self):
         try:
             client = docker.from_env()
@@ -179,8 +189,8 @@ class Poller:
         except Exception as error:
             print(f"Docker error: {error}", flush=True)
     
+    # Fetching History Data For Graphic
     async def fetch_history(self, graph, start, end):
-        uri = "ws://localhost/websocket"
         async with websockets.unix_connect(
             "/run/middleware/middlewared.sock", uri=uri
         ) as ws:
@@ -208,7 +218,39 @@ class Poller:
 
             response = json.loads(await ws.recv())
             return response.get("result", [])
+    
+    # Fetching RAM Inforamtion
+    async def fetch_memory_info(self):
+        result = subprocess.run(
+            ["dmidecode", "--type", "memory"],
+            capture_output=True, text=True
+        )
 
+        modules = []
+        current = {}
+
+        for line in result.stdout.split("\n"):
+            line = line.strip()
+            if "Size:" in line and "No Module" not in line and "None" not in line:
+                size = line.split(":")[1].strip()
+                if size != "No Module Installed":
+                    current["size"] = size
+            elif "Speed:" in line and "Unknown" not in line and "Configured" not in line:
+                current["speed"] = line.split(":")[1].strip()
+            elif "Type:" in line and "Detail" not in line and "Error" not in line:
+                current["type"] = line.split(":")[1].strip()
+            elif "Locator:" in line and "Bank" not in line:
+                if current.get("size"):
+                    modules.append(current.copy())
+                current = {"slot" : line.split(":")[1].strip()}
+        
+        if current.get('size') and current.get('slot'):
+            modules.append(current.copy())
+        
+        self.latest_data['memory_info'] = [
+            m for m in modules 
+            if m.get('size') and m.get('size') != 'No Module Installed' and m.get('slot')
+        ]
 
     # Sending data to all connected browsers
     # If no connected browser - do nothing
