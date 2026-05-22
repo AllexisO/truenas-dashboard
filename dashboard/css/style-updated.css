@@ -1,0 +1,74 @@
+/* ------ Reset ------ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Figtree', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ------ Dark Theme ------ */
+html[data-theme="dark"] {
+    --background: #0b1220;
+    --surface: #111a2e;
+    --surface-hover: #1a2541;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --accent: #818cf8;
+    --accent-background: rgba(129, 140, 248, 0.12);
+    --success: #22c55e;
+}
+
+
+/* ------ Light Theme ------ */
+html[data-theme="light"] {
+    --background: #ffffff;
+    --surface: #f8fafc;
+    --surface-hover: #f1f5f9;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #6366f1;
+    --accent-background: rgba(99, 102, 241, 0.10);
+    --success: #10b981;
+}
+
+
+/* ------ Layout ------ */
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    flex-shrink: 0;
+    width: 270px;
+    border-right: 1px solid var(--border);
+    background: var(--background);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--background);
+}
