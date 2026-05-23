@@ -8,7 +8,40 @@
 const WS_PORT = 8765;
 const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
+const getThemeToggle = document.querySelector("#theme-toggle");
+const getCollpseToogle = document.querySelector("#sidebar-toggle");
+
+console.log(getCollpseToogle)
+
+const html = document.documentElement;
+
 let appConfig = null;
+
+/* --- Theme Toogle --- */
+function themeToggle() {
+    getThemeToggle.addEventListener("click", () => {
+        let current = html.getAttribute("data-theme");
+        let next = current === "dark" ? "light" : "dark";
+
+        html.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+    });
+}
+
+/* --- Sidebar Collapse --- */
+function collapseToggle() {
+    getCollpseToogle.addEventListener("click", () => {
+        let isCollapsedSidebar = html.getAttribute("data-sidebar") === "collapsed";
+        
+        if (isCollapsedSidebar) {
+            html.removeAttribute("data-sidebar");
+            localStorage.setItem("sidebar", "expanded");
+        } else {
+            html.setAttribute("data-sidebar", "collapsed");
+            localStorage.setItem("sidebar", "collapsed");
+        }
+    });
+}
 
 /* --- Widget Creation Logic --- */
 function createWidget(templateId, order) {
@@ -47,8 +80,8 @@ function connect() {
 
     ws.onopen = () => {
         console.log("Connected to TrueNAS Dashboard");
-        document.querySelector("#server-status-dot").className = "server-status-dot online";
-        document.querySelector("#server-status-text").className = "server-status-text online";
+        document.querySelector("#server-status-dot").className = "server-status-dot online" || "topbar-pill-dot";
+        document.querySelector("#server-status-text").className = "server-status-text online" || "topbar-pill-dot-text";
         document.querySelector("#server-status-text").textContent = "Online";
     };
 
@@ -68,7 +101,7 @@ function connect() {
 
     ws.onclose = () => {
         console.log('Disconnected, reconnecting in 3s ...');
-        document.querySelector("#server-status-dot").className = "server-status-dot offline";
+        document.querySelector("#server-status-dot").className = "server-status-dot offline" || "topbar-pill-dot";
         document.querySelector("#server-status-text").className = "server-status-text offline";
         document.querySelector("#server-status-text").textContent = "Offline";
         setTimeout(connect, 3000);
@@ -105,6 +138,9 @@ loadConfig().then(config => {
     }
 
     initTooltips();
+
+    if (getThemeToggle) themeToggle();
+    if (getCollpseToogle) collapseToggle();
 
     connect();
  });
