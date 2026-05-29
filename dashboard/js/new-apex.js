@@ -1,5 +1,5 @@
 // ============================
-// CPU summary card
+// CPU summary card — rendering only
 // ============================
 
 const RING_CIRCUMFERENCE = 314.16; // 2π × 50
@@ -45,8 +45,8 @@ function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
     renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-load-min').textContent = `${min}%`;
     document.getElementById('cpu-load-max').textContent = `${max}%`;
-    document.getElementById('cpu-load-min-time').textContent = `· ${minTime}`;
-    document.getElementById('cpu-load-max-time').textContent = `· ${maxTime}`;
+    document.getElementById('cpu-load-min-time').textContent = `${minTime}`;
+    document.getElementById('cpu-load-max-time').textContent = `${maxTime}`;
 }
 
 function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
@@ -55,103 +55,11 @@ function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
     renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-temp-min').textContent = `${min}°C`;
     document.getElementById('cpu-temp-max').textContent = `${max}°C`;
-    document.getElementById('cpu-temp-min-time').textContent = `· ${minTime}`;
-    document.getElementById('cpu-temp-max-time').textContent = `· ${maxTime}`;
+    document.getElementById('cpu-temp-min-time').textContent = `${minTime}`;
+    document.getElementById('cpu-temp-max-time').textContent = `${maxTime}`;
 }
 
+// Placeholder пока нет реальных данных
 const placeholderSparkline = [12, 18, 25, 22, 30, 35, 28, 38, 42, 36, 44, 40, 48, 52, 45, 50, 48, 53, 49, 51];
 renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), placeholderSparkline);
 renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), placeholderSparkline);
-
-// ============================
-// WebSocket: real-time data
-// ============================
-
-const WS_URL = `ws://${window.location.hostname}:8765`;
-const BUFFER_SIZE = 60; // ~2 минуты при сэмпле раз в 2 секунды
-
-const buffers = {
-    cpuLoad: [],
-    cpuTemp: []
-};
-
-function pushSample(buffer, value) {
-    buffer.push({ value, time: Date.now() });
-    if (buffer.length > BUFFER_SIZE) buffer.shift();
-}
-
-function getMinMax(buffer) {
-    if (!buffer.length) return null;
-    let min = buffer[0];
-    let max = buffer[0];
-    for (const sample of buffer) {
-        if (sample.value < min.value) min = sample;
-        if (sample.value > max.value) max = sample;
-    }
-    return { min, max };
-}
-
-function formatTime(timestamp) {
-    const date = new Date(timestamp);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-}
-
-function handleRealtimeData(data) {
-    const cpuData = data.realtime?.cpu?.cpu;
-    if (!cpuData) return;
-
-    const usage = cpuData.usage;
-    const temp = cpuData.temp;
-
-    if (typeof usage === 'number') {
-        pushSample(buffers.cpuLoad, usage);
-        const stats = getMinMax(buffers.cpuLoad);
-        updateCpuLoad({
-            percent: usage,
-            history: buffers.cpuLoad.map(sample => sample.value),
-            min: Math.round(stats.min.value),
-            max: Math.round(stats.max.value),
-            minTime: formatTime(stats.min.time),
-            maxTime: formatTime(stats.max.time)
-        });
-    }
-
-    if (typeof temp === 'number') {
-        pushSample(buffers.cpuTemp, temp);
-        const stats = getMinMax(buffers.cpuTemp);
-        updateCpuTemp({
-            degrees: temp,
-            history: buffers.cpuTemp.map(sample => sample.value),
-            min: Math.round(stats.min.value),
-            max: Math.round(stats.max.value),
-            minTime: formatTime(stats.min.time),
-            maxTime: formatTime(stats.max.time)
-        });
-    }
-}
-
-function connectWebSocket() {
-    const ws = new WebSocket(WS_URL);
-
-    ws.addEventListener('message', (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            handleRealtimeData(data);
-        } catch (error) {
-            console.error('Failed to parse WebSocket message:', error);
-        }
-    });
-
-    ws.addEventListener('close', () => {
-        // авто-реконнект через 3 секунды
-        setTimeout(connectWebSocket, 3000);
-    });
-
-    ws.addEventListener('error', (error) => {
-        console.error('WebSocket error:', error);
-    });
-}
-
-connectWebSocket();

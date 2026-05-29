@@ -87,6 +87,7 @@ function connect() {
         const data = JSON.parse(event.data);
         updateHeader(data);
         updateLeds(data);
+        if (typeof handleRealtimeData === 'function') handleRealtimeData(data);
         updateCPU(data);
         updateCores(data.realtime?.cpu);
         updateRam(data);
