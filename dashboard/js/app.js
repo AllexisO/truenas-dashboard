@@ -11,8 +11,6 @@ const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 const getThemeToggle = document.querySelector("#theme-toggle");
 const getCollpseToogle = document.querySelector("#sidebar-toggle");
 
-console.log(getCollpseToogle)
-
 const html = document.documentElement;
 
 let appConfig = null;
@@ -89,6 +87,7 @@ function connect() {
         const data = JSON.parse(event.data);
         updateHeader(data);
         updateLeds(data);
+        if (typeof handleRealtimeData === 'function') handleRealtimeData(data);
         updateCPU(data);
         updateCores(data.realtime?.cpu);
         updateRam(data);
