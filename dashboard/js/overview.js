@@ -4,6 +4,7 @@
  * Handles data processing for the main overview page.
  * Receives realtime data from app.js and calls
  * rendering functions from new-apex.js.
+ * 
  */
 
 const BUFFER_SIZE = 60;
@@ -20,8 +21,11 @@ function pushSample(buffer, value) {
 
 function formatTime(timestamp) {
     const date = new Date(timestamp);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    const timeWithSeconds = `${hours}:${minutes}:${seconds}`;
+
     return `${hours}:${minutes}`;
 }
 
@@ -100,3 +104,5 @@ async function loadCpuHistory() {
 }
 
 loadCpuHistory();
+initSparklineTooltip('cpu-load-sparkline', 'cpu-load-cursor', 'cpu-load-dot', buffers.cpuLoad, '%');
+initSparklineTooltip('cpu-temp-sparkline', 'cpu-temp-cursor', 'cpu-temp-dot', buffers.cpuTemp, '°C');

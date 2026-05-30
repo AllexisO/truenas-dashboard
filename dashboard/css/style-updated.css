@@ -1,4 +1,4 @@
-/* ------ Reset ------ */
+/* ---------/ Reset /--------- */
 
 *,
 *::before,
@@ -30,7 +30,8 @@ body {
 
 
 
-/* --------- / Dark Theme / --------- */
+/* ---------/ Dark Theme /--------- */
+
 html[data-theme="dark"] {
     --background: #0a0e1a;
     --surface: #111a2e;
@@ -52,7 +53,8 @@ html[data-theme="dark"] {
 
 
 
-/* --------- / Light Theme / --------- */
+/* ---------/ Light Theme /--------- */
+
 html[data-theme="light"] {
     --background: #f4f6fb;
     --surface: #f8fafc;
@@ -74,7 +76,74 @@ html[data-theme="light"] {
 
 
 
-/* --------- / Layout / --------- */
+/* ---------/ HTML Data /--------- */
+
+/* Toggle Theme */
+html[data-theme="dark"] .topbar-theme-icon-moon,
+html[data-theme="light"] .topbar-theme-icon-sun {
+    display: none;
+}
+
+/* Collapsed Sidebar */
+html[data-sidebar="collapsed"] .sidebar {
+    width: 84px;
+}
+
+html[data-sidebar="collapsed"] .sidebar-brand {
+    justify-content: center;
+}
+
+html[data-sidebar="collapsed"] .sidebar-brand-text,
+html[data-sidebar="collapsed"] .sidebar-nav-label,
+html[data-sidebar="collapsed"] .sidebar-footer {
+    display: none;
+}
+
+html[data-sidebar="collapsed"] .sidebar-nav-item {
+    justify-content: center;
+}
+
+
+
+/* ---------/ Data Metric /--------- */
+
+
+[data-metric="load"] .ring-chart-progress {
+    stroke: var(--circle-cpu-progress);
+}
+
+[data-metric="load"] .sparkline-line {
+    stroke: var(--line-cpu-progress);
+}
+
+[data-metric="load"] .sparkline-stop-top,
+[data-metric="load"] .sparkline-stop-bottom {
+    stop-color: var(--accent);
+}
+
+[data-metric="temp"] .ring-chart-progress,
+[data-metric="temp"] .sparkline-line {
+    stroke: var(--warning);
+}
+
+[data-metric="temp"] .sparkline-stop-top,
+[data-metric="temp"] .sparkline-stop-bottom {
+    stop-color: var(--warning);
+}
+
+[data-metric="load"] .sparkline-dot {
+    stroke: var(--accent);
+}
+
+[data-metric="temp"] .sparkline-dot {
+    border-color: var(--warning);
+}
+
+
+
+
+/* ---------/ Layout /--------- */
+
 .app {
     display: flex;
     height: 100vh;
@@ -91,6 +160,7 @@ html[data-theme="light"] {
 
 
 /* --------- / Sidebar / --------- */
+
 .sidebar {
     flex-shrink: 0;
     display: flex;
@@ -251,7 +321,8 @@ html[data-theme="light"] {
 
 
 
-/* --------- / Topbar / --------- */
+/* ---------/ Topbar /--------- */
+
 .topbar {
     flex-shrink: 0;
     display: flex;
@@ -360,38 +431,14 @@ html[data-theme="light"] {
     color: var(--danger, #F43F5E);
 }
 
-/* Toggle Theme: display icon according theme */
-html[data-theme="dark"] .topbar-theme-icon-moon,
-html[data-theme="light"] .topbar-theme-icon-sun {
-    display: none;
-}
-
-/* Collapsed State */
 .sidebar {
     transition: width 0.2s ease;
 }
 
-html[data-sidebar="collapsed"] .sidebar {
-    width: 84px;
-}
-
-html[data-sidebar="collapsed"] .sidebar-brand {
-    justify-content: center;
-}
-
-html[data-sidebar="collapsed"] .sidebar-brand-text,
-html[data-sidebar="collapsed"] .sidebar-nav-label,
-html[data-sidebar="collapsed"] .sidebar-footer {
-    display: none;
-}
-
-html[data-sidebar="collapsed"] .sidebar-nav-item {
-    justify-content: center;
-}
 
 
+/* ---------/ Content /--------- */
 
-/* --------- / Content / --------- */
 .content {
     display: flex;
     flex-direction: column;
@@ -399,38 +446,6 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     gap: 16px;
     overflow: auto;
     padding: 24px;
-}
-
-/* Summary Cards */
-[data-metric="load"] .ring-chart-progress {
-    stroke: var(--circle-cpu-progress);
-}
-
-[data-metric="load"] .sparkline-line {
-    stroke: var(--line-cpu-progress);
-}
-
-[data-metric="load"] .sparkline-stop-top,
-[data-metric="load"] .sparkline-stop-bottom {
-    stop-color: var(--accent);
-}
-
-[data-metric="temp"] .ring-chart-progress,
-[data-metric="temp"] .sparkline-line {
-    stroke: var(--warning);
-}
-
-[data-metric="temp"] .sparkline-stop-top,
-[data-metric="temp"] .sparkline-stop-bottom {
-    stop-color: var(--warning);
-}
-
-[data-metric="load"] .sparkline-dot {
-    stroke: var(--accent);
-}
-
-[data-metric="temp"] .sparkline-dot {
-    stroke: var(--warning);
 }
 
 .summary-cards {
@@ -602,10 +617,20 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     vector-effect: non-scaling-stroke;
 }
 
+.sparkline-wrap {
+    position: relative;
+}
+
 .sparkline-dot {
-    fill: var(--surface);
-    stroke-width: 1.5;
-    vector-effect: non-scaling-stroke;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: var(--surface);
+    transform: translate(-50%, -50%);
+    display: none;
+    pointer-events: none;
 }
 
 .sparkline-tooltip {
