@@ -212,8 +212,8 @@
 
                             <div class="metric-stats">
                                 <div class="metric-stats-row metric-stats-labels">
-                                    <span>MIN</span>
-                                    <span>MAX</span>
+                                    <span>Min %</span>
+                                    <span>Max %</span>
                                 </div>
                                 <div class="metric-stats-row">
                                     <span><b id="cpu-load-min">0%</b> <em id="cpu-load-min-time">00:00</em></span>
@@ -228,6 +228,8 @@
                                     </defs>
                                     <path class="sparkline-area" id="cpu-load-sparkline-area" fill="url(#sparkline-gradient-cpu-load)"/>
                                     <polyline class="sparkline-line" id="cpu-load-sparkline"/>
+                                    <line class="sparkline-cursor" id="cpu-load-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
+                                    <circle class="sparkline-dot" id="cpu-load-dot" r="2" visibility="hidden"/>
                                 </svg>
                             </div>
                         </div>
@@ -247,8 +249,8 @@
 
                             <div class="metric-stats">
                                 <div class="metric-stats-row metric-stats-labels">
-                                    <span>MIN</span>
-                                    <span>MAX</span>
+                                    <span>Min °C</span>
+                                    <span>Max °C</span>
                                 </div>
                                 <div class="metric-stats-row">
                                     <span><b id="cpu-temp-min">0°C</b> <em id="cpu-temp-min-time">00:00</em></span>
@@ -263,6 +265,8 @@
                                     </defs>
                                     <path class="sparkline-area" id="cpu-temp-sparkline-area" fill="url(#sparkline-gradient-cpu-temp)"/>
                                     <polyline class="sparkline-line" id="cpu-temp-sparkline"/>
+                                    <line class="sparkline-cursor" id="cpu-temp-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
+                                    <circle class="sparkline-dot" id="cpu-temp-dot" r="2" visibility="hidden"/>
                                 </svg>
                             </div>
                         </div>
@@ -288,6 +292,8 @@
             </div>
         </main>
     </div>
+
+    <div class="sparkline-tooltip" id="sparkline-tooltip"></div>
 
     <script src="/js/header.js"></script>
     <script src="/js/settings.js"></script>

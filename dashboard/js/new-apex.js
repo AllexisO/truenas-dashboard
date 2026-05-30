@@ -59,7 +59,60 @@ function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
     document.getElementById('cpu-temp-max-time').textContent = `${maxTime}`;
 }
 
+/* Sparkline for graphic */
+function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
+    let svg = document.getElementById(svgId).closest('.sparkline');
+    let cursor = document.getElementById(cursorId);
+    let dot = document.getElementById(dotId);
+    let tooltip = document.getElementById("sparkline-tooltip")
+
+    svg.addEventListener("mouseenter", () => {
+        cursor.setAttribute("visibility", "visible");
+        dot.setAttribute("visibility", "visible");
+        tooltip.style.display = "block";
+    });
+
+    svg.addEventListener("mouseleave", () => {
+        cursor.setAttribute("visibility", "hidden");
+        dot.setAttribute("visibility", "hidden");
+        tooltip.style.display = "none";
+    });
+
+    svg.addEventListener("mousemove", () => {
+        let rect = svg.getBoundingClientRect();
+        let mouseX = event.clientX - rect.left;
+        let ratio = Math.max(0, Math.min(1, mouseX / rect.width));
+
+        const data = bufferRef;
+
+        if (!data.length) return;
+
+        let index = Math.round(ratio * (data.length - 1));
+        const sample = data[index];
+
+        let svgX = ratio * 100;
+
+        let min = Math.min(...data.map(s => s.value));
+        let max = Math.max(...data.map(s => s.value));
+        let range = max - min || 1;
+        let svgY = 2 + 36 -((sample.value - min) / range) * 36;
+
+        cursor.setAttribute("x1", svgX);
+        cursor.setAttribute("x2", svgX);
+        dot.setAttribute("cx", svgX);
+        dot.setAttribute("cy", svgY);
+
+        tooltip.style.left = (event.clientX + 12) + "px";
+        tooltip.style.top = (event.clientY - 24) + "px";
+        tooltip.textContent = `${Math.round(sample.value)}${unit} ${formatTime(sample.time)}`;
+    });
+}
+
+
 // Placeholder пока нет реальных данных
 const placeholderSparkline = [12, 18, 25, 22, 30, 35, 28, 38, 42, 36, 44, 40, 48, 52, 45, 50, 48, 53, 49, 51];
 renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), placeholderSparkline);
 renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), placeholderSparkline);
+
+initSparklineTooltip('cpu-load-sparkline', 'cpu-load-cursor', 'cpu-load-dot', buffers.cpuLoad, '%');
+initSparklineTooltip('cpu-temp-sparkline', 'cpu-temp-cursor', 'cpu-temp-dot', buffers.cpuTemp, '°C');

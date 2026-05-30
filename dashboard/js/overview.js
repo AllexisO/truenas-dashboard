@@ -18,17 +18,6 @@ function pushSample(buffer, value) {
     if (buffer.length > BUFFER_SIZE) buffer.shift();
 }
 
-function getMinMax(buffer) {
-    if (!buffer.length) return null;
-    let min = buffer[0];
-    let max = buffer[0];
-    for (const sample of buffer) {
-        if (sample.value < min.value) min = sample;
-        if (sample.value > max.value) max = sample;
-    }
-    return { min, max };
-}
-
 function formatTime(timestamp) {
     const date = new Date(timestamp);
     const hours = String(date.getHours()).padStart(2, '0');
@@ -38,34 +27,76 @@ function formatTime(timestamp) {
 
 function handleRealtimeData(data) {
     const cpuData = data.realtime?.cpu?.cpu;
+
     if (!cpuData) return;
 
-    const usage = cpuData.usage;
-    const temp = cpuData.temp;
+    let usage = cpuData.usage;
+    let temp = cpuData.temp;
 
-    if (typeof usage === 'number') {
+    if (typeof usage === "number") {
         pushSample(buffers.cpuLoad, usage);
-        const stats = getMinMax(buffers.cpuLoad);
         updateCpuLoad({
             percent: usage,
             history: buffers.cpuLoad.map(sample => sample.value),
-            min: Math.round(stats.min.value),
-            max: Math.round(stats.max.value),
-            minTime: formatTime(stats.min.time),
-            maxTime: formatTime(stats.max.time)
+            min: cpuLoadStats.min ? Math.round(cpuLoadStats.min.value) : "0",
+            max: cpuLoadStats.max ? Math.round(cpuLoadStats.max.value) : "0",
+            minTime: cpuLoadStats.min ? formatTime(cpuLoadStats.min.time) : "0",
+            maxTime: cpuLoadStats.max ? formatTime(cpuLoadStats.max.time) : "0"
         });
     }
 
-    if (typeof temp === 'number') {
+    if (typeof temp === "number") {
         pushSample(buffers.cpuTemp, temp);
-        const stats = getMinMax(buffers.cpuTemp);
         updateCpuTemp({
             degrees: temp,
             history: buffers.cpuTemp.map(sample => sample.value),
-            min: Math.round(stats.min.value),
-            max: Math.round(stats.max.value),
-            minTime: formatTime(stats.min.time),
-            maxTime: formatTime(stats.max.time)
+            min: cpuTempStats.min ? Math.round(cpuTempStats.min.value) : "0",
+            max: cpuTempStats.max ? Math.round(cpuTempStats.max.value) : "0",
+            minTime: cpuTempStats.min ? formatTime(cpuTempStats.min.time) : "0",
+            maxTime: cpuTempStats.max ? formatTime(cpuTempStats.max.time) : "0"
         });
     }
 }
+
+let cpuLoadStats = { min: null, max: null };
+let cpuTempStats = { min: null, max: null };
+
+async function loadCpuHistory() {
+    const [loadResponse, tempResponse] = await Promise.all([
+        fetch('/history?graph=cpu&hours=24'),
+        fetch('/history?graph=cputemp&hours=24')
+    ]);
+
+    const loadResult = await loadResponse.json();
+    const tempResult = await tempResponse.json();
+
+    if (loadResult?.[0]?.data) {
+        const points = loadResult[0].data;
+        
+        points.forEach(point => {
+            let value = point[1];
+            let time = point[0] * 1000;
+
+            if (value === null || value <= 0) return;
+
+            if (!cpuLoadStats.min || value < cpuLoadStats.min.value) cpuLoadStats.min = { value, time };
+            if (!cpuLoadStats.max || value > cpuLoadStats.max.value) cpuLoadStats.max = { value, time };
+        });
+    }
+
+    if (tempResult?.[0]?.data) {
+        const points = tempResult[0].data;
+        
+        points.forEach(point => {
+            let value = point[1];
+            let time = point[0] * 1000;
+            
+            if (value === null || value <= 0) return;
+
+            if (!cpuTempStats.min || value < cpuTempStats.min.value) cpuTempStats.min = { value, time };
+            if (!cpuTempStats.max || value > cpuTempStats.max.value) cpuTempStats.max = { value, time };
+        });
+    }
+}
+
+loadCpuHistory();
