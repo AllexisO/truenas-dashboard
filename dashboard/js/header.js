@@ -85,26 +85,26 @@ function updateLeds(data) {
         let led = document.getElementById(id);
         if (!led) return;
         led.style.fill = getLedColor(info.value);
-        led.dataset.tooltip = `${info.label}: ${Math.round(info.value)}%`;
+        led.dataset.logoTooltip = `${info.label}: ${Math.round(info.value)}%`;
     });
 }
 
 function initTooltips() {
-    const tooltip = document.getElementById('tooltip');
+    let logoTooltip = document.getElementById('logo-tooltip');
     
     document.querySelectorAll('[data-tooltip]').forEach(el => {
         el.addEventListener('mouseenter', (event) => {
-            tooltip.textContent = el.dataset.tooltip;
-            tooltip.style.display = 'block';
+            logoTooltip.textContent = el.dataset.logoTooltip;
+            logoTooltip.style.display = 'block';
         });
 
         el.addEventListener('mousemove', (event) => {
-            tooltip.style.left = (event.clientX + 12) + 'px';
-            tooltip.style.top = (event.clientY + 12) + 'px';
+            logoTooltip.style.left = (event.clientX + 12) + 'px';
+            logoTooltip.style.top = (event.clientY + 12) + 'px';
         });
 
         el.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
+            logoTooltip.style.display = 'none';
         });
     });
 }
