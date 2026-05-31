@@ -208,7 +208,7 @@
    z-index: 100;
 }
 
-.tooltip {
+.logo-tooltip {
    display: none;
    position: fixed;
    background: #0d1520;
@@ -246,7 +246,7 @@
    animation-delay: 0.2s;
 }
 
-#led-net {
+#led-network {
    animation: led-hdd 0.5s steps(2, start) infinite;
    animation-delay: 0.3s;
 }

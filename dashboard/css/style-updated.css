@@ -48,6 +48,7 @@ html[data-theme="dark"] {
     --accent-border: rgba(129, 140, 248, 0.25);
     --success: #22c55e;
     --warning: #f97316;
+    --ram-color: #A78BFA;
     --ring-track: rgba(255, 255, 255, 0.08);
 }
 
@@ -71,6 +72,7 @@ html[data-theme="light"] {
     --accent-border: rgba(99, 102, 241, 0.20);
     --success: #10b981;
     --warning: #ea580c;
+    --ram-color: #A78BFA;
     --ring-track: rgba(15, 23, 42, 0.08);
 }
 
@@ -140,14 +142,66 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 [data-metric="ram"] .ring-chart-progress,
 [data-metric="ram"] .sparkline-line {
-    stroke: #A78BFA;
+    stroke: var(--ram-color);
 }
 
 [data-metric="ram"] .sparkline-stop-top,
 [data-metric="ram"] .sparkline-stop-bottom {
-    stop-color: #A78BFA;
+    stop-color: var(--ram-color);
 }
 
+[data-tooltip] {
+   position: relative;
+   cursor: pointer;
+}
+
+[data-tooltip]:hover::after {
+   content: attr(data-tooltip);
+   position: absolute;
+   top: 20px;
+   left: 0;
+   background: #0d1520;
+   color: var(--text);
+   font-size: 11px;
+   font-family: monospace;
+   padding: 4px 8px;
+   border-radius: 4px;
+   border: 1px solid var(--border);
+   white-space: nowrap;
+   z-index: 100;
+}
+
+
+
+/* ---------/ Animations /--------- */
+
+@keyframes led-hdd {
+   0%   { opacity: 0; }
+   25%  { opacity: 1; }
+   50%  { opacity: 0; }
+   75%  { opacity: 1; }
+   90%  { opacity: 0; }
+   100% { opacity: 1; }
+}
+
+#led-cpu {
+   animation: led-hdd 0.5s steps(2, start) infinite;
+}
+
+#led-ram {
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.1s;
+}
+
+#led-disk {
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.2s;
+}
+
+#led-network {
+   animation: led-hdd 0.5s steps(2, start) infinite;
+   animation-delay: 0.3s;
+}
 
 
 
@@ -642,6 +696,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     pointer-events: none;
 }
 
+/* Tooltips */
 .sparkline-tooltip {
     position: fixed;
     background: var(--surface);
@@ -655,6 +710,21 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     display: none;
     z-index: 100;
     white-space: nowrap;
+}
+
+.logo-tooltip {
+   display: none;
+   position: fixed;
+   background: #0d1520;
+   color: #e2e8f0;
+   font-size: 11px;
+   font-family: monospace;
+   padding: 4px 8px;
+   border-radius: 4px;
+   border: 1px solid rgba(255,255,255,0.1);
+   white-space: nowrap;
+   z-index: 100;
+   pointer-events: none;
 }
 
 .metric-divider {
@@ -703,7 +773,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 .ram-footer-value {
     font-weight: 600;
-    color: #A78BFA;
+    color: var(--ram-color);
 }
 
 .ram-footer-size {
