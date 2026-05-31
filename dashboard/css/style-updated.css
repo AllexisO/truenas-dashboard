@@ -107,7 +107,6 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 /* ---------/ Data Metric /--------- */
 
-
 [data-metric="load"] .ring-chart-progress {
     stroke: var(--circle-cpu-progress);
 }
@@ -137,6 +136,16 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 [data-metric="temp"] .sparkline-dot {
     border-color: var(--warning);
+}
+
+[data-metric="ram"] .ring-chart-progress,
+[data-metric="ram"] .sparkline-line {
+    stroke: #A78BFA;
+}
+
+[data-metric="ram"] .sparkline-stop-top,
+[data-metric="ram"] .sparkline-stop-bottom {
+    stop-color: #A78BFA;
 }
 
 
@@ -651,6 +660,54 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 .metric-divider {
     height: 1px;
     background: var(--border);
+    margin-top: auto;
+}
+
+/* RAM */
+.ram-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.ram-stat-label {
+    color: var(--text-muted);
+}
+
+.ram-stat-value {
+    font-weight: 600;
+    color: var(--text);
+}
+
+#ram-overview-card .metric-row {
+    align-items: flex-start;
+}
+
+#ram-overview-card .ring-chart {
+    width: 130px;
+    height: 130px;
+}
+
+.ram-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.ram-footer-label {
+    color: var(--text-muted)
+}
+
+.ram-footer-value {
+    font-weight: 600;
+    color: #A78BFA;
+}
+
+.ram-footer-size {
+    color: var(--text-muted);
 }
 
 /* Panels */

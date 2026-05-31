@@ -187,6 +187,8 @@
 
             <div class="content">
                 <section class="summary-cards">
+
+                    <!-- CPU Card -->
                     <article class="summary-card" id="cpu-overview-card">
                         <header class="summary-card-header">
                             <span class="summary-card-icon">
@@ -276,17 +278,70 @@
                         </div>
                     </article>
 
-                    <article class="summary-card" id="ram-overview-card">
+                    <!-- RAM Card -->
+                    <article class="summary-card" id="ram-overview-card" data-metric="ram">
                         <header class="summary-card-header">
                             <span class="summary-card-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="4" y="4" width="16" height="16" rx="2"/>
-                                    <rect x="9" y="9" width="6" height="6"/>
-                                    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+                                    <rect x="2" y="8" width="20" height="9" rx="1"/>
+                                    <path d="M6 12v2M10 12v2M14 12v2M18 12v2"/>
                                 </svg>
                             </span>
                             <h2 class="summary-card-title">RAM</h2>
                         </header>
+
+                        <div class="metric-row">
+                            <svg class="ring-chart" viewBox="0 0 120 120">
+                                <circle class="ring-chart-track" cx="60" cy="60" r="50"/>
+                                <circle class="ring-chart-progress" id="ram-ring" cx="60" cy="60" r="50" transform="rotate(-90 60 60)" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+                                <text class="ring-chart-value" x="60" y="54" text-anchor="middle" dominant-baseline="middle">
+                                    <tspan id="ram-percent">0</tspan><tspan class="ring-chart-unit">%</tspan>
+                                </text>
+                                <text class="ring-chart-label" x="60" y="76" text-anchor="middle" dominant-baseline="middle">In use</text>
+                            </svg>
+
+                            <div class="metric-stats">
+                                <div class="ram-stat-row">
+                                    <span class="ram-stat-label">Total</span>
+                                    <span class="ram-stat-value" id="ram-total">0</span>
+                                </div>
+                                <div class="ram-stat-row">
+                                    <span class="ram-stat-label">Used</span>
+                                    <span class="ram-stat-value" id="ram-used">0</span>
+                                </div>
+                                <div class="ram-stat-row">
+                                    <span class="ram-stat-label">Free</span>
+                                    <span class="ram-stat-value" id="ram-free">0</span>
+                                </div>
+                                <div class="ram-stat-row">
+                                    <span class="ram-stat-label">ARC</span>
+                                    <span class="ram-stat-value" id="ram-arc">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sparkline-wrap">
+                            <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="sparkline-gradient-ram" x1="0" y1="0" x2="0" y2="1">
+                                        <stop class="sparkline-stop-top" offset="0%"/>
+                                        <stop class="sparkline-stop-bottom" offset="100%"/>
+                                    </linearGradient>
+                                </defs>
+                                <path class="sparkline-area" id="ram-sparkline-area" fill="url(#sparkline-gradient-ram)"/>
+                                <polyline class="sparkline-line" id="ram-sparkline"/>
+                                <line class="sparkline-cursor" id="ram-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
+                            </svg>
+                            <div class="sparkline-dot" id="ram-dot"></div>
+                        </div>
+
+                        <div class="metric-divider"></div>
+
+                        <div class="ram-footer">
+                            <span class="ram-footer-label">ARC Hit Rate</span>
+                            <span class="ram-footer-value" id="ram-arc-hit">0%</span>
+                            <span class="ram-footer-size" id="ram-arc-size">0 GB</span>
+                        </div>
                     </article>
 
                     <div class="summary-card" id="server-network-card">

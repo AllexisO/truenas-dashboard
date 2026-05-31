@@ -123,6 +123,19 @@ function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
     });
 }
 
+function updateRamCard({ percent, total, used, free, arc }) {
+    updateRingProgress("ram-ring", percent / 100);
+    document.getElementById("ram-percent").textContent = Math.round(percent);
+    document.getElementById("ram-total").textContent = total;
+    document.getElementById("ram-used").textContent = used;
+    document.getElementById("ram-free").textContent = free;
+    document.getElementById("ram-arc").textContent = arc;
+}
+
+function updateRamSparkline(history) {
+    renderSparkline(document.getElementById("ram-sparkline").closest(".sparkline"), history);
+}
+
 
 // Placeholder пока нет реальных данных
 const placeholderSparkline = [12, 18, 25, 22, 30, 35, 28, 38, 42, 36, 44, 40, 48, 52, 45, 50, 48, 53, 49, 51];

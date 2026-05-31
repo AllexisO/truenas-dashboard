@@ -11,7 +11,8 @@ const BUFFER_SIZE = 60;
 
 const buffers = {
     cpuLoad: [],
-    cpuTemp: []
+    cpuTemp: [],
+    ram: []
 };
 
 function pushSample(buffer, value) {
@@ -31,6 +32,7 @@ function formatTime(timestamp) {
 
 function handleRealtimeData(data) {
     const cpuData = data.realtime?.cpu?.cpu;
+    const memory = data.realtime?.memory;
 
     if (!cpuData) return;
 
@@ -59,6 +61,37 @@ function handleRealtimeData(data) {
             minTime: cpuTempStats.min ? formatTime(cpuTempStats.min.time) : "0",
             maxTime: cpuTempStats.max ? formatTime(cpuTempStats.max.time) : "0"
         });
+    }
+
+    if (memory) {
+        let total = memory.physical_memory_total;
+        let available = memory.physical_memory_available;
+        let used = total - available;
+        let arc = memory.arc_size;
+        let percent = (used / total) * 100;
+
+        pushSample(buffers.ram, percent);
+
+        updateRamCard({
+            percent,
+            total: formatBytes(total),
+            used: formatBytes(used),
+            free: formatBytes(available),
+            arc: formatBytes(arc)
+        });
+
+        updateRamSparkline(buffers.ram.map(sample => sample.value));
+
+        let zfs = data.realtime?.zfs;
+        let hits = zfs?.demand_data_hits_per_second ?? 0;
+        let accesses = zfs?.demand_data_accesses_per_second ?? 0;
+        let arcHitRate = accesses > 0 ? Math.round((hits / accesses) * 100) : 0;
+
+        let arcEl = document.getElementById("ram-arc-hit");
+        let arcSizeEl = document.getElementById("ram-arc-size");
+
+        if (arcEl) arcEl.textContent = arcHitRate + "%";
+        if (arcSizeEl) arcSizeEl.textContent = formatBytes(arc);
     }
 }
 
@@ -103,6 +136,13 @@ async function loadCpuHistory() {
     }
 }
 
+function formatBytes(bytes) {
+    let gb = bytes / 1073741824;
+    return gb.toFixed(1) + " GB";
+}
+
+
 loadCpuHistory();
 initSparklineTooltip('cpu-load-sparkline', 'cpu-load-cursor', 'cpu-load-dot', buffers.cpuLoad, '%');
 initSparklineTooltip('cpu-temp-sparkline', 'cpu-temp-cursor', 'cpu-temp-dot', buffers.cpuTemp, '°C');
+initSparklineTooltip("ram-sparkline", "ram-cursor", "ram-dot", buffers.ram, "%");
