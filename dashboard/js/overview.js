@@ -12,7 +12,9 @@ const BUFFER_SIZE = 60;
 const buffers = {
     cpuLoad: [],
     cpuTemp: [],
-    ram: []
+    ram: [],
+    netRx: [],
+    netTx: []
 };
 
 function pushSample(buffer, value) {
@@ -33,6 +35,7 @@ function formatTime(timestamp) {
 function handleRealtimeData(data) {
     const cpuData = data.realtime?.cpu?.cpu;
     const memory = data.realtime?.memory;
+    const interfaces = data.realtime?.interfaces;
 
     if (!cpuData) return;
 
@@ -93,6 +96,25 @@ function handleRealtimeData(data) {
         if (arcEl) arcEl.textContent = arcHitRate + "%";
         if (arcSizeEl) arcSizeEl.textContent = formatBytes(arc);
     }
+
+    if (interfaces) {
+        const ifaceName = Object.keys(interfaces)[0];
+        
+        if(ifaceName) {
+            let iface = interfaces[ifaceName];
+            let rx = iface.received_bytes_rate;
+            let tx = iface.sent_bytes_rate;
+
+            pushSample(buffers.netRx, rx);
+            pushSample(buffers.netTx, tx);
+
+            updateNetworkCard({ rx, tx });
+            updateNetworkSparklines(
+                buffers.netRx.map(s => s.value),
+                buffers.netTx.map(s => s.value)
+            )
+        }
+    }
 }
 
 let cpuLoadStats = { min: null, max: null };
@@ -141,8 +163,33 @@ function formatBytes(bytes) {
     return gb.toFixed(1) + " GB";
 }
 
+let networkStats = { totalRx: 0, totalTx: 0 };
+
+async function loadNetworkHistory() {
+    const response = await fetch("/history?graph=interface&identifier=eno1&hours=24");
+    const result = await response.json();
+
+    if (result?.[0]?.aggregations?.mean) {
+        let meanRx = result[0].aggregations.mean.received ?? 0;
+        let meanTx = result[0].aggregations.mean.sent ?? 0;
+
+        networkStats.totalRx = meanRx * 86400;
+        networkStats.totalTx = meanTx * 86400;
+
+        updateNetworkTotals(networkStats.totalRx, networkStats.totalTx);
+    }
+}
 
 loadCpuHistory();
-initSparklineTooltip('cpu-load-sparkline', 'cpu-load-cursor', 'cpu-load-dot', buffers.cpuLoad, '%');
-initSparklineTooltip('cpu-temp-sparkline', 'cpu-temp-cursor', 'cpu-temp-dot', buffers.cpuTemp, '°C');
+loadNetworkHistory();
+initSparklineTooltip("cpu-load-sparkline", "cpu-load-cursor", "cpu-load-dot", buffers.cpuLoad, '%');
+initSparklineTooltip("cpu-temp-sparkline", "cpu-temp-cursor", "cpu-temp-dot", buffers.cpuTemp, '°C');
 initSparklineTooltip("ram-sparkline", "ram-cursor", "ram-dot", buffers.ram, "%");
+initSparklineTooltip("net-rx-sparkline", "net-rx-cursor", "net-rx-dot", buffers.netRx, "", (v) => {
+    let formatted = formatNetworkSpeed(v);
+    return `${formatted.value} ${formatted.unit}`;
+});
+initSparklineTooltip("net-tx-sparkline", "net-tx-cursor", "net-tx-dot", buffers.netTx, "", (v) => {
+    let formatted = formatNetworkSpeed(v);
+    return `${formatted.value} ${formatted.unit}`;
+});

@@ -773,7 +773,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 .metric-divider {
     height: 1px;
     background: var(--border);
-    margin-top: auto;
+    /* margin-top: auto; */
 }
 
 
@@ -891,6 +891,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     font-weight: 600;
     color: var(--text);
 }
+
 
 /* - Panels - */
 

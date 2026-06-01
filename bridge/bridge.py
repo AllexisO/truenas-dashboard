@@ -72,7 +72,9 @@ class Bridge:
 
             start = int(end - (hours * 3600))
 
-            result = await self.poller.fetch_history(graph, start, end)
+            identifier = request.query.get("identifier", None)
+            result = await self.poller.fetch_history(graph, start, end, identifier)
+            
             return web.json_response(result)
         except Exception as error:
             return web.json_response({"error": str(error)}, status=500)

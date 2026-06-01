@@ -190,7 +190,7 @@ class Poller:
             print(f"Docker error: {error}", flush=True)
     
     # Fetching History Data For Graphic
-    async def fetch_history(self, graph, start, end):
+    async def fetch_history(self, graph, start, end, identifier=None):
         async with websockets.unix_connect(
             "/run/middleware/middlewared.sock", uri=uri
         ) as ws:
@@ -213,7 +213,7 @@ class Poller:
             await ws.send(json.dumps({
                 "id": "3", "msg": "method",
                 "method": "reporting.netdata_get_data",
-                "params": [[{"name": graph}], {"start": start, "end": end}]
+                "params": [[{"name": graph, **({"identifier": identifier} if identifier else {})}], {"start": start, "end": end}]
             }))
 
             response = json.loads(await ws.recv())
