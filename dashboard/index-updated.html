@@ -344,14 +344,103 @@
                         </div>
                     </article>
 
-                    <div class="summary-card" id="server-network-card">
+                    <!-- Network Card -->
+                    <article class="summary-card" id="network-overview-card">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="18" cy="5" r="3"/>
+                                    <circle cx="6" cy="12" r="3"/>
+                                    <circle cx="18" cy="19" r="3"/>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                                </svg>
+                            </span>
+                            <h2 class="summary-card-title">Network</h2>
+                        </header>
 
-                    </div>
-                    <div class="summary-card" id="server-disks-card">
+                        <div class="network-metric" data-metric="rx">
+                            <div class="network-speed-row">
+                                <svg class="network-direction-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flow-down" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4934:63:14">
+                                    <path d="M12 3v11M8 11l4 4 4-4" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4950:63:30"></path>
+                                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4983:63:63"></path>
+                                </svg>
+                                <span class="network-value" id="net-rx-value">0</span>
+                                <span class="network-unit" id="net-rx-unit">Kb/s</span>
+                            </div>
+                            <div class="network-label">Inbound</div>
+                            <div class="sparkline-wrap">
+                                <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="sparkline-gradient-rx" x1="0" y1="0" x2="0" y2="1">
+                                            <stop class="sparkline-stop-top" offset="0%"/>
+                                            <stop class="sparkline-stop-bottom" offset="100%"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="sparkline-area" id="net-rx-sparkline-area" fill="url(#sparkline-gradient-rx)"/>
+                                    <polyline class="sparkline-line" id="net-rx-sparkline"/>
+                                    <line class="sparkline-cursor" id="net-rx-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
+                                </svg>
+                                <div class="sparkline-dot" id="net-rx-dot"></div>
+                            </div>
+                        </div>
 
-                    </div>
+                        <div class="network-metric" data-metric="tx">
+                            <div class="network-speed-row">
+                                <svg class="network-direction-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="flow-up" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5076:65:14">
+                                    <path d="M12 21V10M8 13l4-4 4 4" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5092:65:30"></path>
+                                    <path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5126:65:64"></path>
+                                </svg>
+                                <span class="network-value" id="net-tx-value">0</span>
+                                <span class="network-unit" id="net-tx-unit">Kb/s</span>
+                            </div>
+                            <div class="network-label">Outbound</div>
+                            <div class="sparkline-wrap">
+                                <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="sparkline-gradient-tx" x1="0" y1="0" x2="0" y2="1">
+                                            <stop class="sparkline-stop-top" offset="0%"/>
+                                            <stop class="sparkline-stop-bottom" offset="100%"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="sparkline-area" id="net-tx-sparkline-area" fill="url(#sparkline-gradient-tx)"/>
+                                    <polyline class="sparkline-line" id="net-tx-sparkline"/>
+                                    <line class="sparkline-cursor" id="net-tx-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
+                                </svg>
+                                <div class="sparkline-dot" id="net-tx-dot"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-divider"></div>
+
+                        <div class="network-footer">
+                            <div class="network-footer-title">Last 24 hours</div>
+                            <div class="network-footer-row" data-metric="rx">
+                                <div class="network-footer-row-data">
+                                    <svg class="network-footer-row-data__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4934:63:14">
+                                        <path d="M12 3v11M8 11l4 4 4-4" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4950:63:30"></path>
+                                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:4983:63:63"></path>
+                                    </svg>
+                                    <span class="network-footer-label">Total received</span>
+                                </div>
+                                <span class="network-footer-value" id="net-total-rx">0</span>
+                            </div>
+                            <div class="network-footer-row" data-metric="tx">
+                                <div class="network-footer-row-data">
+                                    <svg class="network-footer-row-data__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5076:65:14">
+                                        <path d="M12 21V10M8 13l4-4 4 4" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5092:65:30"></path>
+                                        <path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2" data-om-id="jsx:/https:/7f312d5e-3863-4815-bdf9-be4d23faa379.claudeusercontent.com/v1/design/projects/7f312d5e-3863-4815-bdf9-be4d23faa379/serve/components.jsx:5126:65:64"></path>
+                                    </svg>
+                                    <span class="network-footer-label">Total sent</span>
+                                </div>
+                                <span class="network-footer-value" id="net-total-tx">0</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="summary-card" id="-overview-card"></article>
                 </section>
-                <section class="pannels">
+                <section class="panels">
                     <div class="panel">
 
                     </div>

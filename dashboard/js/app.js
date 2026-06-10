@@ -88,14 +88,14 @@ function connect() {
         updateHeader(data);
         updateLeds(data);
         if (typeof handleRealtimeData === 'function') handleRealtimeData(data);
-        updateCPU(data);
-        updateCores(data.realtime?.cpu);
-        updateRam(data);
-        updateNetwork(data);
-        updateDisks(data);
-        buildPoolsSidebar(data);
+        if (typeof updateCPU === 'function') updateCPU(data);
+        if (typeof updateCores === 'function') updateCores(data.realtime?.cpu);
+        if (typeof updateRam === 'function') updateRam(data);
+        if (typeof updateNetwork === 'function') updateNetwork(data);
+        if (typeof updateDisks === 'function') updateDisks(data);
+        if (typeof buildPoolsSidebar === 'function') buildPoolsSidebar(data);
 
-        console.log(data)
+        // console.log(data);
     };
 
     ws.onclose = () => {

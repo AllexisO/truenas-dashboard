@@ -21,6 +21,25 @@ class Poller:
         self.config = config
         self.latest_data = {}
         self.clients = set()
+        self.net_total_rx = 0
+        self.net_total_tx = 0
+        self.net_last_reset = self._today()
+    
+    def _today(self):
+        from datetime import date
+        return date.today().isoformat()
+
+    def update_network_totals(self, rx_rate, tx_rate, interval=2):
+        from datetime import date
+        today = date.today().isoformat()
+        
+        if today != self.net_last_reset:
+            self.net_total_rx = 0
+            self.net_total_tx = 0
+            self.net_last_reset = today
+        
+        self.net_total_rx += rx_rate * interval
+        self.net_total_tx += tx_rate * interval
 
     # Connection to TrueNAS with Websocket
     async def connect(self):
@@ -64,6 +83,18 @@ class Poller:
                 data = json.loads(msg)
                 if data.get("msg") == "added":
                     self.latest_data["realtime"] = data["fields"]
+
+                    interfaces = data["fields"].get("interfaces", {})
+                    if interfaces:
+                        iface = next(iter(interfaces.values()))
+                        rx_rate = iface.get("received_bytes_rate", 0)
+                        tx_rate = iface.get("sent_bytes_rate", 0)
+                        self.update_network_totals(rx_rate, tx_rate)
+                    self.latest_data["net_totals"] = {
+                        "rx": self.net_total_rx,
+                        "tx": self.net_total_tx
+                    }
+                    
                     await self.broadcast()
 
                 now = asyncio.get_event_loop().time()
@@ -190,7 +221,7 @@ class Poller:
             print(f"Docker error: {error}", flush=True)
     
     # Fetching History Data For Graphic
-    async def fetch_history(self, graph, start, end):
+    async def fetch_history(self, graph, start, end, identifier=None):
         async with websockets.unix_connect(
             "/run/middleware/middlewared.sock", uri=uri
         ) as ws:
@@ -213,7 +244,7 @@ class Poller:
             await ws.send(json.dumps({
                 "id": "3", "msg": "method",
                 "method": "reporting.netdata_get_data",
-                "params": [[{"name": graph}], {"start": start, "end": end}]
+                "params": [[{"name": graph, **({"identifier": identifier} if identifier else {})}], {"start": start, "end": end}]
             }))
 
             response = json.loads(await ws.recv())

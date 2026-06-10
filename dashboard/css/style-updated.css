@@ -23,9 +23,36 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-@keyframes pulse {
+/* @keyframes pulse {
    0%, 100% { opacity: 1; }
    50% { opacity: 0.3; }
+} */
+
+@keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+}
+
+@keyframes bounce-up {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes flow-down {
+  0%   { transform: translateY(-3px); opacity: 0.4; }
+  50%  { transform: translateY(2px);  opacity: 1; }
+  100% { transform: translateY(-3px); opacity: 0.4; }
+}
+@keyframes flow-up {
+  0%   { transform: translateY(3px);  opacity: 0.4; }
+  50%  { transform: translateY(-2px); opacity: 1; }
+  100% { transform: translateY(3px);  opacity: 0.4; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 60%, transparent); }
+  70% { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 
@@ -33,22 +60,24 @@ body {
 /* ---------/ Dark Theme /--------- */
 
 html[data-theme="dark"] {
-    --background: #0a0e1a;
-    --surface: #111a2e;
-    --surface-hover: #1a2541;
+    --background: #0A0E1A;
+    --surface: #111A2E;
+    --surface-hover: #1A2541;
     --border: rgba(255, 255, 255, 0.08);
-    --text: #e2e8f0;
-    --text-dim: #98a2c3;
-    --text-muted: #64748b;
-    --circle-cpu-progress: #06b6d4;
-    --line-cpu-progress: #10b981;
-    --accent: #06b6d4; 
-    --accent-2: #0ea5e9;
+    --text: #E2E8F0;
+    --text-dim: #98A2C3;
+    --text-muted: #64748B;
+    --circle-cpu-progress: #06B6D4;
+    --line-cpu-progress: #10B981;
+    --accent: #06B6D4; 
+    --accent-2: #0EA5E9;
     --accent-background: rgba(129, 140, 248, 0.12);
     --accent-border: rgba(129, 140, 248, 0.25);
-    --success: #22c55e;
-    --warning: #f97316;
+    --success: #22C55E;
+    --warning: #F97316;
     --ram-color: #A78BFA;
+    --rx-network-color: #A78BFA;
+    --tx-network-color: #10B981;
     --ring-track: rgba(255, 255, 255, 0.08);
 }
 
@@ -57,22 +86,24 @@ html[data-theme="dark"] {
 /* ---------/ Light Theme /--------- */
 
 html[data-theme="light"] {
-    --background: #f4f6fb;
-    --surface: #f8fafc;
-    --surface-hover: #f1f5f9;
-    --border: #e2e8f0;
-    --text: #0f172a;
+    --background: #F4F6FB;
+    --surface: #F8FAFC;
+    --surface-hover: #F1F5F9;
+    --border: #E2E8F0;
+    --text: #0F172A;
     --text-dim: #475569;
-    --text-muted: #64748b;
-    --circle-cpu-progress: #06b6d4;
-    --line-cpu-progress: #10b981;
-    --accent: #06b6d4;
-    --accent-2: #0ea5e9;
+    --text-muted: #64748B;
+    --circle-cpu-progress: #06B6D4;
+    --line-cpu-progress: #10B981;
+    --accent: #06B6D4;
+    --accent-2: #0EA5E9;
     --accent-background: rgba(99, 102, 241, 0.10);
     --accent-border: rgba(99, 102, 241, 0.20);
-    --success: #10b981;
-    --warning: #ea580c;
+    --success: #10B981;
+    --warning: #EA580C;
     --ram-color: #A78BFA;
+    --rx-network-color: #A78BFA;
+    --tx-network-color: #10B981;
     --ring-track: rgba(15, 23, 42, 0.08);
 }
 
@@ -149,6 +180,63 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 [data-metric="ram"] .sparkline-stop-bottom {
     stop-color: var(--ram-color);
 }
+
+[data-metric="rx"] .ring-chart-progress,
+[data-metric="rx"] .sparkline-line {
+    stroke: var(--rx-network-color);
+}
+
+[data-metric="rx"] .sparkline-stop-top,
+[data-metric="rx"] .sparkline-stop-bottom {
+    stop-color: var(--rx-network-color);
+}
+
+[data-metric="rx"] .sparkline-dot {
+    border-color: var(--rx-network-color);
+}
+
+[data-metric="tx"] .sparkline-line {
+    stroke: var(--accent);
+}
+
+[data-metric="tx"] .sparkline-stop-top,
+[data-metric="tx"] .sparkline-stop-bottom {
+    stop-color: var(--accent);
+}
+
+[data-metric="tx"] .sparkline-dot {
+    border-color: var(--accent);
+}
+
+[data-metric="rx"] .network-direction-icon {
+    color: var(--rx-network-color);
+}
+
+[data-metric="tx"] .network-direction-icon {
+    color: var(--accent);
+}
+
+[data-metric="rx"] .network-direction-icon {
+    animation: flow-down 1.5s ease-in-out infinite;
+}
+
+[data-metric="tx"] .network-direction-icon {
+    animation: flow-up 1.5s ease-in-out infinite;
+}
+
+[data-metric="rx"] .network-footer-row-data__icon,
+[data-metric="rx"] .network-footer-value {
+    color: var(--rx-network-color);
+}
+
+[data-metric="tx"] .network-footer-row-data__icon,
+[data-metric="tx"] .network-footer-value {
+    color: var(--accent);
+}
+
+
+
+/* ---------/ Data Tooltip /--------- */
 
 [data-tooltip] {
    position: relative;
@@ -479,7 +567,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 .server-status-dot.online {
     background-color: var(--success);
-    animation: pulse 1.5s infinite;
+    animation: pulse 2s infinite;
 }
 
 .server-status-dot.offline {
@@ -730,10 +818,12 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 .metric-divider {
     height: 1px;
     background: var(--border);
-    margin-top: auto;
+    /* margin-top: auto; */
 }
 
-/* RAM */
+
+/* - RAM Card - */
+
 .ram-stat-row {
     display: flex;
     justify-content: space-between;
@@ -780,8 +870,89 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     color: var(--text-muted);
 }
 
-/* Panels */
-.pannels {
+
+/* - Network Card - */
+
+.network-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.network-speed-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.network-direction-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.network-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+.network-unit {
+    font-size: 14px;
+    columns: var(--text-muted);
+}
+
+.network-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.network-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.network-footer-title {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.network-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.network-footer-row-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.network-footer-row-data__icon {
+    width: 15px;
+    height: 15px;
+}
+
+.network-footer-label {
+    color: var(--text-muted);
+}
+
+.network-footer-value {
+    font-weight: 600;
+    color: var(--text);
+}
+
+
+/* - Panels - */
+
+.panels {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;

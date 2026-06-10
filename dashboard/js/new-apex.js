@@ -39,6 +39,45 @@ function renderSparkline(svgElement, data) {
     areaEl.setAttribute('d', `M0,${height} L${points.join(' L')} L${width},${height} Z`);
 }
 
+function formatNetworkSpeed(bytesPerSecond) {
+    let bitsPerSecond = bytesPerSecond * 8;
+    if (bitsPerSecond >= 1000000) return { value: (bitsPerSecond / 1000000).toFixed(2), unit: "Mb/s" };
+    if (bitsPerSecond >= 1000) return { value: (bitsPerSecond / 1000).toFixed(2), unit: "Kb/s" };
+    return { value: Math.round(bitsPerSecond ?? 0), unit: "b/s" };
+}
+
+function formatNetworkTotal(bytes) {
+    if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + " TB";
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + " GB";
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + " MB";
+    
+    return (bytes / 1024).toFixed(1) + " Kb";
+}
+
+function updateNetworkCard({rx, tx }) {
+    let rxFormatted = formatNetworkSpeed(rx);
+    let txFormatted = formatNetworkSpeed(tx);
+
+    document.getElementById("net-rx-value").textContent = rxFormatted.value;
+    document.getElementById("net-rx-unit").textContent = rxFormatted.unit;
+
+    document.getElementById("net-tx-value").textContent = txFormatted.value;
+    document.getElementById("net-tx-unit").textContent = txFormatted.unit;
+}
+
+function updateNetworkSparklines(rxHistory, txHistory) {
+    renderSparkline(document.getElementById("net-rx-sparkline").closest(".sparkline"), rxHistory);
+    renderSparkline(document.getElementById("net-tx-sparkline").closest(".sparkline"), txHistory);
+}
+
+function updateNetworkTotals(totalRx, totalTx) {
+    let rxEl = document.getElementById('net-total-rx');
+    let txEl = document.getElementById('net-total-tx');
+
+    if (rxEl) rxEl.textContent = formatNetworkTotal(totalRx);
+    if (txEl) txEl.textContent = formatNetworkTotal(totalTx);
+}
+
 function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
     updateRingProgress('cpu-load-ring', percent / 100);
     document.getElementById('cpu-load-percent').textContent = Math.round(percent);
@@ -60,7 +99,7 @@ function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
 }
 
 /* Sparkline for graphic */
-function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
+function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit, formatter = null) {
     let svg = document.getElementById(svgId).closest('.sparkline');
     let cursor = document.getElementById(cursorId);
     let dot = document.getElementById(dotId);
@@ -74,9 +113,11 @@ function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
 
         const data = bufferRef;
         if (!data.length) return;
+        if (data.length < 2) return;
 
         const index = Math.round(ratio * (data.length - 1));
         const sample = data[index];
+        if (!sample) return;
 
         const min = Math.min(...data.map(s => s.value));
         const max = Math.max(...data.map(s => s.value));
@@ -85,6 +126,8 @@ function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
         const padding = 2;
         const drawHeight = 40 - padding * 2;
         const svgX = (index / (data.length - 1)) * 100;
+        if (!isFinite(svgX)) return;
+        
         const svgY = padding + drawHeight - ((sample.value - min) / range) * drawHeight;
 
         const pt = svg.createSVGPoint();
@@ -107,7 +150,12 @@ function initSparklineTooltip(svgId, cursorId, dotId, bufferRef, unit) {
         const seconds = String(date.getSeconds()).padStart(2, '0');
         const timeWithSeconds = `${hours}:${minutes}:${seconds}`;
 
-        tooltip.textContent = `${Math.round(sample.value)}${unit} ${timeWithSeconds}`;
+        // tooltip.textContent = `${Math.round(sample.value)}${unit} ${timeWithSeconds}`;
+        if (formatter) {
+            tooltip.textContent = formatter(sample.value) + ' · ' + timeWithSeconds;
+        } else {
+            tooltip.textContent = `${Math.round(sample.value)}${unit} · ${timeWithSeconds}`;
+        }
     });
     
     svg.addEventListener("mouseenter", () => {
@@ -137,7 +185,7 @@ function updateRamSparkline(history) {
 }
 
 
-// Placeholder пока нет реальных данных
+// Placeholder fot preview
 const placeholderSparkline = [12, 18, 25, 22, 30, 35, 28, 38, 42, 36, 44, 40, 48, 52, 45, 50, 48, 53, 49, 51];
 renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), placeholderSparkline);
 renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), placeholderSparkline);
