@@ -23,9 +23,36 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-@keyframes pulse {
+/* @keyframes pulse {
    0%, 100% { opacity: 1; }
    50% { opacity: 0.3; }
+} */
+
+@keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+}
+
+@keyframes bounce-up {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes flow-down {
+  0%   { transform: translateY(-3px); opacity: 0.4; }
+  50%  { transform: translateY(2px);  opacity: 1; }
+  100% { transform: translateY(-3px); opacity: 0.4; }
+}
+@keyframes flow-up {
+  0%   { transform: translateY(3px);  opacity: 0.4; }
+  50%  { transform: translateY(-2px); opacity: 1; }
+  100% { transform: translateY(3px);  opacity: 0.4; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 60%, transparent); }
+  70% { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 
@@ -186,6 +213,24 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 }
 
 [data-metric="tx"] .network-direction-icon {
+    color: var(--accent);
+}
+
+[data-metric="rx"] .network-direction-icon {
+    animation: flow-down 1.5s ease-in-out infinite;
+}
+
+[data-metric="tx"] .network-direction-icon {
+    animation: flow-up 1.5s ease-in-out infinite;
+}
+
+[data-metric="rx"] .network-footer-row-data__icon,
+[data-metric="rx"] .network-footer-value {
+    color: var(--rx-network-color);
+}
+
+[data-metric="tx"] .network-footer-row-data__icon,
+[data-metric="tx"] .network-footer-value {
     color: var(--accent);
 }
 
@@ -522,7 +567,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 .server-status-dot.online {
     background-color: var(--success);
-    animation: pulse 1.5s infinite;
+    animation: pulse 2s infinite;
 }
 
 .server-status-dot.offline {
@@ -883,6 +928,18 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     font-size: 13px;
 }
 
+.network-footer-row-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.network-footer-row-data__icon {
+    width: 15px;
+    height: 15px;
+}
+
 .network-footer-label {
     color: var(--text-muted);
 }
@@ -895,7 +952,7 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 
 /* - Panels - */
 
-.pannels {
+.panels {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;

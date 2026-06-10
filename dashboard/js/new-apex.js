@@ -40,15 +40,16 @@ function renderSparkline(svgElement, data) {
 }
 
 function formatNetworkSpeed(bytesPerSecond) {
-    if (bytesPerSecond >= 1048576) return { value: (bytesPerSecond / 1048576).toFixed(2), unit: 'Mb/s' };
-    if (bytesPerSecond >= 1024) return { value: (bytesPerSecond / 1024).toFixed(2), unit: 'Kb/s' };
-    return { value: Math.round(bytesPerSecond ?? 0), unit: 'B/s' };
+    let bitsPerSecond = bytesPerSecond * 8;
+    if (bitsPerSecond >= 1000000) return { value: (bitsPerSecond / 1000000).toFixed(2), unit: "Mb/s" };
+    if (bitsPerSecond >= 1000) return { value: (bitsPerSecond / 1000).toFixed(2), unit: "Kb/s" };
+    return { value: Math.round(bitsPerSecond ?? 0), unit: "b/s" };
 }
 
 function formatNetworkTotal(bytes) {
-    if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + " Tb";
-    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + " Gb";
-    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + " Mb";
+    if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + " TB";
+    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + " GB";
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + " MB";
     
     return (bytes / 1024).toFixed(1) + " Kb";
 }

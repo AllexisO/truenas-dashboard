@@ -100,10 +100,10 @@ function handleRealtimeData(data) {
     if (interfaces) {
         const ifaceName = Object.keys(interfaces)[0];
         
-        if(ifaceName) {
-            let iface = interfaces[ifaceName];
-            let rx = iface.received_bytes_rate;
-            let tx = iface.sent_bytes_rate;
+        if (ifaceName) {
+            const iface = interfaces[ifaceName];
+            const rx = iface.received_bytes_rate;
+            const tx = iface.sent_bytes_rate;
 
             pushSample(buffers.netRx, rx);
             pushSample(buffers.netTx, tx);
@@ -112,8 +112,13 @@ function handleRealtimeData(data) {
             updateNetworkSparklines(
                 buffers.netRx.map(s => s.value),
                 buffers.netTx.map(s => s.value)
-            )
+            );
         }
+    }
+
+    const netTotals = data.net_totals;
+    if (netTotals) {
+        updateNetworkTotals(netTotals.rx, netTotals.tx);
     }
 }
 
@@ -165,23 +170,7 @@ function formatBytes(bytes) {
 
 let networkStats = { totalRx: 0, totalTx: 0 };
 
-async function loadNetworkHistory() {
-    const response = await fetch("/history?graph=interface&identifier=eno1&hours=24");
-    const result = await response.json();
-
-    if (result?.[0]?.aggregations?.mean) {
-        let meanRx = result[0].aggregations.mean.received ?? 0;
-        let meanTx = result[0].aggregations.mean.sent ?? 0;
-
-        networkStats.totalRx = meanRx * 86400;
-        networkStats.totalTx = meanTx * 86400;
-
-        updateNetworkTotals(networkStats.totalRx, networkStats.totalTx);
-    }
-}
-
 loadCpuHistory();
-loadNetworkHistory();
 initSparklineTooltip("cpu-load-sparkline", "cpu-load-cursor", "cpu-load-dot", buffers.cpuLoad, '%');
 initSparklineTooltip("cpu-temp-sparkline", "cpu-temp-cursor", "cpu-temp-dot", buffers.cpuTemp, '°C');
 initSparklineTooltip("ram-sparkline", "ram-cursor", "ram-dot", buffers.ram, "%");
