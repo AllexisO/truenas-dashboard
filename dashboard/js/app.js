@@ -95,7 +95,7 @@ function connect() {
         if (typeof updateDisks === 'function') updateDisks(data);
         if (typeof buildPoolsSidebar === 'function') buildPoolsSidebar(data);
 
-        // console.log(data);
+        console.log(data);
     };
 
     ws.onclose = () => {
