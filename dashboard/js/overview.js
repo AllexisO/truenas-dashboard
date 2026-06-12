@@ -120,6 +120,16 @@ function handleRealtimeData(data) {
     if (netTotals) {
         updateNetworkTotals(netTotals.rx, netTotals.tx);
     }
+
+    // Disks
+    let disksIO = data.realtime?.disks;
+    if (disksIO) {
+        updateDisksIO(disksIO);
+    }
+
+    if (data.disks && !document.getElementById("disks-overview-list").children.length) {
+        buildDisksOverviewList(data);
+    }
 }
 
 let cpuLoadStats = { min: null, max: null };

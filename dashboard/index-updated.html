@@ -474,7 +474,20 @@
                                 <span class="disks-io-unit">%</span>
                             </div>
                         </div>
-
+                        <template id="disk-overview-item-template">
+                            <div class="disk-overview-item">
+                                <svg class="disk-status-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="disk-status-path"/>
+                                </svg>
+                                <span class="disk-overview-name"></span>
+                                <span class="disk-overview-status"></span>
+                                <span class="disk-overview-temp"></span>
+                                <div class="disk-overview-bar-wrap">
+                                    <div class="disk-overview-bar"></div>
+                                </div>
+                                <span class="disk-overview-percent"></span>
+                            </div>
+                        </template>
                     </article>
                 </section>
                 <section class="panels">
