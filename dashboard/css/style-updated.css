@@ -950,6 +950,114 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 }
 
 
+/* - Disks Card - */
+.disks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.disk-overview-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.disk-status-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.disk-overview-name {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--text);
+    width: 48px;
+    flex-shrink: 0;
+}
+
+.disk-overview-status {
+    width: 56px;
+    flex-shrink: 0;
+    font-weight: 500;
+}
+
+.disk-overview-status.healthy {
+    color: var(--success);
+}
+
+.disk-overview-item.warning {
+    color: var(--warning);
+}
+
+.disk-overview-temp {
+    width: 40px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.disk-overview-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background-color: var(--ring-track);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.disk-overview-bar {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s easy;
+}
+
+.disk-overview-percent {
+    width: 32px;
+    text-align: right;
+    color: var(--text-muted);
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.disks-io-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.disks-io-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px;
+    border-radius: 8px;
+    background: var(--background);
+    border: 1px solid var(--border);
+}
+
+.disks-io-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.disks-io-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.disks-io-unit {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+
 /* - Panels - */
 
 .panels {
