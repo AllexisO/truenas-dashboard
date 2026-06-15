@@ -438,7 +438,57 @@
                         </div>
                     </article>
 
-                    <article class="summary-card" id="-overview-card"></article>
+                    <article class="summary-card" id="disks-overview-card">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                </svg>
+                            </span>
+                            <h2 class="summary-card-title">Disks</h2>
+                        </header>
+
+                        <div class="disks-list" id="disks-overview-list"></div>
+
+                        <div class="disks-io-grid">
+                            <div class="disks-io-item">
+                                <span class="disks-io-label">Read</span>
+                                <span class="disks-io-value" id="disk-read-speed">0</span>
+                                <span class="disks-io-unit">MB/s</span>
+                            </div>
+                            <div class="disks-io-item">
+                                <span class="disks-io-label">Write</span>
+                                <span class="disks-io-value" id="disk-write-speed">0</span>
+                                <span class="disks-io-unit">MB/s</span>
+                            </div>
+                            <div class="disks-io-item">
+                                <span class="disks-io-label">IOPS</span>
+                                <span class="disks-io-value" id="disk-iops">0</span>
+                                <span class="disks-io-unit">ops</span>
+                            </div>
+                            <div class="disks-io-item">
+                                <span class="disks-io-label">Busy</span>
+                                <span class="disks-io-value" id="disk-busy">0</span>
+                                <span class="disks-io-unit">%</span>
+                            </div>
+                        </div>
+                        <template id="disk-overview-item-template">
+                            <div class="disk-overview-item">
+                                <svg class="disk-status-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path class="disk-status-path"/>
+                                </svg>
+                                <span class="disk-overview-name"></span>
+                                <span class="disk-overview-status"></span>
+                                <span class="disk-overview-temp"></span>
+                                <div class="disk-overview-bar-wrap">
+                                    <div class="disk-overview-bar"></div>
+                                </div>
+                                <span class="disk-overview-percent"></span>
+                            </div>
+                        </template>
+                    </article>
                 </section>
                 <section class="panels">
                     <div class="panel">
