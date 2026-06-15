@@ -191,13 +191,11 @@ function getDiskStatusColor(percent) {
 }
 
 function buildDisksOverviewList(data) {
-    console.log(data.disks)
-    console.log('building disks list', data.disks?.length);
-    const list = document.getElementById("#disks-overview-list");
+    const list = document.getElementById("disks-overview-list");
     if (!list || list.children.length > 0) return;
 
     let disks = data.disks;
-    let temp = data.disk_temps;
+    let temps = data.disk_temps;
     let pools = data.pools;
     let bootDisks = data.boot_disks;
     let bootDisk = data.boot_disk;
@@ -236,7 +234,7 @@ function buildDisksOverviewList(data) {
             percent = Math.round((bootDisk.used / bootDisk.total) * 100);
         }
 
-        let temp = temps?.[disk_name];
+        let temp = temps?.[disk.name];
         let color = percent !== null ? getDiskStatusColor(percent) : "#378ADD";
         
         let clone = template.content.cloneNode(true);
@@ -249,7 +247,7 @@ function buildDisksOverviewList(data) {
         if (healthy) {
             icon.setAttribute("stroke", "var(--success)");
             path.setAttribute("d", "M22 11.08V12a10 10 0 1 1-5.93-9.14");
-            let poly = document.createAttributeNS("http://www.w3.org/2000/svg", "polyline");
+            let poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
             poly.setAttribute("points", "22 4 12 14.01 9 11.01");
             icon.appendChild(poly);
         } else {
@@ -265,15 +263,15 @@ function buildDisksOverviewList(data) {
             icon.appendChild(line2);
         }
 
-        clone.querySelector("disk-overview-name").textContent = disk.name;
+        clone.querySelector(".disk-overview-name").textContent = disk.name;
 
         let statusEl = clone.querySelector(".disk-overview-status");
         statusEl.textContent = healthy ? "Healthy" : "Warning";
         statusEl.className = `disk-overview-status ${healthy ? "healthy" : "warning"}`;
 
-        clone.querySelector("disk-overview-temp").textContent = temp !== undefined ? Math.round(temp) + "°C" : "";
+        clone.querySelector(".disk-overview-temp").textContent = temp !== undefined ? Math.round(temp) + "°C" : "";
 
-        let bar = clone.querySelector("disk-overview-bar");
+        let bar = clone.querySelector(".disk-overview-bar");
         bar.style.width = (percent ?? 0) + "%";
         bar.style.background = color;
 
@@ -299,6 +297,24 @@ function updateDisksIO(disks) {
         busyEl.textContent = busy;
         busyEl.style.color = busy >= 80 ? '#E24B4A' : busy >= 50 ? '#BA7517' : 'var(--text)';
     }
+}
+
+function updateDisksOverviewList(data) {
+    const list = document.getElementById("disks-overview-list");
+    if (!list || !list.children.length) return;
+
+    let temps = data.disk_temps;
+    if (!temps) return;
+
+    list.querySelectorAll(".disk-overview-item").forEach(item => {
+        let diskName = item.dataset.diskName;
+        let temp = temps[diskName];
+
+        if (temp !== undefined) {
+            let tempEl = item.querySelector(".disk-overview-temp");
+            if (tempEl) tempEl.textContent = Math.round(temp) + '°C';
+        }
+    });
 }
 
 // Placeholder fot preview

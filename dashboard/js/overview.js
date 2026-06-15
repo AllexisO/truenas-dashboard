@@ -127,8 +127,12 @@ function handleRealtimeData(data) {
         updateDisksIO(disksIO);
     }
 
-    if (data.disks && !document.getElementById("disks-overview-list").children.length) {
-        buildDisksOverviewList(data);
+    if (data.disks) {
+        if (!document.getElementById("disks-overview-list").children.length) {
+            buildDisksOverviewList(data);
+        } else {
+            updateDisksOverviewList(data);
+        }
     }
 }
 

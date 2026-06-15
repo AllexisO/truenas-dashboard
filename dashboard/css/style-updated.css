@@ -955,6 +955,8 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    overflow-y: auto;
+    max-height: 215px;
 }
 
 .disk-overview-item {
@@ -1019,6 +1021,10 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
     color: var(--text-muted);
     font-family: monospace;
     font-size: 11px;
+}
+
+#disks-overview-card {
+    justify-content: space-between;
 }
 
 .disks-io-grid {
