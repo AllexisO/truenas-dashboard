@@ -75,6 +75,7 @@ html[data-theme="dark"] {
     --accent-border: rgba(129, 140, 248, 0.25);
     --success: #22C55E;
     --warning: #F97316;
+    --failed: #E24B4A;
     --ram-color: #A78BFA;
     --rx-network-color: #A78BFA;
     --tx-network-color: #10B981;
@@ -101,6 +102,7 @@ html[data-theme="light"] {
     --accent-border: rgba(99, 102, 241, 0.20);
     --success: #10B981;
     --warning: #EA580C;
+    --failed: #E24B4A;
     --ram-color: #A78BFA;
     --rx-network-color: #A78BFA;
     --tx-network-color: #10B981;

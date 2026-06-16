@@ -490,13 +490,131 @@
                         </template>
                     </article>
                 </section>
+
                 <section class="panels">
-                    <div class="panel">
+                    <div class="panel" id="disks-overview-panel">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                </svg>
+                            </span>
+                            <h2 class="summary-card-title">Disks Overview</h2>
+                        </header>
 
-                    </div>
-                    <div class="panel">
+                        <div class="disks-overview-top">
+                            <div class="disks-overview-stats">
+                                <div class="disks-overview-stat-row">
+                                    <!-- Total Count -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-total-count">0</span>
+                                        <span class="disks-overview-stat-label">Total Disks</span>
+                                    </div>
+                                    <!-- Total Healthy -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-healthy-count" style="color: var(--success);">0</span>
+                                        <span class="disks-overview-stat-label">Healthy</span>
+                                    </div>
+                                    <!-- Total Warning -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                            <line x1="12" y1="9" x2="12" y2="13"/>
+                                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-warning-count" style="color: var(--warning);">0</span>
+                                        <span class="disks-overview-stat-label">Warning</span>
+                                    </div>
+                                    <!-- Total Failed -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--failed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="15" y1="9" x2="9" y2="15"/>
+                                            <line x1="9" y1="9" x2="15" y2="15"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-failed-count" style="color: var(--failed);">0</span>
+                                        <span class="disks-overview-stat-label">Failed</span>
+                                    </div>
+                                </div>
 
+                                <div class="disks-overview-stat-row">
+                                    <!-- Total Capacity -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-total-capacity">0</span>
+                                        <span class="disks-overview-stat-label">Total Capacity</span>
+                                    </div>
+                                    <!-- Total Used -->
+                                    <div class="disks-overview-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                        </svg>
+                                        <span class="disks-overview-stat-value" id="disks-total-used">0</span>
+                                        <span class="disks-overview-stat-label">Used</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="disks-overview-donut-wrap">
+                                <svg class="disks-overview-donut" viewBox="0 0 120 120">
+                                    <circle class="donut-track" cx="60" cy="60" r="50"/>
+                                    <circle class="donut-healthy" id="donut-healthy" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
+                                    <circle class="donut-warning" id="donut-warning" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
+                                    <circle class="donut-failed" id="donut-failed" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
+                                </svg>
+                                <div class="disks-overview-legend">
+                                    <div class="disks-overview-legend-item">
+                                        <span class="disks-overview-legend-dot" style="background: var(--success);"></span>
+                                        <span>Healthy</span>
+                                        <span id="donut-healthy-pct">0%</span>
+                                    </div>
+                                </div>
+                                <div class="disks-overview-legend">
+                                    <div class="disks-overview-legend-item">
+                                        <span class="disks-overview-legend-dot" style="background: var(--warning);"></span>
+                                        <span>Warning</span>
+                                        <span id="donut-warning-pct">0%</span>
+                                    </div>
+                                </div>
+                                <div class="disks-overview-legend">
+                                    <div class="disks-overview-legend-item">
+                                        <span class="disks-overview-legend-dot" style="background: var(--failed);"></span>
+                                        <span>Failed</span>
+                                        <span id="donut-failed-pct">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-divider"></div>
+
+                        <div class="disks-overview-chart-header">
+                            <span class="disk-overview-chart-title">Read & Write last hour</span>
+                            <div class="disks-overview-chart-legend">
+                                <span class="disks-overview-chart-legend-item" style="color: var(--accent);">Read <span id="disk-chart-read">0</span> MB/s</span>
+                                <span class="disks-overview-chart-legend-item" style="color: var(--success);">Write <span id="disk-chart-write">0</span> MB/s</span>
+                            </div>
+                        </div>
+
+                        <div class="disks-overview-chart" id="disks-overview-chart"></div>
                     </div>
+
+                    <div class="panel"></div>
                 </section>
             </div>
         </main>
