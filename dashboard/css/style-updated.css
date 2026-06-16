@@ -1090,3 +1090,143 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
         min-height: 240px;
     }
 }
+
+/* Disks Overview Panel */
+.disks-overview-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin: 16px 0;
+}
+
+.disks-overview-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.disks-overview-stat-row {
+    display: flex;
+    gap: 32px;
+}
+
+.disks-overview-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.disks-overview-stat-top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.disks-overview-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+.disks-overview-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.disks-overview-donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.disks-overview-donut {
+    width: 110px;
+    height: 110px;
+}
+
+.donut-track {
+    fill: none;
+    stroke: var(--ring-track);
+    stroke-width: 10;
+}
+
+.donut-healthy,
+.donut-warning,
+.donut-failed {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: butt;
+    transition: stroke-dasharray 0.4s ease, stroke-dashoffset 0.4s ease;
+}
+
+.donut-healthy {
+    stroke: var(--success);
+}
+
+.donut-warning {
+    stroke: var(--warning);
+}
+
+.donut-failed {
+    stroke: var(--failed);
+}
+
+.disks-overview-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.disks-overview-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.disks-overview-legend-item span:last-child {
+    font-weight: 600;
+    color: var(--text);
+    margin-left: auto;
+    min-width: 36px;
+    text-align: right;
+}
+
+.disks-overview-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.disks-overview-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 12px;
+}
+
+.disks-overview-chart-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-muted);
+}
+
+.disks-overview-chart-legend {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    font-family: monospace;
+}
+
+.disks-overview-chart {
+    width: 100%;
+    height: 200px;
+}
