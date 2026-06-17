@@ -11,6 +11,17 @@ function updateRingProgress(elementId, progress) {
     ring.setAttribute('stroke-dashoffset', RING_CIRCUMFERENCE * (1 - clamped));
 }
 
+function updateDonutSegment(id, pct, offsetPct) {
+    let element = document.getElementById(id);
+    if (!element) return;
+
+    let dash = (pct / 100) * RING_CIRCUMFERENCE;
+    let offset = (offsetPct / 100) * RING_CIRCUMFERENCE;
+
+    element.setAttribute("stroke-dasharray", `${dash} ${RING_CIRCUMFERENCE - dash}`);
+    element.setAttribute("stroke-dashoffset", -offset);
+}
+
 function renderSparkline(svgElement, data) {
     const lineEl = svgElement.querySelector('.sparkline-line');
     const areaEl = svgElement.querySelector('.sparkline-area');
@@ -46,7 +57,7 @@ function formatNetworkSpeed(bytesPerSecond) {
     return { value: Math.round(bitsPerSecond ?? 0), unit: "b/s" };
 }
 
-function formatNetworkTotal(bytes) {
+function formatBytesUnit(bytes) {
     if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + " TB";
     if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + " GB";
     if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + " MB";
@@ -74,8 +85,8 @@ function updateNetworkTotals(totalRx, totalTx) {
     let rxEl = document.getElementById('net-total-rx');
     let txEl = document.getElementById('net-total-tx');
 
-    if (rxEl) rxEl.textContent = formatNetworkTotal(totalRx);
-    if (txEl) txEl.textContent = formatNetworkTotal(totalTx);
+    if (rxEl) rxEl.textContent = formatBytesUnit(totalRx);
+    if (txEl) txEl.textContent = formatBytesUnit(totalTx);
 }
 
 function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
@@ -190,6 +201,25 @@ function getDiskStatusColor(percent) {
     return "#378ADD";
 }
 
+function buildDiskPoolMap(pools) {
+    const diskPoolMap = {};
+    if (!pools) return diskPoolMap;
+
+    pools.forEach(pool => {
+        const walkVdevs = (vdevs) => {
+            vdevs.forEach(vdev => {
+                if (vdev.disk) {
+                    diskPoolMap[vdev.disk] = pool;
+                }
+                if (vdev.children) walkVdevs(vdev.children);
+            });
+        };
+        if (pool.topology?.data) walkVdevs(pool.topology.data);
+    });
+
+    return diskPoolMap;
+}
+
 function buildDisksOverviewList(data) {
     const list = document.getElementById("disks-overview-list");
     if (!list || list.children.length > 0) return;
@@ -203,24 +233,20 @@ function buildDisksOverviewList(data) {
     if(!disks) return;
 
     // Build disk -> pool map
-    const diskPoolMap = {};
-    if (pools) {
-        pools.forEach(pool => {
-            const walkVdevs = (vdevs) => {
-                vdevs.forEach(vdev => {
-                    if (vdev.disk) {
-                        diskPoolMap[vdev.disk] = pool;
-                    }
-                    if (vdev.children) walkVdevs(vdev.children);
-                });
-            };
-            if (pool.topology?.data) walkVdevs(pool.topology.data);
-        });
-    }
+    const diskPoolMap = buildDiskPoolMap(pools);
 
-    const template = document.getElementById("disk-overview-item-template");
+    let totalCapacity = 0;
+    let totalUsed = 0;
+    let healthyCount = 0;
+    let warningCount = 0;
+    let failedCount = 0;
+
+    const shouldBuildList = list && list.children.length === 0;
+    const template = shouldBuildList ? document.getElementById("disk-overview-item-template") : null;
     
     disks.forEach(disk => {
+        totalCapacity += disk.size;
+
         let pool = diskPoolMap[disk.name];
         let isBootDisk = bootDisks?.includes(disk.name);
 
@@ -230,9 +256,19 @@ function buildDisksOverviewList(data) {
         if (pool) {
             percent = Math.round((pool.allocated / pool.size) * 100);
             healthy = pool.healthy && !pool.warning;
+
+            if (!pool.healthy) failedCount++;
+            else if (pool.warning) warningCount++;
+            else healthyCount++;
         } else if (isBootDisk && bootDisk) {
             percent = Math.round((bootDisk.used / bootDisk.total) * 100);
+            healthyCount++;
+        } else {
+            healthyCount++;
         }
+
+        if (!shouldBuildList) return;
+
 
         let temp = temps?.[disk.name];
         let color = percent !== null ? getDiskStatusColor(percent) : "#378ADD";
@@ -279,6 +315,52 @@ function buildDisksOverviewList(data) {
 
         list.appendChild(clone);
     });
+
+    // Disks Overview panel totals + donut
+    pools?.forEach(pool => {
+        totalUsed += pool.allocated;
+    });
+
+    if (bootDisk) {
+        totalUsed += bootDisk.used;
+    }
+
+    let total = disks.length;
+
+    let totalCountElement = document.querySelector("#disks-total-count");
+    if (totalCountElement) totalCountElement.textContent = total;
+
+    let totalCapacityElement = document.querySelector("#disks-total-capacity");
+    if (totalCapacityElement) totalCapacityElement.textContent = formatBytesUnit(totalCapacity);
+
+    let totalUsedElement = document.querySelector("#disks-total-used");
+    if (totalUsedElement) totalUsedElement.textContent = formatBytesUnit(totalUsed);
+
+    let healthyCountElement = document.querySelector("#disks-healthy-count");
+    if (healthyCountElement) healthyCountElement.textContent = healthyCount;
+
+    let warningCountElement = document.querySelector("#disks-warning-count");
+    if (warningCountElement) warningCountElement.textContent = warningCount;
+
+    let failedCountElement = document.querySelector("#disks-failed-count");
+    if (failedCountElement) failedCountElement.textContent = failedCount;
+
+    let healthyPct = total > 0 ? Math.round((healthyCount / total) * 100) : 0;
+    let warningPct = total > 0 ? Math.round((warningCount / total) * 100) : 0;
+    let failedPct = total > 0 ? Math.round((failedCount / total) * 100) : 0;
+
+    let healthyPctElement = document.querySelector("#donut-healthy-pct");
+    if (healthyPctElement) healthyPctElement.textContent = healthyPct + '%';
+
+    let warningPctElement = document.querySelector("#donut-warning-pct");
+    if (warningPctElement) warningPctElement.textContent = warningPct + '%';
+
+    let failedPctElement = document.querySelector("#donut-failed-pct");
+    if (failedPctElement) failedPctElement.textContent = failedPct + '%';
+
+    updateDonutSegment("donut-healthy", healthyPct, 0);
+    updateDonutSegment("donut-warning", warningPct, healthyPct);
+    updateDonutSegment("donut-failed", failedPct, healthyPct + warningPct);
 }
 
 function updateDisksIO(disks) {
@@ -295,7 +377,7 @@ function updateDisksIO(disks) {
     if (busyEl) {
         const busy = Math.round(disks.busy);
         busyEl.textContent = busy;
-        busyEl.style.color = busy >= 80 ? '#E24B4A' : busy >= 50 ? '#BA7517' : 'var(--text)';
+        busyEl.style.color = busy >= 80 ? 'var(--failed)' : busy >= 50 ? 'var(--warning)' : 'var(--text)';
     }
 }
 

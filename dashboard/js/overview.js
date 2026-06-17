@@ -22,6 +22,11 @@ function pushSample(buffer, value) {
     if (buffer.length > BUFFER_SIZE) buffer.shift();
 }
 
+function formatBytes(bytes) {
+    let gb = bytes / 1073741824;
+    return gb.toFixed(1) + " GB";
+}
+
 function formatTime(timestamp) {
     const date = new Date(timestamp);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -175,11 +180,6 @@ async function loadCpuHistory() {
             if (!cpuTempStats.max || value > cpuTempStats.max.value) cpuTempStats.max = { value, time };
         });
     }
-}
-
-function formatBytes(bytes) {
-    let gb = bytes / 1073741824;
-    return gb.toFixed(1) + " GB";
 }
 
 let networkStats = { totalRx: 0, totalTx: 0 };
