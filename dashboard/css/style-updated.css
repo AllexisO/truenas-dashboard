@@ -1229,4 +1229,5 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
 .disks-overview-chart {
     width: 100%;
     height: 200px;
+    display: block;
 }

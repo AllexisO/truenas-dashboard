@@ -149,10 +149,10 @@ class Poller:
 
         # Getting disk usage via df
         result = subprocess.run(
-            ['df', '-B1', '/'],
+            ["df", "-B1", "/"],
             capture_output=True, text=True
         )
-        lines = result.stdout.strip().split('\n')
+        lines = result.stdout.strip().split("\n")
         if len(lines) >= 2:
             parts = lines[1].split()
             self.latest_data["boot_disk"] = {
@@ -160,6 +160,24 @@ class Poller:
                 "used": int(parts[2]),
                 "free": int(parts[3])
             }
+        
+        # Getting disk graph identifiers (for /history endpoint)
+        await ws.send(json.dumps({
+            "id": "10", "msg": "method",
+            "method": "reporting.graphs", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        graphs = response.get("result", [])
+
+        disk_graph = next((g for g in graphs if g["name"] == "disk"), None)
+        disk_identifiers = {}
+
+        if disk_graph and disk_graph.get("identifiers"):
+            for identifier in disk_graph["identifiers"]:
+                disk_name = identifier.split(" | ")[0].strip()
+                disk_identifiers[disk_name] = identifier
+        
+        self.latest_data["disk_identifiers"] = disk_identifiers
 
         # Getting TOP processes
         await self.fetch_processes()

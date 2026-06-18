@@ -22,32 +22,66 @@ function updateDonutSegment(id, pct, offsetPct) {
     element.setAttribute("stroke-dashoffset", -offset);
 }
 
+// function renderSparkline(svgElement, data) {
+//     const lineEl = svgElement.querySelector('.sparkline-line');
+//     const areaEl = svgElement.querySelector('.sparkline-area');
+//     if (!data || data.length < 2) {
+//         lineEl.setAttribute('points', '');
+//         areaEl.setAttribute('d', '');
+//         return;
+//     }
+
+//     const width = 100;
+//     const height = 40;
+//     const padding = 2;
+//     const drawHeight = height - padding * 2;
+
+//     const min = Math.min(...data);
+//     const max = Math.max(...data);
+//     const range = max - min || 1;
+
+//     const points = data.map((value, index) => {
+//         const x = (index / (data.length - 1)) * width;
+//         const y = padding + drawHeight - ((value - min) / range) * drawHeight;
+//         return `${x.toFixed(2)},${y.toFixed(2)}`;
+//     });
+
+//     lineEl.setAttribute('points', points.join(' '));
+//     areaEl.setAttribute('d', `M0,${height} L${points.join(' L')} L${width},${height} Z`);
+// }
+
+function computeLinePoints(data, min, max, width, height, padding) {
+    let range = max - min || 1;
+    let drawHeight = height - padding * 2;
+
+    return data.map((value, index) => {
+        let x = (index / (data.length - 1)) * width;
+        let y = padding + drawHeight - ((value - min) / range) * drawHeight;
+
+        return `${x.toFixed(2)},${y.toFixed(2)}`;
+    });
+}
+
 function renderSparkline(svgElement, data) {
-    const lineEl = svgElement.querySelector('.sparkline-line');
-    const areaEl = svgElement.querySelector('.sparkline-area');
+    let lineElement = svgElement.querySelector(".sparkline-line");
+    let areaElement = svgElement.querySelector(".sparkline-area");
+
     if (!data || data.length < 2) {
-        lineEl.setAttribute('points', '');
-        areaEl.setAttribute('d', '');
+        lineElement.setAttribute("points", "");
+        areaElement.setAttribute("d", "");
         return;
     }
 
-    const width = 100;
-    const height = 40;
-    const padding = 2;
-    const drawHeight = height - padding * 2;
+    let width = 100;
+    let height = 40;
+    let padding = 2;
 
     const min = Math.min(...data);
     const max = Math.max(...data);
-    const range = max - min || 1;
+    const points = computeLinePoints(data, min, max, width, height, padding);
 
-    const points = data.map((value, index) => {
-        const x = (index / (data.length - 1)) * width;
-        const y = padding + drawHeight - ((value - min) / range) * drawHeight;
-        return `${x.toFixed(2)},${y.toFixed(2)}`;
-    });
-
-    lineEl.setAttribute('points', points.join(' '));
-    areaEl.setAttribute('d', `M0,${height} L${points.join(' L')} L${width},${height} Z`);
+    lineElement.setAttribute("points", points.join(" "));
+    areaElement.setAttribute("d", `M0,${height} L${points.join(" L")} L${width},${height} Z`);
 }
 
 function formatNetworkSpeed(bytesPerSecond) {
@@ -397,6 +431,49 @@ function updateDisksOverviewList(data) {
             if (tempEl) tempEl.textContent = Math.round(temp) + '°C';
         }
     });
+}
+
+function downsample(data, maxPoints) {
+    if (data.length <= maxPoints) return data;
+    const chunkSize = Math.ceil(data.length / maxPoints);
+    const result = [];
+    for (let i = 0; i < data.length; i += chunkSize) {
+        const chunk = data.slice(i, i + chunkSize);
+        const avg = chunk.reduce((sum, v) => sum + v, 0) / chunk.length;
+        result.push(avg);
+    }
+    return result;
+}
+
+function renderDisksOverviewChart(combined) {
+    const svg = document.getElementById('disks-overview-chart-svg');
+    if (!svg) return;
+
+    const rawReads = combined.map(p => p.reads / 1024);   // KiB/s -> MB/s
+    const rawWrites = combined.map(p => p.writes / 1024); // KiB/s -> MB/s
+
+    const reads = downsample(rawReads, 60);
+    const writes = downsample(rawWrites, 60);
+
+    const allValues = [...reads, ...writes];
+    const min = Math.min(...allValues, 0);
+    const max = Math.max(...allValues, 1);
+
+    const width = 600;
+    const height = 200;
+    const padding = 8;
+
+    const readPoints = computeLinePoints(reads, min, max, width, height, padding);
+    const writePoints = computeLinePoints(writes, min, max, width, height, padding);
+
+    svg.querySelector('.disks-chart-read-line').setAttribute('points', readPoints.join(' '));
+    svg.querySelector('.disks-chart-write-line').setAttribute('points', writePoints.join(' '));
+
+    let readEl = document.getElementById('disk-chart-read');
+    let writeEl = document.getElementById('disk-chart-write');
+
+    if (readEl) readEl.textContent = (rawReads[rawReads.length - 1] ?? 0).toFixed(1);
+    if (writeEl) writeEl.textContent = (rawWrites[rawWrites.length - 1] ?? 0).toFixed(1);
 }
 
 // Placeholder fot preview
