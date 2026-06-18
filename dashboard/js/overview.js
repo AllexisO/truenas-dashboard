@@ -22,6 +22,11 @@ function pushSample(buffer, value) {
     if (buffer.length > BUFFER_SIZE) buffer.shift();
 }
 
+function formatBytes(bytes) {
+    let gb = bytes / 1073741824;
+    return gb.toFixed(1) + " GB";
+}
+
 function formatTime(timestamp) {
     const date = new Date(timestamp);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -36,6 +41,8 @@ function handleRealtimeData(data) {
     const cpuData = data.realtime?.cpu?.cpu;
     const memory = data.realtime?.memory;
     const interfaces = data.realtime?.interfaces;
+
+    let disksChartLoaded = false;
 
     if (!cpuData) return;
 
@@ -134,6 +141,14 @@ function handleRealtimeData(data) {
             updateDisksOverviewList(data);
         }
     }
+
+    
+
+    if (data.disk_identifiers && !disksChartLoaded) {
+        disksChartLoaded = true;
+        loadDisksChartHistory(data.disk_identifiers);
+        setInterval(() => loadDisksChartHistory(data.disk_identifiers), 60000);
+    }
 }
 
 let cpuLoadStats = { min: null, max: null };
@@ -177,9 +192,36 @@ async function loadCpuHistory() {
     }
 }
 
-function formatBytes(bytes) {
-    let gb = bytes / 1073741824;
-    return gb.toFixed(1) + " GB";
+async function loadDisksChartHistory(diskIdentifiers) {
+    if (!diskIdentifiers) return;
+
+    const names = Object.keys(diskIdentifiers);
+
+    const requests = names.map(name => {
+        const encoded = encodeURIComponent(diskIdentifiers[name]);
+        return fetch(`/history?graph=disk&identifier=${encoded}&hours=1`).then(r => r.json());
+    });
+
+    const results = await Promise.all(requests);
+
+    let combined = null;
+
+    results.forEach(result => {
+        const entry = result[0];
+        if (!entry || !entry.data) return;
+
+        entry.data.forEach((point, index) => {
+            const [time, reads, writes] = point;
+            if (!combined) combined = [];
+            if (!combined[index]) combined[index] = { time, reads: 0, writes: 0 };
+            combined[index].reads += reads;
+            combined[index].writes += writes;
+        });
+    });
+
+    if (!combined) return;
+
+    renderDisksOverviewChart(combined);
 }
 
 let networkStats = { totalRx: 0, totalTx: 0 };
