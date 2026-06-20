@@ -22,34 +22,6 @@ function updateDonutSegment(id, pct, offsetPct) {
     element.setAttribute("stroke-dashoffset", -offset);
 }
 
-// function renderSparkline(svgElement, data) {
-//     const lineEl = svgElement.querySelector('.sparkline-line');
-//     const areaEl = svgElement.querySelector('.sparkline-area');
-//     if (!data || data.length < 2) {
-//         lineEl.setAttribute('points', '');
-//         areaEl.setAttribute('d', '');
-//         return;
-//     }
-
-//     const width = 100;
-//     const height = 40;
-//     const padding = 2;
-//     const drawHeight = height - padding * 2;
-
-//     const min = Math.min(...data);
-//     const max = Math.max(...data);
-//     const range = max - min || 1;
-
-//     const points = data.map((value, index) => {
-//         const x = (index / (data.length - 1)) * width;
-//         const y = padding + drawHeight - ((value - min) / range) * drawHeight;
-//         return `${x.toFixed(2)},${y.toFixed(2)}`;
-//     });
-
-//     lineEl.setAttribute('points', points.join(' '));
-//     areaEl.setAttribute('d', `M0,${height} L${points.join(' L')} L${width},${height} Z`);
-// }
-
 function computeLinePoints(data, min, max, width, height, padding) {
     let range = max - min || 1;
     let drawHeight = height - padding * 2;
@@ -400,19 +372,29 @@ function buildDisksOverviewList(data) {
 function updateDisksIO(disks) {
     if (!disks) return;
 
+    const readMBs = disks.read_bytes / 1048576;
+    const writeMBs = disks.write_bytes / 1048576;
+
     const readEl = document.getElementById('disk-read-speed');
     const writeEl = document.getElementById('disk-write-speed');
     const iopsEl = document.getElementById('disk-iops');
     const busyEl = document.getElementById('disk-busy');
 
-    if (readEl) readEl.textContent = (disks.read_bytes / 1048576).toFixed(1);
-    if (writeEl) writeEl.textContent = (disks.write_bytes / 1048576).toFixed(1);
+    if (readEl) readEl.textContent = readMBs.toFixed(1);
+    if (writeEl) writeEl.textContent = writeMBs.toFixed(1);
     if (iopsEl) iopsEl.textContent = Math.round(disks.read_ops + disks.write_ops);
     if (busyEl) {
         const busy = Math.round(disks.busy);
         busyEl.textContent = busy;
         busyEl.style.color = busy >= 80 ? 'var(--failed)' : busy >= 50 ? 'var(--warning)' : 'var(--text)';
     }
+
+    const chartReadEl = document.getElementById('disk-chart-read');
+    const chartWriteEl = document.getElementById('disk-chart-write');
+    if (chartReadEl) chartReadEl.textContent = readMBs.toFixed(1);
+    if (chartWriteEl) chartWriteEl.textContent = writeMBs.toFixed(1);
+
+    return { readMBs, writeMBs };
 }
 
 function updateDisksOverviewList(data) {
@@ -433,29 +415,12 @@ function updateDisksOverviewList(data) {
     });
 }
 
-function downsample(data, maxPoints) {
-    if (data.length <= maxPoints) return data;
-    const chunkSize = Math.ceil(data.length / maxPoints);
-    const result = [];
-    for (let i = 0; i < data.length; i += chunkSize) {
-        const chunk = data.slice(i, i + chunkSize);
-        const avg = chunk.reduce((sum, v) => sum + v, 0) / chunk.length;
-        result.push(avg);
-    }
-    return result;
-}
-
-function renderDisksOverviewChart(combined) {
+function renderDisksOverviewChart(readHistory, writeHistory) {
     const svg = document.getElementById('disks-overview-chart-svg');
     if (!svg) return;
+    if (readHistory.length < 5 || writeHistory.length < 5) return;
 
-    const rawReads = combined.map(p => p.reads / 1024);   // KiB/s -> MB/s
-    const rawWrites = combined.map(p => p.writes / 1024); // KiB/s -> MB/s
-
-    const reads = downsample(rawReads, 60);
-    const writes = downsample(rawWrites, 60);
-
-    const allValues = [...reads, ...writes];
+    const allValues = [...readHistory, ...writeHistory];
     const min = Math.min(...allValues, 0);
     const max = Math.max(...allValues, 1);
 
@@ -463,17 +428,52 @@ function renderDisksOverviewChart(combined) {
     const height = 200;
     const padding = 8;
 
-    const readPoints = computeLinePoints(reads, min, max, width, height, padding);
-    const writePoints = computeLinePoints(writes, min, max, width, height, padding);
+    const readCoords = computeFixedWindowPoints(readHistory, min, max, width, height, padding, BUFFER_SIZE);
+    const writeCoords = computeFixedWindowPoints(writeHistory, min, max, width, height, padding, BUFFER_SIZE);
 
-    svg.querySelector('.disks-chart-read-line').setAttribute('points', readPoints.join(' '));
-    svg.querySelector('.disks-chart-write-line').setAttribute('points', writePoints.join(' '));
+    const readPoints = readCoords.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
+    const writePoints = writeCoords.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' ');
 
-    let readEl = document.getElementById('disk-chart-read');
-    let writeEl = document.getElementById('disk-chart-write');
+    svg.querySelector('.disks-chart-read-line').setAttribute('points', readPoints);
+    svg.querySelector('.disks-chart-write-line').setAttribute('points', writePoints);
+}
 
-    if (readEl) readEl.textContent = (rawReads[rawReads.length - 1] ?? 0).toFixed(1);
-    if (writeEl) writeEl.textContent = (rawWrites[rawWrites.length - 1] ?? 0).toFixed(1);
+function smoothPath(points) {
+    if (points.length < 3) {
+        return `M${points.map(p => p.join(',')).join(' L')}`;
+    }
+
+    let d = `M${points[0][0]},${points[0][1]}`;
+
+    for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[i === 0 ? i : i - 1];
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const p3 = points[i + 2 < points.length ? i + 2 : i + 1];
+
+        const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+        const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+        const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+        const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+
+        d += ` C${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0]},${p2[1]}`;
+    }
+
+    return d;
+}
+
+function computeFixedWindowPoints(data, min, max, width, height, padding, totalSlots) {
+    const range = max - min || 1;
+    const drawHeight = height - padding * 2;
+    const slotWidth = width / (totalSlots - 1);
+    const startSlot = totalSlots - data.length;
+
+    return data.map((value, index) => {
+        const slot = startSlot + index;
+        const x = slot * slotWidth;
+        const y = padding + drawHeight - ((value - min) / range) * drawHeight;
+        return [x, y];
+    });
 }
 
 // Placeholder fot preview

@@ -14,7 +14,9 @@ const buffers = {
     cpuTemp: [],
     ram: [],
     netRx: [],
-    netTx: []
+    netTx: [],
+    diskRead: [],
+    diskWrite: []
 };
 
 function pushSample(buffer, value) {
@@ -129,7 +131,13 @@ function handleRealtimeData(data) {
     // Disks
     let disksIO = data.realtime?.disks;
     if (disksIO) {
-        updateDisksIO(disksIO);
+        const { readMBs, writeMBs } = updateDisksIO(disksIO);
+        pushSample(buffers.diskRead, readMBs);
+        pushSample(buffers.diskWrite, writeMBs);
+        renderDisksOverviewChart(
+            buffers.diskRead.map(s => s.value),
+            buffers.diskWrite.map(s => s.value)
+        );
     }
 
     if (data.disks) {
@@ -182,7 +190,93 @@ async function loadCpuHistory() {
     }
 }
 
-let networkStats = { totalRx: 0, totalTx: 0 };
+function initDisksChartTooltip(svgId, cursorId, readDotId, writeDotId, readBufferRef, writeBufferRef) {
+    let svg = document.getElementById(svgId);
+    let wrapper = svg.parentElement;
+    let cursor = document.getElementById(cursorId);
+    let readDot = document.getElementById(readDotId);
+    let writeDot = document.getElementById(writeDotId);
+    let tooltip = document.getElementById("sparkline-tooltip");
+
+    svg.addEventListener("mousemove", (event) => {
+        const rect = svg.getBoundingClientRect();
+        const wrapRect = wrapper.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+
+        const readData = readBufferRef;
+        const writeData = writeBufferRef;
+        if (readData.length < 2 || writeData.length < 2) return;
+
+        const width = 600;
+        const height = 200;
+        const padding = 8;
+        const totalSlots = BUFFER_SIZE;
+        const slotWidth = width / (totalSlots - 1);
+        const startSlot = totalSlots - readData.length;
+
+        const ratio = mouseX / rect.width;
+        const slot = ratio * (totalSlots - 1);
+        const index = Math.round(slot - startSlot);
+
+        if (index < 0 || index >= readData.length) return;
+
+        const readSample = readData[index];
+        const writeSample = writeData[index];
+        if (!readSample || !writeSample) return;
+
+        const allValues = [...readData.map(s => s.value), ...writeData.map(s => s.value)];
+        const min = Math.min(...allValues, 0);
+        const max = Math.max(...allValues, 1);
+        const range = max - min || 1;
+        const drawHeight = height - padding * 2;
+
+        const svgX = (startSlot + index) * slotWidth;
+        const readY = padding + drawHeight - ((readSample.value - min) / range) * drawHeight;
+        const writeY = padding + drawHeight - ((writeSample.value - min) / range) * drawHeight;
+
+        cursor.setAttribute("x1", svgX);
+        cursor.setAttribute("x2", svgX);
+
+        const toScreen = (x, y) => {
+            const pt = svg.createSVGPoint();
+            pt.x = x;
+            pt.y = y;
+            return pt.matrixTransform(svg.getScreenCTM());
+        };
+
+        const readScreen = toScreen(svgX, readY);
+        const writeScreen = toScreen(svgX, writeY);
+
+        readDot.style.left = (readScreen.x - wrapRect.left) + 'px';
+        readDot.style.top = (readScreen.y - wrapRect.top) + 'px';
+        writeDot.style.left = (writeScreen.x - wrapRect.left) + 'px';
+        writeDot.style.top = (writeScreen.y - wrapRect.top) + 'px';
+
+        tooltip.style.left = (event.clientX + 12) + 'px';
+        tooltip.style.top = (event.clientY - 24) + 'px';
+
+        const date = new Date(readSample.time);
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        tooltip.textContent = `Read ${readSample.value.toFixed(1)} MB/s · Write ${writeSample.value.toFixed(1)} MB/s · ${hours}:${minutes}:${seconds}`;
+    });
+
+    svg.addEventListener("mouseenter", () => {
+        cursor.setAttribute("visibility", "visible");
+        readDot.style.display = "block";
+        writeDot.style.display = "block";
+        tooltip.style.display = "block";
+    });
+
+    svg.addEventListener("mouseleave", () => {
+        cursor.setAttribute("visibility", "hidden");
+        readDot.style.display = "none";
+        writeDot.style.display = "none";
+        tooltip.style.display = "none";
+    });
+}
 
 loadCpuHistory();
 initSparklineTooltip("cpu-load-sparkline", "cpu-load-cursor", "cpu-load-dot", buffers.cpuLoad, '%');
@@ -196,3 +290,4 @@ initSparklineTooltip("net-tx-sparkline", "net-tx-cursor", "net-tx-dot", buffers.
     let formatted = formatNetworkSpeed(v);
     return `${formatted.value} ${formatted.unit}`;
 });
+initDisksChartTooltip("disks-overview-chart-svg", "disks-chart-cursor", "disks-chart-read-dot", "disks-chart-write-dot", buffers.diskRead, buffers.diskWrite);

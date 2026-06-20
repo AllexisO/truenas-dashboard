@@ -615,18 +615,26 @@
                         <div class="metric-divider"></div>
 
                         <div class="disks-overview-chart-header">
-                            <span class="disks-overview-chart-title">Read & Write last hour</span>
                             <div class="disks-overview-chart-legend">
-                                <span class="disks-overview-chart-legend-item" style="color: var(--accent);">Read <span id="disk-chart-read">0</span> MB/s</span>
-                                <span class="disks-overview-chart-legend-item" style="color: var(--success);">Write <span id="disk-chart-write">0</span> MB/s</span>
+                                <div class="disks-overview-chart-container" style="color: var(--accent);">
+                                    <span class="disk-chart-read-line"></span>
+                                    <span class="disks-overview-chart-legend-item">Read <span id="disk-chart-read">0</span> MB/s</span>
+                                </div>
+                                <div class="disks-overview-chart-container" style="color: var(--success);">
+                                    <span class="disk-chart-write-line"></span>
+                                    <span class="disks-overview-chart-legend-item">Write <span id="disk-chart-write">0</span> MB/s</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="disks-overview-chart" id="disks-overview-chart">
-                            <svg class="disks-overview-chart" id="disks-overview-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
+                        <div class="sparkline-wrap" style="height: 200px;">
+                            <svg class="disks-overview-chart sparkline" id="disks-overview-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
                                 <polyline class="disks-chart-read-line" fill="none" stroke="var(--accent)" stroke-width="2"></polyline>
                                 <polyline class="disks-chart-write-line" fill="none" stroke="var(--success)" stroke-width="2"></polyline>
+                                <line class="sparkline-cursor" id="disks-chart-cursor" x1="0" y1="0" x2="0" y2="200" visibility="hidden"/>
                             </svg>
+                            <div class="sparkline-dot" id="disks-chart-read-dot" style="background: var(--accent);"></div>
+                            <div class="sparkline-dot" id="disks-chart-write-dot" style="background: var(--success);"></div>
                         </div>
                     </div>
 
