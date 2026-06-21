@@ -638,13 +638,59 @@
                         </div>
                     </div>
 
-                    <div class="panel"></div>
+                    <div class="panel" id="pools-overview-panel">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                </svg>
+                            </span>
+                            <h2 class="summary-card-title">Pools</h2>
+                        </header>
+
+                        <table class="pools-table">
+                            <thead>
+                                <tr>
+                                    <th>Pool</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Used</th>
+                                    <th>Available</th>
+                                    <th>Capacity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pools-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <template id="pool-row-template">
+                        <tr class="pools-table-row">
+                            <td class="pools-table-name"></td>
+                            <td><span class="disk-overview-status"></span></td>
+                            <td class="pools-table-total"></td>
+                            <td class="pools-table-used"></td>
+                            <td class="pools-table-available"></td>
+                            <td class="pools-table-capacity">
+                                <div class="pools-table-capacity-wrap">
+                                    <div class="disk-overview-bar-wrap">
+                                        <div class="disk-overview-bar"></div>
+                                    </div>
+                                    <span class="pools-table-percent"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
                 </section>
             </div>
         </main>
     </div>
 
-    <div class="sparkline-tooltip" id="sparkline-tooltip"></div>
+    <div class="sparkline-tooltip" id="sparkline-tooltip">
+
+    </div>
+
     <div class="logo-tooltip" id="logo-tooltip"></div>
 
     <script src="/js/header.js"></script>

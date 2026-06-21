@@ -147,6 +147,10 @@ function handleRealtimeData(data) {
             updateDisksOverviewList(data);
         }
     }
+
+    if (data.pools) {
+        buildPoolsTable(data);
+    }
 }
 
 let cpuLoadStats = { min: null, max: null };

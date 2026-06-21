@@ -1275,3 +1275,58 @@ html[data-sidebar="collapsed"] .sidebar-nav-item {
         height: 14px;
     }
 }
+
+/* Pools */
+.pools-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.pools-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.pools-table-row td {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+}
+
+.pools-table-row:last-child td {
+    border-bottom: none;
+}
+
+.pools-table-name {
+    font-weight: 600;
+}
+
+.pools-table-used,
+.pools-table-available {
+    color: var(--text-muted);
+}
+
+.pools-table-capacity-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;   
+}
+
+.pools-table-capacity-wrap .disk-overview-bar-wrap {
+    flex: 1;
+    max-width: 160px;
+}
+
+.pools-table-percent {
+    font-weight: 600;
+    min-width: 36px;
+    text-align: right;
+}
