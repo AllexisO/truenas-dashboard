@@ -476,6 +476,52 @@ function computeFixedWindowPoints(data, min, max, width, height, padding, totalS
     });
 }
 
+function buildPoolsTable(data) {
+    let tbody = document.getElementById("pools-table-body");
+    if (!tbody) return;
+
+    let pools = data.pools;
+    if (!pools) return;
+
+    let shouldBuildRows = tbody.children.length === 0;
+    let template = shouldBuildRows ? document.getElementById("pool-row-template") : null;
+
+    pools.forEach(pool => {
+        let percent = Math.round((pool.allocated / pool.size) * 100);
+        let healthy = pool.healthy && !pool.warning;
+        let color = getDiskStatusColor(percent);
+
+        let row;
+
+        if (shouldBuildRows) {
+            let clone = template.content.cloneNode(true);
+            tbody.appendChild(clone);
+            row = tbody.children[tbody.children.length - 1];
+            row.dataset.poolName = pool.name;
+        } else {
+            row = tbody.querySelector(`[data-pool-name="${pool.name}"]`);
+        }
+
+        if (!row) return;
+
+        row.querySelector(".pools-table-name").textContent = pool.name;
+
+        let statusElement = row.querySelector(".disk-overview-status");
+        statusElement.textContent = healthy ? "Healthy" : "Warning";
+        statusElement.className = `disk-overview-status ${healthy ? "healthy" : "warning"}`;
+
+        row.querySelector(".pools-table-total").textContent = formatBytesUnit(pool.size);
+        row.querySelector(".pools-table-used").textContent = formatBytesUnit(pool.allocated);
+        row.querySelector(".pools-table-available").textContent = formatBytesUnit(pool.free);
+
+        let bar = row.querySelector(".disk-overview-bar");
+        bar.style.width = percent + "%";
+        bar.style.background = color;
+
+        row.querySelector(".pools-table-percent").textContent = percent + "%";
+    });
+}
+
 // Placeholder fot preview
 const placeholderSparkline = [12, 18, 25, 22, 30, 35, 28, 38, 42, 36, 44, 40, 48, 52, 45, 50, 48, 53, 49, 51];
 renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), placeholderSparkline);
