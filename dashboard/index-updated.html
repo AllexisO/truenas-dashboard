@@ -149,6 +149,8 @@
                 </div>
             </div>
         </aside>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
         <main class="main">
             <header class="topbar">
                 <div class="topbar-left">
@@ -683,14 +685,59 @@
                         </tr>
                     </template>
                 </section>
+
+                <section class="panels panels-three">
+                    <div class="panel" id="process-panel">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="8" y1="6" x2="21" y2="6"/>
+                                    <line x1="8" y1="12" x2="21" y2="12"/>
+                                    <line x1="8" y1="18" x2="21" y2="18"/>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                </svg>
+                            </span>
+                            <h2 class="summary-card-title">Top 10 Processes</h2>
+                        </header>
+
+                        <table class="processes-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Process</th>
+                                    <th>CPU %</th>
+                                    <th>RAM %</th>
+                                    <th>PID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="processes-table-body"></tbody>
+                        </table>
+
+                        <a href="#" class="panel-footer-link">View all processes →</a>
+                    </div>
+
+                    <div class="panel"></div>
+                    <div class="panel"></div>
+                </section>
+                <template id="process-row-template">
+                    <tr class="processes-table-row">
+                        <td class="processes-table-index"></td>
+                        <td class="processes-table-name-cell">
+                            <span class="process-avatar"></span>
+                            <span class="processes-table-name"></span>
+                        </td>
+                        <td class="processes-table-cpu"></td>
+                        <td class="processes-table-mem"></td>
+                        <td class="processes-table-pid"></td>
+                    </tr>
+                </template>
             </div>
         </main>
     </div>
 
-    <div class="sparkline-tooltip" id="sparkline-tooltip">
-
-    </div>
-
+    <div class="sparkline-tooltip" id="sparkline-tooltip"></div>
     <div class="logo-tooltip" id="logo-tooltip"></div>
 
     <script src="/js/header.js"></script>
