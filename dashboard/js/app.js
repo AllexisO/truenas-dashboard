@@ -29,8 +29,20 @@ function themeToggle() {
 /* --- Sidebar Collapse --- */
 function collapseToggle() {
     getCollpseToogle.addEventListener("click", () => {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+        if (isMobile) {
+            const isOpen = html.getAttribute("data-mobile-sidebar") === "open";
+            if (isOpen) {
+                html.removeAttribute("data-mobile-sidebar");
+            } else {
+                html.setAttribute("data-mobile-sidebar", "open");
+            }
+            return;
+        }
+
         let isCollapsedSidebar = html.getAttribute("data-sidebar") === "collapsed";
-        
+
         if (isCollapsedSidebar) {
             html.removeAttribute("data-sidebar");
             localStorage.setItem("sidebar", "expanded");
@@ -38,6 +50,13 @@ function collapseToggle() {
             html.setAttribute("data-sidebar", "collapsed");
             localStorage.setItem("sidebar", "collapsed");
         }
+    });
+}
+
+const sidebarOverlay = document.querySelector("#sidebar-overlay");
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", () => {
+        html.removeAttribute("data-mobile-sidebar");
     });
 }
 

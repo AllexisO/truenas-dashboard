@@ -151,6 +151,10 @@ function handleRealtimeData(data) {
     if (data.pools) {
         buildPoolsTable(data);
     }
+
+    if (data.processes) {
+        buildProcessesTable(data.processes);
+    }
 }
 
 let cpuLoadStats = { min: null, max: null };

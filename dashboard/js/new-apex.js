@@ -204,7 +204,7 @@ function updateRamSparkline(history) {
 function getDiskStatusColor(percent) {
     if (percent >= 90) return "#E24B4A";
     if (percent >= 60) return "#BA7517";
-    return "#378ADD";
+    return "var(--disk-success-bar)";
 }
 
 function buildDiskPoolMap(pools) {
@@ -519,6 +519,52 @@ function buildPoolsTable(data) {
         bar.style.background = color;
 
         row.querySelector(".pools-table-percent").textContent = percent + "%";
+    });
+}
+
+function getProcessName(command) {
+    if (!command) return "unknown";
+
+    let first = command.trim().split(/\s+/)[0];
+    let base = first.split("/").pop();
+    return base.replace(/^-/, "") || "unknown";
+}
+
+const AVATAR_COLOR_COUNT = 7;
+
+function getAvatarColorClass(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = (hash * 31 + name.charCodeAt(i)) % AVATAR_COLOR_COUNT;
+    }
+    return `process-avatar-${Math.abs(hash) % AVATAR_COLOR_COUNT}`;
+}
+
+function buildProcessesTable(processes) {
+    let tbody = document.getElementById("processes-table-body");
+    
+    if (!tbody || !processes) return;
+
+    tbody.innerHTML = "";
+
+    let template = document.getElementById("process-row-template");
+
+    processes.forEach((proc, index) => {
+        let name = getProcessName(proc.command);
+        let clone = template.content.cloneNode(true);
+
+        clone.querySelector(".processes-table-index").textContent = index + 1;
+
+        let avatar = clone.querySelector(".process-avatar");
+        avatar.textContent = name.charAt(0);
+        avatar.classList.add(getAvatarColorClass(name));
+
+        clone.querySelector(".processes-table-name").textContent = name;
+        clone.querySelector(".processes-table-cpu").textContent = parseFloat(proc.cpu).toFixed(1) + "%";
+        clone.querySelector(".processes-table-mem").textContent = parseFloat(proc.mem).toFixed(1) + "%";
+        clone.querySelector(".processes-table-pid").textContent = proc.pid;
+
+        tbody.appendChild(clone);
     });
 }
 
