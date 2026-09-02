@@ -5,14 +5,6 @@
  * Combines data from disk.query, disk.temperatures and pool.query.
  */
 
-function formatDiskSize(bytes) {
-    let tb = bytes / 1099511627776;
-    if (tb >= 1) return tb.toFixed(1) + " TB";
-    
-    let gb = bytes / 1073741824;
-    return gb.toFixed(0) + " GB";
-}
-
 function getDiskColor(percent) {
     if (percent >= 90) return "#E24B4A";
     if (percent >= 60) return "#BA7517";
@@ -93,15 +85,15 @@ function buildDiskGrid(data) {
         bar.style.width = (percent || 0) + "%";
         bar.style.background = color;
 
-        clone.querySelector(".disk-allocated").textContent = usage ? formatDiskSize(usage.allocated) : "--";
-        clone.querySelector(".disk-size").textContent = formatDiskSize(disk.size);
+        clone.querySelector(".disk-allocated").textContent = usage ? formatBytes(usage.allocated, 0) : "--";
+        clone.querySelector(".disk-size").textContent = formatBytes(disk.size, 0);
 
         item.dataset.diskName = disk.name;
         grid.appendChild(clone);
     });
 
-    let count = document.querySelector(".disk-count");
-    if (count) count.textContent = disk.length + " disks";
+    let count = document.querySelector("#disks-count");
+    if (count) count.textContent = disks.length + " disks";
 }
 
 function buildPoolsSidebar(data) {
@@ -111,26 +103,32 @@ function buildPoolsSidebar(data) {
     const pools = data.pools;
     if (!pools || !pools.length) return;
 
-    // Clear and rebuild
-    grid.innerHTML = "";
-
     const template = document.getElementById("pool-sidebar-item-template");
+    const shouldBuildItems = grid.children.length === 0;
 
     pools.forEach(pool => {
         const percent = Math.round((pool.allocated / pool.size) * 100);
         const color = getDiskColor(percent);
 
-        const clone = template.content.cloneNode(true);
+        let item;
+        if (shouldBuildItems) {
+            const clone = template.content.cloneNode(true);
+            grid.appendChild(clone);
+            item = grid.children[grid.children.length - 1];
+            item.dataset.poolName = pool.name;
+        } else {
+            item = grid.querySelector(`[data-pool-name="${pool.name}"]`);
+        }
 
-        clone.querySelector(".pool-sidebar-name").textContent = pool.name;
-        clone.querySelector(".pool-sidebar-percent").textContent = percent + "%";
-        clone.querySelector(".pool-sidebar-percent").style.color = color;
-        clone.querySelector(".pool-sidebar-bar").style.width = percent + "%";
-        clone.querySelector(".pool-sidebar-bar").style.background = color;
-        clone.querySelector(".pool-sidebar-used").textContent = formatDiskSize(pool.allocated);
-        clone.querySelector(".pool-sidebar-size").textContent = formatDiskSize(pool.size);
+        if (!item) return;
 
-        grid.appendChild(clone);
+        item.querySelector(".pool-sidebar-name").textContent = pool.name;
+        item.querySelector(".pool-sidebar-percent").textContent = percent + "%";
+        item.querySelector(".pool-sidebar-percent").style.color = color;
+        item.querySelector(".pool-sidebar-bar").style.width = percent + "%";
+        item.querySelector(".pool-sidebar-bar").style.background = color;
+        item.querySelector(".pool-sidebar-used").textContent = formatBytes(pool.allocated, 0);
+        item.querySelector(".pool-sidebar-size").textContent = formatBytes(pool.size, 0);
     });
 }
 

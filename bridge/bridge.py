@@ -25,6 +25,8 @@ class Bridge:
         self.poller.clients.add(websocket)
         print(f"Browser connected, total: {len(self.poller.clients)}", flush=True)
         try:
+            if self.poller.latest_data:
+                await websocket.send(json.dumps(self.poller.latest_data))
             await websocket.wait_closed()
         finally:
             self.poller.clients.discard(websocket)
@@ -35,12 +37,16 @@ class Bridge:
 
         if path == "/":
             path = "/index.html"
-        
-        filePath = "/dashboard" + path
+
+        base_dir = os.path.realpath("/dashboard")
+        file_path = os.path.realpath(os.path.join(base_dir, path.lstrip("/")))
+
+        if not file_path.startswith(base_dir + os.sep):
+            return web.Response(status=404, text="Not found")
 
         try:
-            return web.FileResponse(filePath)
-        except:
+            return web.FileResponse(file_path)
+        except (FileNotFoundError, IsADirectoryError, PermissionError):
             return web.Response(status=404, text="Not found")
     
     async def config_handler(self, request):

@@ -24,17 +24,10 @@ function pushSample(buffer, value) {
     if (buffer.length > BUFFER_SIZE) buffer.shift();
 }
 
-function formatBytes(bytes) {
-    let gb = bytes / 1073741824;
-    return gb.toFixed(1) + " GB";
-}
-
 function formatTime(timestamp) {
     const date = new Date(timestamp);
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    const timeWithSeconds = `${hours}:${minutes}:${seconds}`;
 
     return `${hours}:${minutes}`;
 }

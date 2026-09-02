@@ -14,8 +14,10 @@ function updateHeader(data) {
 
     if (serverVersion) serverVersion.textContent = data.system.version;
     if (serverIp) {
-        let _interface = data.interfaces?.[0]?.state?.aliases?.find(a => a.type === "INET");
-        if (_interface) serverIp.textContent = _interface.address;
+        let alias = data.interfaces
+            ?.flatMap(iface => iface.state?.aliases || [])
+            .find(a => a.type === "INET");
+        if (alias) serverIp.textContent = alias.address;
     }
 
     let uptime = document.querySelector("#server-uptime");
@@ -70,8 +72,10 @@ function updateLeds(data) {
     let ram = ((memoryTotal - memoryAvailable) / memoryTotal) * 100;
     let disk = data.realtime.disks?.busy || 0;
     let netMax = 1000 * 1024 * 1024 / 8;
-    let netRx = data.realtime?.interfaces?.eno1?.received_bytes_rate || 0;
-    let netTx = data.realtime?.interfaces?.eno1?.sent_bytes_rate || 0;
+    let interfaces = data.realtime.interfaces || {};
+    let interfaceName = Object.keys(interfaces)[0];
+    let netRx = interfaces[interfaceName]?.received_bytes_rate || 0;
+    let netTx = interfaces[interfaceName]?.sent_bytes_rate || 0;
     let network = ((netRx + netTx) / netMax) * 100;
 
     const leds = {

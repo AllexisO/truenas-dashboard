@@ -1488,9 +1488,14 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .panel-footer-link {
     display: inline-block;
     margin-top: 16px;
+    font: inherit;
     font-size: 13px;
     color: var(--accent);
     text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .panel-footer-link:hover {

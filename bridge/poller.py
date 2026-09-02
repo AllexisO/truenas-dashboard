@@ -20,14 +20,20 @@ class Poller:
         self.api_key = api_key
         self.config = config
         self.latest_data = {}
+        self.dirty_keys = set()
         self.clients = set()
         self.net_total_rx = 0
         self.net_total_tx = 0
         self.net_last_reset = self._today()
-    
+
     def _today(self):
         from datetime import date
         return date.today().isoformat()
+
+    # Updates latest_data and marks the key for the next delta broadcast
+    def _set(self, key, value):
+        self.latest_data[key] = value
+        self.dirty_keys.add(key)
 
     def update_network_totals(self, rx_rate, tx_rate, interval=2):
         from datetime import date
@@ -82,7 +88,7 @@ class Poller:
             async for msg in ws:
                 data = json.loads(msg)
                 if data.get("msg") == "added":
-                    self.latest_data["realtime"] = data["fields"]
+                    self._set("realtime", data["fields"])
 
                     interfaces = data["fields"].get("interfaces", {})
                     if interfaces:
@@ -90,11 +96,11 @@ class Poller:
                         rx_rate = iface.get("received_bytes_rate", 0)
                         tx_rate = iface.get("sent_bytes_rate", 0)
                         self.update_network_totals(rx_rate, tx_rate)
-                    self.latest_data["net_totals"] = {
+                    self._set("net_totals", {
                         "rx": self.net_total_rx,
                         "tx": self.net_total_tx
-                    }
-                    
+                    })
+
                     await self.broadcast()
 
                 now = asyncio.get_event_loop().time()
@@ -111,7 +117,7 @@ class Poller:
             "method": "disk.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["disks"] = response.get("result", [])
+        self._set("disks", response.get("result", []))
 
         # Getting pools
         await self.fetch_pools(ws)
@@ -122,7 +128,7 @@ class Poller:
             "method": "interface.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["interfaces"] = response.get("result", [])
+        self._set("interfaces", response.get("result", []))
 
         # Getting system info
         await ws.send(json.dumps({
@@ -130,7 +136,7 @@ class Poller:
             "method": "system.info", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["system"] = response.get("result", [])
+        self._set("system", response.get("result", []))
 
         # Getting disk temperatures
         await ws.send(json.dumps({
@@ -138,14 +144,14 @@ class Poller:
             "method": "disk.temperatures", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["disk_temps"] = response.get("result", {})
+        self._set("disk_temps", response.get("result", {}))
 
         await ws.send(json.dumps({
             "id": "9", "msg": "method",
             "method": "boot.get_disks", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["boot_disks"] = response.get("result", [])
+        self._set("boot_disks", response.get("result", []))
 
         # Getting disk usage via df
         result = subprocess.run(
@@ -155,11 +161,11 @@ class Poller:
         lines = result.stdout.strip().split("\n")
         if len(lines) >= 2:
             parts = lines[1].split()
-            self.latest_data["boot_disk"] = {
+            self._set("boot_disk", {
                 "total": int(parts[1]),
                 "used": int(parts[2]),
                 "free": int(parts[3])
-            }
+            })
         
         # Getting disk graph identifiers (for /history endpoint)
         await ws.send(json.dumps({
@@ -177,7 +183,7 @@ class Poller:
                 disk_name = identifier.split(" | ")[0].strip()
                 disk_identifiers[disk_name] = identifier
         
-        self.latest_data["disk_identifiers"] = disk_identifiers
+        self._set("disk_identifiers", disk_identifiers)
 
         # Getting TOP processes
         await self.fetch_processes()
@@ -197,11 +203,12 @@ class Poller:
             "method": "pool.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["pools"] = response.get("result", [])
+        self._set("pools", response.get("result", []))
     
     # Fetching Server Top 10 Processes
     async def fetch_processes(self):
-        result = subprocess.run(
+        result = await asyncio.to_thread(
+            subprocess.run,
             ['ps', 'aux', '--sort=-%cpu'],
             capture_output=True, text=True
         )
@@ -217,14 +224,14 @@ class Poller:
                     'mem': parts[3],
                     'command': parts[10][:50]
                 })
-                self.latest_data['processes'] = processes
+        self._set("processes", processes)
 
     # Fetching Docker Containers Info
     async def fetch_docker_containers(self):
         try:
             client = docker.from_env()
             containers = client.containers.list()
-            self.latest_data["containers"] = [
+            self._set("containers", [
                 {
                     "id": c.short_id,
                     "name": c.name,
@@ -234,7 +241,7 @@ class Poller:
                     "uptime": c.attrs["State"]["StartedAt"]
                 }
                 for c in containers
-            ]
+            ])
         except Exception as error:
             print(f"Docker error: {error}", flush=True)
     
@@ -296,22 +303,26 @@ class Poller:
         if current.get('size') and current.get('slot'):
             modules.append(current.copy())
         
-        self.latest_data['memory_info'] = [
-            m for m in modules 
+        self._set("memory_info", [
+            m for m in modules
             if m.get('size') and m.get('size') != 'No Module Installed' and m.get('slot')
-        ]
+        ])
 
-    # Sending data to all connected browsers
-    # If no connected browser - do nothing
-    # If browser disconnected - remove from the list
+    # Sending only the keys that changed since the last broadcast
+    # to all connected browsers. New clients get the full snapshot
+    # separately, on connect (see bridge.ws_handler).
+    # If no connected browser - do nothing, keep the keys dirty.
+    # If browser disconnected - remove from the list.
     async def broadcast(self):
-        if not self.clients:
+        if not self.clients or not self.dirty_keys:
             return
-                
-        message = json.dumps(self.latest_data)
+
+        delta = {key: self.latest_data[key] for key in self.dirty_keys}
+        self.dirty_keys.clear()
+        message = json.dumps(delta)
 
         disconnected = set()
-        for client in self.clients:
+        for client in list(self.clients):
             try:
                 await client.send(message)
             except:

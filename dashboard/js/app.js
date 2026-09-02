@@ -15,6 +15,10 @@ const html = document.documentElement;
 
 let appConfig = null;
 
+// Server now sends only changed keys per message (delta broadcast),
+// so we merge each message into the running state instead of replacing it.
+let latestData = {};
+
 /* --- Theme Toogle --- */
 function themeToggle() {
     getThemeToggle.addEventListener("click", () => {
@@ -97,29 +101,30 @@ function connect() {
 
     ws.onopen = () => {
         console.log("Connected to TrueNAS Dashboard");
-        document.querySelector("#server-status-dot").className = "server-status-dot online" || "topbar-pill-dot";
-        document.querySelector("#server-status-text").className = "server-status-text online" || "topbar-pill-dot-text";
+        document.querySelector("#server-status-dot").className = "server-status-dot online";
+        document.querySelector("#server-status-text").className = "server-status-text online";
         document.querySelector("#server-status-text").textContent = "Online";
     };
 
     ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        updateHeader(data);
-        updateLeds(data);
-        if (typeof handleRealtimeData === 'function') handleRealtimeData(data);
-        if (typeof updateCPU === 'function') updateCPU(data);
-        if (typeof updateCores === 'function') updateCores(data.realtime?.cpu);
-        if (typeof updateRam === 'function') updateRam(data);
-        if (typeof updateNetwork === 'function') updateNetwork(data);
-        if (typeof updateDisks === 'function') updateDisks(data);
-        if (typeof buildPoolsSidebar === 'function') buildPoolsSidebar(data);
+        Object.assign(latestData, JSON.parse(event.data));
 
-        console.log(data);
+        updateHeader(latestData);
+        updateLeds(latestData);
+        if (typeof handleRealtimeData === 'function') handleRealtimeData(latestData);
+        if (typeof updateCPU === 'function') updateCPU(latestData);
+        if (typeof updateCores === 'function') updateCores(latestData.realtime?.cpu);
+        if (typeof updateRam === 'function') updateRam(latestData);
+        if (typeof updateNetwork === 'function') updateNetwork(latestData);
+        if (typeof updateDisks === 'function') updateDisks(latestData);
+        if (typeof buildPoolsSidebar === 'function') buildPoolsSidebar(latestData);
+
+        console.log(latestData);
     };
 
     ws.onclose = () => {
         console.log('Disconnected, reconnecting in 3s ...');
-        document.querySelector("#server-status-dot").className = "server-status-dot offline" || "topbar-pill-dot";
+        document.querySelector("#server-status-dot").className = "server-status-dot offline";
         document.querySelector("#server-status-text").className = "server-status-text offline";
         document.querySelector("#server-status-text").textContent = "Offline";
         setTimeout(connect, 3000);
@@ -147,7 +152,7 @@ loadConfig().then(config => {
         createWidget('ram-card-template', 3);
     }
 
-    if (config.widgets.memory.enabled) {
+    if (config.widgets.network.enabled) {
         createWidget('network-card-template', 4);
     }
 

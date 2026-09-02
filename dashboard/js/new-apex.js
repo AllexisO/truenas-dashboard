@@ -63,14 +63,6 @@ function formatNetworkSpeed(bytesPerSecond) {
     return { value: Math.round(bitsPerSecond ?? 0), unit: "b/s" };
 }
 
-function formatBytesUnit(bytes) {
-    if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + " TB";
-    if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + " GB";
-    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + " MB";
-    
-    return (bytes / 1024).toFixed(1) + " Kb";
-}
-
 function updateNetworkCard({rx, tx }) {
     let rxFormatted = formatNetworkSpeed(rx);
     let txFormatted = formatNetworkSpeed(tx);
@@ -91,8 +83,8 @@ function updateNetworkTotals(totalRx, totalTx) {
     let rxEl = document.getElementById('net-total-rx');
     let txEl = document.getElementById('net-total-tx');
 
-    if (rxEl) rxEl.textContent = formatBytesUnit(totalRx);
-    if (txEl) txEl.textContent = formatBytesUnit(totalTx);
+    if (rxEl) rxEl.textContent = formatBytes(totalRx);
+    if (txEl) txEl.textContent = formatBytes(totalTx);
 }
 
 function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
@@ -337,10 +329,10 @@ function buildDisksOverviewList(data) {
     if (totalCountElement) totalCountElement.textContent = total;
 
     let totalCapacityElement = document.querySelector("#disks-total-capacity");
-    if (totalCapacityElement) totalCapacityElement.textContent = formatBytesUnit(totalCapacity);
+    if (totalCapacityElement) totalCapacityElement.textContent = formatBytes(totalCapacity);
 
     let totalUsedElement = document.querySelector("#disks-total-used");
-    if (totalUsedElement) totalUsedElement.textContent = formatBytesUnit(totalUsed);
+    if (totalUsedElement) totalUsedElement.textContent = formatBytes(totalUsed);
 
     let healthyCountElement = document.querySelector("#disks-healthy-count");
     if (healthyCountElement) healthyCountElement.textContent = healthyCount;
@@ -510,9 +502,9 @@ function buildPoolsTable(data) {
         statusElement.textContent = healthy ? "Healthy" : "Warning";
         statusElement.className = `disk-overview-status ${healthy ? "healthy" : "warning"}`;
 
-        row.querySelector(".pools-table-total").textContent = formatBytesUnit(pool.size);
-        row.querySelector(".pools-table-used").textContent = formatBytesUnit(pool.allocated);
-        row.querySelector(".pools-table-available").textContent = formatBytesUnit(pool.free);
+        row.querySelector(".pools-table-total").textContent = formatBytes(pool.size);
+        row.querySelector(".pools-table-used").textContent = formatBytes(pool.allocated);
+        row.querySelector(".pools-table-available").textContent = formatBytes(pool.free);
 
         let bar = row.querySelector(".disk-overview-bar");
         bar.style.width = percent + "%";
@@ -542,29 +534,40 @@ function getAvatarColorClass(name) {
 
 function buildProcessesTable(processes) {
     let tbody = document.getElementById("processes-table-body");
-    
+
     if (!tbody || !processes) return;
 
-    tbody.innerHTML = "";
-
     let template = document.getElementById("process-row-template");
+    let seenPids = new Set();
 
     processes.forEach((proc, index) => {
         let name = getProcessName(proc.command);
-        let clone = template.content.cloneNode(true);
+        seenPids.add(proc.pid);
 
-        clone.querySelector(".processes-table-index").textContent = index + 1;
+        let row = tbody.querySelector(`[data-pid="${proc.pid}"]`);
+        if (!row) {
+            let clone = template.content.cloneNode(true);
+            row = clone.querySelector(".processes-table-row");
+            row.dataset.pid = proc.pid;
+        }
 
-        let avatar = clone.querySelector(".process-avatar");
+        row.querySelector(".processes-table-index").textContent = index + 1;
+
+        let avatar = row.querySelector(".process-avatar");
         avatar.textContent = name.charAt(0);
-        avatar.classList.add(getAvatarColorClass(name));
+        avatar.className = `process-avatar ${getAvatarColorClass(name)}`;
 
-        clone.querySelector(".processes-table-name").textContent = name;
-        clone.querySelector(".processes-table-cpu").textContent = parseFloat(proc.cpu).toFixed(1) + "%";
-        clone.querySelector(".processes-table-mem").textContent = parseFloat(proc.mem).toFixed(1) + "%";
-        clone.querySelector(".processes-table-pid").textContent = proc.pid;
+        row.querySelector(".processes-table-name").textContent = name;
+        row.querySelector(".processes-table-cpu").textContent = parseFloat(proc.cpu).toFixed(1) + "%";
+        row.querySelector(".processes-table-mem").textContent = parseFloat(proc.mem).toFixed(1) + "%";
+        row.querySelector(".processes-table-pid").textContent = proc.pid;
 
-        tbody.appendChild(clone);
+        let currentRowAtIndex = tbody.children[index];
+        if (currentRowAtIndex !== row) tbody.insertBefore(row, currentRowAtIndex || null);
+    });
+
+    tbody.querySelectorAll(".processes-table-row").forEach(row => {
+        if (!seenPids.has(row.dataset.pid)) row.remove();
     });
 }
 
