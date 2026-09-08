@@ -148,6 +148,8 @@ function handleRealtimeData(data) {
     if (data.processes) {
         buildProcessesTable(data.processes);
     }
+
+    if (typeof updateTopology === "function") updateTopology(data);
 }
 
 let cpuLoadStats = { min: null, max: null };

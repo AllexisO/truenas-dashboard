@@ -25,6 +25,8 @@ class Poller:
         self.net_total_rx = 0
         self.net_total_tx = 0
         self.net_last_reset = self._today()
+        self.prev_disk_stats = None
+        self.prev_disk_stats_time = None
 
     def _today(self):
         from datetime import date
@@ -46,6 +48,52 @@ class Poller:
         
         self.net_total_rx += rx_rate * interval
         self.net_total_tx += tx_rate * interval
+
+    # Reads raw per-device sector counters from /proc/diskstats, keyed by
+    # device name ("sda", "nvme0n1", ...) — the same short names disk.query
+    # uses, so callers can match on latest_data["disks"][i]["name"] directly.
+    def read_disk_stats(self):
+        stats = {}
+        try:
+            with open("/proc/diskstats") as file:
+                for line in file:
+                    parts = line.split()
+                    if len(parts) < 10:
+                        continue
+                    stats[parts[2]] = {
+                        "sectors_read": int(parts[5]),
+                        "sectors_written": int(parts[9])
+                    }
+        except FileNotFoundError:
+            pass
+        return stats
+
+    # reporting.realtime only exposes a system-wide disk "busy" %, not a
+    # per-disk rate, so per-disk read/write bytes/sec is computed here from
+    # two consecutive /proc/diskstats samples (512-byte sectors) — the same
+    # delta-between-samples approach update_network_totals uses above.
+    def update_disk_io(self):
+        now = asyncio.get_event_loop().time()
+        current = self.read_disk_stats()
+
+        if self.prev_disk_stats and self.prev_disk_stats_time:
+            interval = now - self.prev_disk_stats_time
+            if interval > 0:
+                disk_io = {}
+                for device, stat in current.items():
+                    previous = self.prev_disk_stats.get(device)
+                    if not previous:
+                        continue
+                    read_delta = stat["sectors_read"] - previous["sectors_read"]
+                    write_delta = stat["sectors_written"] - previous["sectors_written"]
+                    disk_io[device] = {
+                        "read_bytes_rate": max(0, read_delta) * 512 / interval,
+                        "write_bytes_rate": max(0, write_delta) * 512 / interval
+                    }
+                self._set("disk_io", disk_io)
+
+        self.prev_disk_stats = current
+        self.prev_disk_stats_time = now
 
     # Connection to TrueNAS with Websocket
     async def connect(self):
@@ -100,6 +148,8 @@ class Poller:
                         "rx": self.net_total_rx,
                         "tx": self.net_total_tx
                     })
+
+                    self.update_disk_io()
 
                     await self.broadcast()
 
@@ -275,38 +325,59 @@ class Poller:
             response = json.loads(await ws.recv())
             return response.get("result", [])
     
-    # Fetching RAM Inforamtion
+    # Fetching RAM Information
     async def fetch_memory_info(self):
         result = subprocess.run(
             ["dmidecode", "--type", "memory"],
             capture_output=True, text=True
         )
 
+        # Parsed per dmidecode block (blocks are blank-line separated), not by
+        # scanning "Locator:" as a boundary marker — Locator appears before
+        # Type/Speed within each block, so treating it as the boundary paired
+        # every module's slot with the NEXT module's size/type/speed instead
+        # of its own.
         modules = []
-        current = {}
+        for block in result.stdout.split("\n\n"):
+            if "Memory Device" not in block:
+                continue
 
-        for line in result.stdout.split("\n"):
-            line = line.strip()
-            if "Size:" in line and "No Module" not in line and "None" not in line:
-                size = line.split(":")[1].strip()
-                if size != "No Module Installed":
-                    current["size"] = size
-            elif "Speed:" in line and "Unknown" not in line and "Configured" not in line:
-                current["speed"] = line.split(":")[1].strip()
-            elif "Type:" in line and "Detail" not in line and "Error" not in line:
-                current["type"] = line.split(":")[1].strip()
-            elif "Locator:" in line and "Bank" not in line:
-                if current.get("size"):
-                    modules.append(current.copy())
-                current = {"slot" : line.split(":")[1].strip()}
-        
-        if current.get('size') and current.get('slot'):
-            modules.append(current.copy())
-        
-        self._set("memory_info", [
-            m for m in modules
-            if m.get('size') and m.get('size') != 'No Module Installed' and m.get('slot')
-        ])
+            module = {}
+            for line in block.split("\n"):
+                line = line.strip()
+                if line.startswith("Size:"):
+                    size = line.split(":", 1)[1].strip()
+                    if size not in ("No Module Installed", "Not Installed"):
+                        module["size"] = size
+                elif line.startswith("Locator:"):
+                    module["locator"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Bank Locator:"):
+                    module["bank"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Speed:") and "Unknown" not in line:
+                    module["speed"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Type:") and "Detail" not in line:
+                    module["type"] = line.split(":", 1)[1].strip()
+
+            if module.get("size") and module.get("locator"):
+                modules.append(module)
+
+        # dmidecode's Locator ("DIMM 0") isn't always unique across memory
+        # channels on its own (some boards reuse it per-channel) — fall back
+        # to "<Bank Locator> <Locator>" only for the modules that actually
+        # collide, so the common case stays as the plain, familiar label.
+        locator_counts = {}
+        for module in modules:
+            locator_counts[module["locator"]] = locator_counts.get(module["locator"], 0) + 1
+
+        for module in modules:
+            if locator_counts[module["locator"]] > 1 and module.get("bank"):
+                module["slot"] = module["bank"] + " " + module["locator"]
+            else:
+                module["slot"] = module["locator"]
+            del module["locator"]
+            module.pop("bank", None)
+
+        self._set("memory_info", modules)
 
     # Sending only the keys that changed since the last broadcast
     # to all connected browsers. New clients get the full snapshot
