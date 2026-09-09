@@ -54,7 +54,7 @@ function initSettings(config) {
             await fetch('/config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(config)
+                body: JSON.stringify(appConfig)
             });
                     
             settingsPanel.classList.remove('open');

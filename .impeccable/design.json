@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T00:00:00Z",
+  "title": "Design System: TrueNAS Dashboard",
+  "extensions": {
+    "colorMeta": {
+      "void": { "role": "neutral", "displayName": "Void", "canonical": "#0A0E1A", "lightModeValue": "#F4F6FB", "tonalRamp": ["#151e37", "#283867", "#394f93", "#4e69bb", "#7a8fcc", "#9faeda", "#c4cde8", "#e5e9f5"] },
+      "surface": { "role": "neutral", "displayName": "Surface", "canonical": "#111A2E", "lightModeValue": "#F8FAFC", "tonalRamp": ["#152038", "#273b68", "#375495", "#4c6fbd", "#7993cd", "#9eb1db", "#c3cfe9", "#e5eaf5"] },
+      "surface-hover": { "role": "neutral", "displayName": "Surface Hover", "canonical": "#1A2541", "lightModeValue": "#F1F5F9" },
+      "border": { "role": "neutral", "displayName": "Border", "canonical": "rgba(255, 255, 255, 0.08)", "lightModeValue": "#E2E8F0" },
+      "text": { "role": "neutral", "displayName": "Text", "canonical": "#E2E8F0", "lightModeValue": "#0F172A" },
+      "text-dim": { "role": "neutral", "displayName": "Text Dim", "canonical": "#98A2C3", "lightModeValue": "#475569" },
+      "text-muted": { "role": "neutral", "displayName": "Text Muted", "canonical": "#64748B", "lightModeValue": "#64748B" },
+      "signal-cyan": { "role": "primary", "displayName": "Signal Cyan", "canonical": "#06B6D4", "lightModeValue": "#06B6D4", "tonalRamp": ["#02404a", "#04778b", "#06aac6", "#11d7f8", "#4ce1fa", "#7ee9fb", "#b0f2fd", "#dcf9fe"] },
+      "sky-blue": { "role": "primary", "displayName": "Sky Blue", "canonical": "#0EA5E9", "lightModeValue": "#0EA5E9", "tonalRamp": ["#043348", "#085f87", "#0c88c0", "#18aef1", "#52c2f5", "#82d3f7", "#b2e4fa", "#ddf3fd"] },
+      "amethyst-signal": { "role": "secondary", "displayName": "Amethyst Signal", "canonical": "#A78BFA", "lightModeValue": "#A78BFA", "tonalRamp": ["#150349", "#270689", "#3808c4", "#4d14f5", "#794ff7", "#9f80fa", "#c4b1fc", "#e5ddfe"] },
+      "tx-green": { "role": "secondary", "displayName": "Emerald Flow", "canonical": "#10B981", "lightModeValue": "#10B981", "tonalRamp": ["#064631", "#0b835c", "#10bc83", "#1eeca7", "#56f0bd", "#85f4d0", "#b4f9e2", "#defcf2"] },
+      "success": { "role": "state", "displayName": "Success", "canonical": "#22C55E", "lightModeValue": "#10B981", "tonalRamp": ["#0b411f", "#157a3a", "#1eae53", "#2edb6e", "#62e492", "#8eebb0", "#b9f3cf", "#e1faea"] },
+      "warning": { "role": "state", "displayName": "Warning", "canonical": "#F97316", "lightModeValue": "#EA580C", "tonalRamp": ["#4b2002", "#8b3b04", "#c75505", "#f97010", "#fa934c", "#fcb17e", "#fdcfaf", "#feeadc"] },
+      "danger": { "role": "state", "displayName": "Danger", "canonical": "#E24B4A", "lightModeValue": "#E24B4A", "tonalRamp": ["#420b0b", "#7b1414", "#b01d1c", "#dd2d2c", "#e66261", "#ed8d8d", "#f4b9b9", "#fae0e0"] },
+      "ring-track": { "role": "neutral", "displayName": "Ring Track", "canonical": "rgba(255, 255, 255, 0.08)", "lightModeValue": "rgba(15, 23, 42, 0.08)" },
+      "process-avatar-blue": { "role": "categorical", "displayName": "Process Avatar — Blue", "canonical": "rgb(91, 141, 239)" },
+      "process-avatar-violet": { "role": "categorical", "displayName": "Process Avatar — Violet", "canonical": "rgb(139, 92, 246)" },
+      "process-avatar-cyan": { "role": "categorical", "displayName": "Process Avatar — Cyan", "canonical": "rgb(34, 211, 238)" },
+      "process-avatar-sky": { "role": "categorical", "displayName": "Process Avatar — Sky", "canonical": "rgb(14, 165, 233)" },
+      "process-avatar-green": { "role": "categorical", "displayName": "Process Avatar — Green", "canonical": "rgb(16, 185, 129)" },
+      "process-avatar-blue-2": { "role": "categorical", "displayName": "Process Avatar — Blue 2", "canonical": "rgb(59, 130, 246)" },
+      "process-avatar-slate": { "role": "categorical", "displayName": "Process Avatar — Slate", "canonical": "rgb(100, 116, 139)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero card number: network throughput value, disks-overview aggregate stat." },
+      "headline": { "displayName": "Headline", "purpose": "Topbar page title; in-ring metric percentage (CPU/RAM/temp)." },
+      "title": { "displayName": "Title", "purpose": "Summary card titles, sidebar wordmark." },
+      "body": { "displayName": "Body", "purpose": "Table cell values, server-card rows, general UI text." },
+      "label": { "displayName": "Label", "purpose": "Uppercase table column headers, sidebar version tag." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-fast", "value": "0.15s ease", "purpose": "Background/color/border-color transitions on hover (topbar buttons, nav items)." },
+      { "name": "ease-sidebar-collapse", "value": "0.18s ease", "purpose": "Sidebar width transition when collapsing to the icon-only rail." },
+      { "name": "ease-mobile-drawer", "value": "0.25s ease", "purpose": "Off-canvas sidebar transform on mobile (<768px)." },
+      { "name": "ease-progress", "value": "0.4s ease", "purpose": "Ring stroke-dashoffset and bar-width transitions when a live value updates." },
+      { "name": "pulse-online", "value": "pulse 2s infinite", "purpose": "The one shadow-based motion exception: expanding/fading ring on the online server-status dot." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Topbar Icon Button",
+      "kind": "button",
+      "refersTo": "topbar-button",
+      "description": "36×36px icon-only action button in the topbar (e.g. settings, refresh).",
+      "html": "<button class=\"ds-topbar-button\" aria-label=\"Settings\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z\"></path></svg></button>",
+      "css": ".ds-topbar-button { font: inherit; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 36px; height: 36px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: #111A2E; color: #98A2C3; transition: background 0.15s, color 0.15s, border-color 0.15s; } .ds-topbar-button:hover, .ds-topbar-button:focus-visible { background: #1A2541; outline: none; }"
+    },
+    {
+      "name": "Sidebar Nav Item (active)",
+      "kind": "nav",
+      "refersTo": "sidebar-nav-item-active",
+      "description": "Active sidebar navigation entry with the gradient wash and left accent bar.",
+      "html": "<button class=\"ds-nav-item ds-nav-item--active\"><span class=\"ds-nav-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"></rect><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"></rect><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"></rect><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"></rect></svg></span><span class=\"ds-nav-label\">Overview</span></button>",
+      "css": ".ds-nav-item { width: 100%; background: none; font: inherit; text-align: left; cursor: pointer; position: relative; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; color: #64748B; font-weight: 500; transition: background 0.15s, color 0.15s, border-color 0.15s; } .ds-nav-item--active { color: #E2E8F0; background: linear-gradient(135deg, color-mix(in srgb, #06B6D4 18%, transparent), color-mix(in srgb, #0EA5E9 9%, transparent)); border-color: color-mix(in srgb, #06B6D4 35%, transparent); } .ds-nav-item--active::before { content: \"\"; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: #06B6D4; } .ds-nav-icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; }"
+    },
+    {
+      "name": "Summary Card",
+      "kind": "card",
+      "refersTo": "summary-card",
+      "description": "The canonical metric card shell — icon chip + title header, flat surface, 12px radius.",
+      "html": "<div class=\"ds-summary-card\"><div class=\"ds-summary-card__header\"><div class=\"ds-summary-card__icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"></rect></svg></div><div class=\"ds-summary-card__title\">CPU</div></div></div>",
+      "css": ".ds-summary-card { display: flex; flex-direction: column; gap: 16px; min-width: 0; min-height: 360px; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); background: #111A2E; overflow: hidden; } .ds-summary-card__header { display: flex; align-items: center; gap: 10px; } .ds-summary-card__icon { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 9px; background: rgba(129,140,248,0.12); color: #06B6D4; } .ds-summary-card__title { font-size: 16px; font-weight: 700; color: #E2E8F0; }"
+    },
+    {
+      "name": "Process Row",
+      "kind": "custom",
+      "refersTo": "processes-table",
+      "description": "Top Processes table row with categorical avatar, right-aligned numeric columns, monospace-free (Figtree body).",
+      "html": "<table class=\"ds-processes-table\"><tbody><tr class=\"ds-processes-table__row\"><td class=\"ds-processes-table__index\">1</td><td><div class=\"ds-processes-table__name-cell\"><span class=\"ds-process-avatar ds-process-avatar--0\">Z</span><span>zfs-scrub</span></div></td><td class=\"ds-processes-table__cpu\">12.4%</td><td class=\"ds-processes-table__mem\">340 MB</td><td class=\"ds-processes-table__pid\">4821</td></tr></tbody></table>",
+      "css": ".ds-processes-table { width: 100%; border-collapse: collapse; } .ds-processes-table__row td { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; color: #98A2C3; } .ds-processes-table__row:hover { background: #1A2541; } .ds-processes-table__name-cell { display: flex; align-items: center; gap: 10px; } .ds-process-avatar { flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #FFF; text-transform: uppercase; } .ds-process-avatar--0 { background: color-mix(in srgb, rgb(91,141,239) 18%, transparent); color: rgb(91,141,239); } .ds-processes-table__cpu, .ds-processes-table__mem, .ds-processes-table__pid { text-align: right; }"
+    },
+    {
+      "name": "Ring Chart",
+      "kind": "custom",
+      "refersTo": "ring-chart",
+      "description": "Signature circular progress gauge with centered value/unit/label, used for CPU/RAM/temperature.",
+      "html": "<svg class=\"ds-ring-chart\" viewBox=\"0 0 120 120\" width=\"110\" height=\"110\"><circle class=\"ds-ring-chart__track\" cx=\"60\" cy=\"60\" r=\"52\" fill=\"none\" stroke=\"rgba(255,255,255,0.08)\" stroke-width=\"8\"></circle><circle class=\"ds-ring-chart__progress\" cx=\"60\" cy=\"60\" r=\"52\" fill=\"none\" stroke=\"#06B6D4\" stroke-width=\"8\" stroke-linecap=\"round\" stroke-dasharray=\"326.7\" stroke-dashoffset=\"120\" transform=\"rotate(-90 60 60)\"></circle><text x=\"60\" y=\"56\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"700\" fill=\"#E2E8F0\">63</text><text x=\"60\" y=\"74\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\" fill=\"#98A2C3\">%</text></svg>",
+      "css": ".ds-ring-chart__progress { transition: stroke-dashoffset 0.4s ease; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Mission Control Panel",
+    "overview": "TrueNAS Dashboard is the dark-first, always-legible console for a home server: rings, sparklines, tables, and status dots read like instrumented gauges on a control-room wall, not a marketing surface. The mood is modern and vibrant rather than austere — Signal Cyan and Amethyst Signal give the flat dark surfaces real color and life, but they stay disciplined: each hue is tied to a specific channel of data (CPU/primary signal in cyan, RAM/inbound network in amethyst, outbound network and healthy states in green), never used decoratively. Nothing here is illustrative or aspirational; every visual element maps to a real, live number.\n\nThe system is currently mid-migration: this DESIGN.md documents the new sidebar+topbar UI (index-updated.html / style-updated.css), which is where active development (including the new Top Process Panel) is happening. The legacy UI (index.html / style.css) is being retired in its favor per the project roadmap.",
+    "keyCharacteristics": [
+      "Dark by default (html[data-theme=\"dark\"]), with a fully-specified light theme as the alternate, not an afterthought.",
+      "Flat everywhere — depth comes from tonal layering (background → surface → surface-hover), not shadows.",
+      "One typeface (Figtree) for everything; hierarchy comes from size and weight, not font-mixing.",
+      "Inline stroke-SVG icons throughout (Lucide-style, 24×24 viewBox, 2px stroke, round caps) — no icon fonts, no image icons.",
+      "A tight, semantic set of state colors (success / warning / danger) applied consistently across disks, pools, and process rows."
+    ],
+    "rules": [
+      { "name": "The Numeric Monospace Rule", "body": "Disk names, temperatures, and percentages render in monospace, not Figtree — so columns of shifting numbers stay visually aligned instead of jittering as digit widths change.", "section": "typography" },
+      { "name": "The Flat-By-Design Rule", "body": "Never add a resting box-shadow to a card, button, or row. If a component needs to read as \"raised,\" lighten it one tonal step (surface → surface-hover) or add a border, not a shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do drive every color and every repeated spacing/radius value through a CSS custom property — never hardcode a hex or px value that duplicates an existing token.",
+      "Do build icons as inline stroke SVG (24×24 viewBox, 2px stroke, round linecap/linejoin) — matches every existing icon in the system.",
+      "Do use <button>, never <a>, for in-app navigation and controls (sidebar nav, topbar actions).",
+      "Do prefer flexbox for layout; reach for CSS grid only when flex genuinely can't express the layout.",
+      "Do use semantic class names that describe the entity (server-card-row, processes-table-row), never the layout shape (server-full-width).",
+      "Do keep Signal Cyan and Amethyst Signal tied to their specific data channels (primary/CPU and secondary/RAM+RX respectively) rather than using them interchangeably as generic accents."
+    ],
+    "donts": [
+      "Don't add a resting box-shadow anywhere — the system is flat by rule; the pulse-ring on the online dot is the one motion exception, not a precedent for card elevation.",
+      "Don't put ApexCharts (or any chart library) on a summary card — native SVG only there; ApexCharts is reserved for the dedicated detail pages (cpu-apex.html and its siblings).",
+      "Don't build list markup with innerHTML; clone the existing <template> once and update only the values on refresh (disks, cores, pools, and process rows all follow this pattern).",
+      "Don't introduce a second font family or a decorative display face — Figtree carries the whole hierarchy by size/weight alone."
+    ]
+  }
+}

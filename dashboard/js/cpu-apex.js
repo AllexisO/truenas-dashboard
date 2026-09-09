@@ -111,16 +111,6 @@ function averagePoints(points, maxPoints) {
     return result;
 }
 
-// Reload every 30 seconds
-setInterval(() => {
-    const activeBtn = document.querySelector('.time-btn.active');
-    const hours = activeBtn ? parseInt(activeBtn.textContent) : 1;
-    loadChart(hours, activeBtn);
-}, 30000);
-
-
-
-
 let cpuLoadChart = null;
 
 async function loadLoadChart(hours, btn) {
@@ -368,7 +358,7 @@ function updateLiveTempChart(temp) {
     }
 }
 
-// Add to setInterval
+// Reload charts every 30 seconds
 setInterval(() => {
     const activeBtn = document.querySelector('.time-btn.active');
     const hours = activeBtn ? parseInt(activeBtn.textContent) : 1;

@@ -5,11 +5,6 @@
  * physical memory and ZFS ARC cache.
  */
 
-function formatBytes(bytes) {
-    let gb = bytes / 1073741824;
-    return gb.toFixed(1) + " GB";
-}
-
 function updateRam(data) {
     if (!data.realtime || !data.realtime.memory) return;
     
@@ -25,7 +20,7 @@ function updateRam(data) {
     let ramTotal = document.querySelector("#ram-total");
 
     let ramFree = document.querySelector("#ram-free");
-    let ramFreeSedibar = document.querySelector("#sidebar-ram-free");
+    let ramFreeSidebar = document.querySelector("#sidebar-ram-free");
 
     let ramUsed = document.querySelector("#ram-used");
     let ramUsedSidebar = document.querySelector("#sidebar-ram-used");
@@ -35,15 +30,17 @@ function updateRam(data) {
 
     let ramBar = document.querySelector("#ram-bar");
 
-    if (!ramUsed) return;
+    if (ramUsed) {
+        ramUsed.textContent = formatBytes(used);
+        ramTotal.textContent = formatBytes(total);
+        ramFree.textContent = formatBytes(available);
+        ramArc.textContent = formatBytes(arc);
+        ramBar.style.width = usedPercent.toFixed(0) + "%";
+    }
 
-    ramUsed.textContent = formatBytes(used);
-    ramTotal.textContent = formatBytes(total);
-    ramFree.textContent = formatBytes(available);
-    ramArc.textContent = formatBytes(arc);
-    ramBar.style.width = usedPercent.toFixed(0) + "%";
-
-    ramFreeSedibar.textContent = formatBytes(available);
-    ramUsedSidebar.textContent = formatBytes(used);
-    ramArcSidebar.textContent = formatBytes(arc);
+    if (ramUsedSidebar) {
+        ramFreeSidebar.textContent = formatBytes(available);
+        ramUsedSidebar.textContent = formatBytes(used);
+        ramArcSidebar.textContent = formatBytes(arc);
+    }
 }

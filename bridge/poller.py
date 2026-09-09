@@ -20,14 +20,22 @@ class Poller:
         self.api_key = api_key
         self.config = config
         self.latest_data = {}
+        self.dirty_keys = set()
         self.clients = set()
         self.net_total_rx = 0
         self.net_total_tx = 0
         self.net_last_reset = self._today()
-    
+        self.prev_disk_stats = None
+        self.prev_disk_stats_time = None
+
     def _today(self):
         from datetime import date
         return date.today().isoformat()
+
+    # Updates latest_data and marks the key for the next delta broadcast
+    def _set(self, key, value):
+        self.latest_data[key] = value
+        self.dirty_keys.add(key)
 
     def update_network_totals(self, rx_rate, tx_rate, interval=2):
         from datetime import date
@@ -40,6 +48,52 @@ class Poller:
         
         self.net_total_rx += rx_rate * interval
         self.net_total_tx += tx_rate * interval
+
+    # Reads raw per-device sector counters from /proc/diskstats, keyed by
+    # device name ("sda", "nvme0n1", ...) — the same short names disk.query
+    # uses, so callers can match on latest_data["disks"][i]["name"] directly.
+    def read_disk_stats(self):
+        stats = {}
+        try:
+            with open("/proc/diskstats") as file:
+                for line in file:
+                    parts = line.split()
+                    if len(parts) < 10:
+                        continue
+                    stats[parts[2]] = {
+                        "sectors_read": int(parts[5]),
+                        "sectors_written": int(parts[9])
+                    }
+        except FileNotFoundError:
+            pass
+        return stats
+
+    # reporting.realtime only exposes a system-wide disk "busy" %, not a
+    # per-disk rate, so per-disk read/write bytes/sec is computed here from
+    # two consecutive /proc/diskstats samples (512-byte sectors) — the same
+    # delta-between-samples approach update_network_totals uses above.
+    def update_disk_io(self):
+        now = asyncio.get_event_loop().time()
+        current = self.read_disk_stats()
+
+        if self.prev_disk_stats and self.prev_disk_stats_time:
+            interval = now - self.prev_disk_stats_time
+            if interval > 0:
+                disk_io = {}
+                for device, stat in current.items():
+                    previous = self.prev_disk_stats.get(device)
+                    if not previous:
+                        continue
+                    read_delta = stat["sectors_read"] - previous["sectors_read"]
+                    write_delta = stat["sectors_written"] - previous["sectors_written"]
+                    disk_io[device] = {
+                        "read_bytes_rate": max(0, read_delta) * 512 / interval,
+                        "write_bytes_rate": max(0, write_delta) * 512 / interval
+                    }
+                self._set("disk_io", disk_io)
+
+        self.prev_disk_stats = current
+        self.prev_disk_stats_time = now
 
     # Connection to TrueNAS with Websocket
     async def connect(self):
@@ -82,7 +136,7 @@ class Poller:
             async for msg in ws:
                 data = json.loads(msg)
                 if data.get("msg") == "added":
-                    self.latest_data["realtime"] = data["fields"]
+                    self._set("realtime", data["fields"])
 
                     interfaces = data["fields"].get("interfaces", {})
                     if interfaces:
@@ -90,16 +144,18 @@ class Poller:
                         rx_rate = iface.get("received_bytes_rate", 0)
                         tx_rate = iface.get("sent_bytes_rate", 0)
                         self.update_network_totals(rx_rate, tx_rate)
-                    self.latest_data["net_totals"] = {
+                    self._set("net_totals", {
                         "rx": self.net_total_rx,
                         "tx": self.net_total_tx
-                    }
-                    
+                    })
+
+                    self.update_disk_io()
+
                     await self.broadcast()
 
                 now = asyncio.get_event_loop().time()
                 if now - last_static_update > 15:
-                    await self.fetch_pools(ws)
+                    await self.fetch_periodic_data()
                     last_static_update = now
                     await self.broadcast()
 
@@ -111,10 +167,15 @@ class Poller:
             "method": "disk.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["disks"] = response.get("result", [])
+        self._set("disks", response.get("result", []))
 
         # Getting pools
         await self.fetch_pools(ws)
+
+        # Getting alerts, service states, and per-pool snapshot health
+        await self.fetch_alerts(ws)
+        await self.fetch_services(ws)
+        await self.fetch_snapshots(ws)
 
         # Getting interfaces
         await ws.send(json.dumps({
@@ -122,7 +183,7 @@ class Poller:
             "method": "interface.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["interfaces"] = response.get("result", [])
+        self._set("interfaces", response.get("result", []))
 
         # Getting system info
         await ws.send(json.dumps({
@@ -130,7 +191,7 @@ class Poller:
             "method": "system.info", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["system"] = response.get("result", [])
+        self._set("system", response.get("result", []))
 
         # Getting disk temperatures
         await ws.send(json.dumps({
@@ -138,14 +199,14 @@ class Poller:
             "method": "disk.temperatures", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["disk_temps"] = response.get("result", {})
+        self._set("disk_temps", response.get("result", {}))
 
         await ws.send(json.dumps({
             "id": "9", "msg": "method",
             "method": "boot.get_disks", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["boot_disks"] = response.get("result", [])
+        self._set("boot_disks", response.get("result", []))
 
         # Getting disk usage via df
         result = subprocess.run(
@@ -155,11 +216,11 @@ class Poller:
         lines = result.stdout.strip().split("\n")
         if len(lines) >= 2:
             parts = lines[1].split()
-            self.latest_data["boot_disk"] = {
+            self._set("boot_disk", {
                 "total": int(parts[1]),
                 "used": int(parts[2]),
                 "free": int(parts[3])
-            }
+            })
         
         # Getting disk graph identifiers (for /history endpoint)
         await ws.send(json.dumps({
@@ -177,7 +238,7 @@ class Poller:
                 disk_name = identifier.split(" | ")[0].strip()
                 disk_identifiers[disk_name] = identifier
         
-        self.latest_data["disk_identifiers"] = disk_identifiers
+        self._set("disk_identifiers", disk_identifiers)
 
         # Getting TOP processes
         await self.fetch_processes()
@@ -190,6 +251,34 @@ class Poller:
         
         print("Static data fetched", flush=True)
 
+    # Refreshes pools/alerts/services/snapshots on their own connection
+    # rather than the one subscribed to reporting.realtime — sharing that
+    # socket risks a live "added" push landing between one of these calls'
+    # send and recv and being misread as its RPC reply, silently corrupting
+    # the result (this is why fetch_history above also opens its own
+    # connection, for the same class of problem).
+    async def fetch_periodic_data(self):
+        async with websockets.unix_connect(
+            "/run/middleware/middlewared.sock", uri=uri
+        ) as ws:
+            await ws.send(json.dumps({
+                "id": "1", "msg": "connect",
+                "version": "1", "support": ["1"]
+            }))
+            await ws.recv()
+
+            await ws.send(json.dumps({
+                "id": "2", "msg": "method",
+                "method": "auth.login_with_api_key",
+                "params": [self.api_key]
+            }))
+            await ws.recv()
+
+            await self.fetch_pools(ws)
+            await self.fetch_alerts(ws)
+            await self.fetch_services(ws)
+            await self.fetch_snapshots(ws)
+
     # Fetching HDD Pools
     async def fetch_pools(self, ws):
         await ws.send(json.dumps({
@@ -197,11 +286,87 @@ class Poller:
             "method": "pool.query", "params": []
         }))
         response = json.loads(await ws.recv())
-        self.latest_data["pools"] = response.get("result", [])
-    
+        self._set("pools", response.get("result", []))
+
+    # Fetching active alerts (unresolved by definition — alert.list only
+    # ever returns alerts middlewared currently considers active).
+    async def fetch_alerts(self, ws):
+        await ws.send(json.dumps({
+            "id": "11", "msg": "method",
+            "method": "alert.list", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        alerts = [
+            {
+                "level": alert.get("level"),
+                "text": alert.get("formatted") or alert.get("text"),
+                "dismissed": alert.get("dismissed", False)
+            }
+            for alert in response.get("result", [])
+        ]
+        self._set("alerts", alerts)
+
+    # Fetching system service states (ssh, nfs, smb, etc.)
+    async def fetch_services(self, ws):
+        await ws.send(json.dumps({
+            "id": "12", "msg": "method",
+            "method": "service.query", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        services = [
+            {"name": service.get("service"), "state": service.get("state"), "enable": service.get("enable")}
+            for service in response.get("result", [])
+        ]
+        self._set("services", services)
+
+    # Fetching per-pool snapshot health: the real latest snapshot (any
+    # dataset under the pool, whatever it actually is — including internal
+    # system snapshots, not just user data) plus whether an enabled
+    # scheduled task actually covers that pool. A pool can have a
+    # recent-looking snapshot yet still have zero real backup schedule —
+    # both facts matter, so both are reported rather than picking one.
+    async def fetch_snapshots(self, ws):
+        await ws.send(json.dumps({
+            "id": "13", "msg": "method",
+            "method": "zfs.snapshot.query", "params": [[], {"extra": {"properties": ["creation"]}}]
+        }))
+        snapshot_response = json.loads(await ws.recv())
+
+        await ws.send(json.dumps({
+            "id": "14", "msg": "method",
+            "method": "pool.snapshottask.query", "params": []
+        }))
+        task_response = json.loads(await ws.recv())
+
+        latest_by_pool = {}
+        for snap in snapshot_response.get("result", []):
+            pool = snap.get("pool")
+            creation = snap.get("properties", {}).get("creation", {}).get("rawvalue")
+            if not pool or not creation:
+                continue
+            creation = int(creation)
+            if pool not in latest_by_pool or creation > latest_by_pool[pool]:
+                latest_by_pool[pool] = creation
+
+        scheduled_pools = set()
+        for task in task_response.get("result", []):
+            if task.get("enabled") and task.get("dataset"):
+                scheduled_pools.add(task["dataset"].split("/")[0])
+
+        pool_names = [pool.get("name") for pool in self.latest_data.get("pools", [])]
+        snapshots = {
+            name: {
+                "last_snapshot": latest_by_pool.get(name),
+                "scheduled": name in scheduled_pools
+            }
+            for name in pool_names
+        }
+        self._set("snapshots", snapshots)
+
     # Fetching Server Top 10 Processes
     async def fetch_processes(self):
-        result = subprocess.run(
+        result = await asyncio.to_thread(
+            subprocess.run,
             ['ps', 'aux', '--sort=-%cpu'],
             capture_output=True, text=True
         )
@@ -217,14 +382,14 @@ class Poller:
                     'mem': parts[3],
                     'command': parts[10][:50]
                 })
-                self.latest_data['processes'] = processes
+        self._set("processes", processes)
 
     # Fetching Docker Containers Info
     async def fetch_docker_containers(self):
         try:
             client = docker.from_env()
             containers = client.containers.list()
-            self.latest_data["containers"] = [
+            self._set("containers", [
                 {
                     "id": c.short_id,
                     "name": c.name,
@@ -234,7 +399,7 @@ class Poller:
                     "uptime": c.attrs["State"]["StartedAt"]
                 }
                 for c in containers
-            ]
+            ])
         except Exception as error:
             print(f"Docker error: {error}", flush=True)
     
@@ -268,50 +433,75 @@ class Poller:
             response = json.loads(await ws.recv())
             return response.get("result", [])
     
-    # Fetching RAM Inforamtion
+    # Fetching RAM Information
     async def fetch_memory_info(self):
         result = subprocess.run(
             ["dmidecode", "--type", "memory"],
             capture_output=True, text=True
         )
 
+        # Parsed per dmidecode block (blocks are blank-line separated), not by
+        # scanning "Locator:" as a boundary marker — Locator appears before
+        # Type/Speed within each block, so treating it as the boundary paired
+        # every module's slot with the NEXT module's size/type/speed instead
+        # of its own.
         modules = []
-        current = {}
+        for block in result.stdout.split("\n\n"):
+            if "Memory Device" not in block:
+                continue
 
-        for line in result.stdout.split("\n"):
-            line = line.strip()
-            if "Size:" in line and "No Module" not in line and "None" not in line:
-                size = line.split(":")[1].strip()
-                if size != "No Module Installed":
-                    current["size"] = size
-            elif "Speed:" in line and "Unknown" not in line and "Configured" not in line:
-                current["speed"] = line.split(":")[1].strip()
-            elif "Type:" in line and "Detail" not in line and "Error" not in line:
-                current["type"] = line.split(":")[1].strip()
-            elif "Locator:" in line and "Bank" not in line:
-                if current.get("size"):
-                    modules.append(current.copy())
-                current = {"slot" : line.split(":")[1].strip()}
-        
-        if current.get('size') and current.get('slot'):
-            modules.append(current.copy())
-        
-        self.latest_data['memory_info'] = [
-            m for m in modules 
-            if m.get('size') and m.get('size') != 'No Module Installed' and m.get('slot')
-        ]
+            module = {}
+            for line in block.split("\n"):
+                line = line.strip()
+                if line.startswith("Size:"):
+                    size = line.split(":", 1)[1].strip()
+                    if size not in ("No Module Installed", "Not Installed"):
+                        module["size"] = size
+                elif line.startswith("Locator:"):
+                    module["locator"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Bank Locator:"):
+                    module["bank"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Speed:") and "Unknown" not in line:
+                    module["speed"] = line.split(":", 1)[1].strip()
+                elif line.startswith("Type:") and "Detail" not in line:
+                    module["type"] = line.split(":", 1)[1].strip()
 
-    # Sending data to all connected browsers
-    # If no connected browser - do nothing
-    # If browser disconnected - remove from the list
+            if module.get("size") and module.get("locator"):
+                modules.append(module)
+
+        # dmidecode's Locator ("DIMM 0") isn't always unique across memory
+        # channels on its own (some boards reuse it per-channel) — fall back
+        # to "<Bank Locator> <Locator>" only for the modules that actually
+        # collide, so the common case stays as the plain, familiar label.
+        locator_counts = {}
+        for module in modules:
+            locator_counts[module["locator"]] = locator_counts.get(module["locator"], 0) + 1
+
+        for module in modules:
+            if locator_counts[module["locator"]] > 1 and module.get("bank"):
+                module["slot"] = module["bank"] + " " + module["locator"]
+            else:
+                module["slot"] = module["locator"]
+            del module["locator"]
+            module.pop("bank", None)
+
+        self._set("memory_info", modules)
+
+    # Sending only the keys that changed since the last broadcast
+    # to all connected browsers. New clients get the full snapshot
+    # separately, on connect (see bridge.ws_handler).
+    # If no connected browser - do nothing, keep the keys dirty.
+    # If browser disconnected - remove from the list.
     async def broadcast(self):
-        if not self.clients:
+        if not self.clients or not self.dirty_keys:
             return
-                
-        message = json.dumps(self.latest_data)
+
+        delta = {key: self.latest_data[key] for key in self.dirty_keys}
+        self.dirty_keys.clear()
+        message = json.dumps(delta)
 
         disconnected = set()
-        for client in self.clients:
+        for client in list(self.clients):
             try:
                 await client.send(message)
             except:

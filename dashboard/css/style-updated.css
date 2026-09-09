@@ -1378,6 +1378,15 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     text-align: right;
 }
 
+.pools-table-snapshot {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.pools-table-snapshot.is-warning {
+    color: var(--warning);
+}
+
 .panels-three .panel {
     flex: 1 1 calc((100% - 32px) / 3);
 }
@@ -1488,11 +1497,413 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .panel-footer-link {
     display: inline-block;
     margin-top: 16px;
+    font: inherit;
     font-size: 13px;
     color: var(--accent);
     text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .panel-footer-link:hover {
     text-decoration: underline;
+}
+
+/* ---------/ Services Panel /--------- */
+
+.services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.service-row:last-child {
+    border-bottom: none;
+}
+
+.service-status-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-muted);
+}
+
+.service-status-dot.running {
+    background-color: var(--success);
+}
+
+.service-status-dot.stopped {
+    background-color: var(--failed);
+}
+
+.service-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.service-state {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* ---------/ Alerts Panel /--------- */
+
+.alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alert-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.alert-row:last-child {
+    border-bottom: none;
+}
+
+.alert-level-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--surface);
+}
+
+.alert-level-badge.level-critical,
+.alert-level-badge.level-error {
+    background-color: var(--failed);
+}
+
+.alert-level-badge.level-warning {
+    background-color: var(--warning);
+}
+
+.alert-level-badge.level-info {
+    background-color: var(--text-dim);
+}
+
+.alert-text {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.alerts-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ---------/ System Topology Panel /--------- */
+
+/* .panel's own flex-basis math assumes a row-direction parent (.panels);
+   as a direct child of .content (a column flex container) that same rule
+   would size it by height instead of width, so neutralize it here. */
+.topology-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: none;
+    min-height: 0;
+    position: relative;
+}
+
+/* Floats over the canvas instead of taking its own row, so the diagram
+   below gets that space back instead of the title sitting on a solid strip
+   above it. No background of its own — genuinely transparent, not just a
+   matching fill — so the diagram is visible right up to the panel's edge. */
+.topology-panel > .summary-card-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.topology-canvas-wrap {
+    position: relative;
+    margin-top: 0;
+}
+
+.topology-canvas {
+    position: relative;
+    background-image: radial-gradient(var(--ring-track) 1px, transparent 1px);
+    background-size: 22px 22px;
+    background-position: -4px -4px;
+    height: 465px;
+    min-height: 465px;
+    max-height: 900px;
+    overflow: auto;
+    resize: vertical;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+    touch-action: none;
+    user-select: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-radius: 8px;
+}
+
+.topology-canvas.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
+/* The native resize handle browsers draw in this corner is barely visible
+   on a dark background — this sits on top of it purely to make the
+   affordance readable. pointer-events: none so it never steals the actual
+   drag from the real (invisible, native) handle underneath it. */
+.topology-resize-hint {
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 12px;
+    height: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.topology-canvas::-webkit-scrollbar {
+    display: none;
+}
+
+#topology-canvas:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Each hub/leaf node is its own tab stop (role="img", not a control) so a
+   keyboard/screen-reader user can reach any single node's reading, not just
+   the canvas as a whole. */
+.tp-focusable {
+    outline: none;
+}
+
+.tp-focusable:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Centers the diagram when it's narrower than the wrapper (e.g. zoomed out);
+   once it's wider, auto margins resolve to 0 and it scrolls normally from the
+   left edge instead — unlike flex centering, this never clips the overflow. */
+.topology-canvas svg {
+    display: block;
+    width: 1441px;
+    max-width: none;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* Fixed on the non-scrolling wrapper, not the scrolling canvas — otherwise
+   they'd pan/zoom along with the content instead of staying pinned to the edge. */
+.topology-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: 8px;
+}
+
+.topology-fade.left {
+    left: 0;
+    background: linear-gradient(to right, var(--surface), transparent);
+}
+
+.topology-fade.right {
+    right: 0;
+    background: linear-gradient(to left, var(--surface), transparent);
+}
+
+.topology-zoom {
+    position: absolute;
+    /* Left, not right — .topology-canvas's native resize handle (bottom
+       right corner) needs that corner free to stay grabbable. */
+    left: 12px;
+    bottom: 12px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.topology-zoom button {
+    width: 30px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font: inherit;
+}
+
+.topology-zoom button:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.topology-zoom button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.topology-zoom button:disabled:hover {
+    background: none;
+    color: var(--text-dim);
+}
+
+.topology-zoom button + button {
+    border-top: 1px solid var(--border);
+}
+
+.topology-zoom button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.topology-zoom-level {
+    width: 30px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: none;
+    cursor: pointer;
+}
+
+.topology-zoom-level:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.tp-node-label {
+    font-weight: 700;
+    font-size: 13px;
+    fill: var(--text);
+}
+
+.tp-node-sub {
+    font-weight: 500;
+    font-size: 11px;
+    fill: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.tp-leaf-label {
+    font-weight: 600;
+    font-size: 11px;
+    fill: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.tp-leaf-value {
+    font-weight: 700;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.tp-leaf-pill {
+    fill: var(--surface-hover);
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.tp-leaf-pill.is-warning {
+    stroke: color-mix(in srgb, var(--warning) 55%, var(--border));
+}
+
+.tp-hub-ring-track {
+    fill: none;
+    stroke: var(--ring-track);
+    stroke-width: 5;
+}
+
+.tp-hub-ring {
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s ease;
+}
+
+.tp-hub-core {
+    fill: var(--surface);
+}
+
+/* Server hub's ring sits at a permanent 100% (it isn't a %-metric), so unlike
+   every other hub it never visibly changes on its own — this radiates a slow
+   "radar ping" outward from behind it instead, the same "live and reporting"
+   signal as .server-status-dot.online elsewhere, not a measured value. */
+@keyframes tp-server-ping {
+    0% { transform: scale(1); opacity: 0.55; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+.tp-server-ping {
+    fill: none;
+    stroke-width: 2;
+    pointer-events: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: tp-server-ping 2.6s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tp-server-ping {
+        display: none;
+    }
+}
+
+.tp-branch {
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.35;
+}
+
+.tp-pulse {
+    filter: url(#tp-glow);
+    transition: opacity 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tp-pulse {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .topology-canvas {
+        height: 280px;
+    }
 }
