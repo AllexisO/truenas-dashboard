@@ -149,6 +149,14 @@ function handleRealtimeData(data) {
         buildProcessesTable(data.processes);
     }
 
+    if (data.services) {
+        updateServices(data);
+    }
+
+    if (data.alerts) {
+        updateAlerts(data);
+    }
+
     if (typeof updateTopology === "function") updateTopology(data);
 }
 

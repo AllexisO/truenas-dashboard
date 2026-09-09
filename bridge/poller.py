@@ -155,7 +155,7 @@ class Poller:
 
                 now = asyncio.get_event_loop().time()
                 if now - last_static_update > 15:
-                    await self.fetch_pools(ws)
+                    await self.fetch_periodic_data()
                     last_static_update = now
                     await self.broadcast()
 
@@ -171,6 +171,11 @@ class Poller:
 
         # Getting pools
         await self.fetch_pools(ws)
+
+        # Getting alerts, service states, and per-pool snapshot health
+        await self.fetch_alerts(ws)
+        await self.fetch_services(ws)
+        await self.fetch_snapshots(ws)
 
         # Getting interfaces
         await ws.send(json.dumps({
@@ -246,6 +251,34 @@ class Poller:
         
         print("Static data fetched", flush=True)
 
+    # Refreshes pools/alerts/services/snapshots on their own connection
+    # rather than the one subscribed to reporting.realtime — sharing that
+    # socket risks a live "added" push landing between one of these calls'
+    # send and recv and being misread as its RPC reply, silently corrupting
+    # the result (this is why fetch_history above also opens its own
+    # connection, for the same class of problem).
+    async def fetch_periodic_data(self):
+        async with websockets.unix_connect(
+            "/run/middleware/middlewared.sock", uri=uri
+        ) as ws:
+            await ws.send(json.dumps({
+                "id": "1", "msg": "connect",
+                "version": "1", "support": ["1"]
+            }))
+            await ws.recv()
+
+            await ws.send(json.dumps({
+                "id": "2", "msg": "method",
+                "method": "auth.login_with_api_key",
+                "params": [self.api_key]
+            }))
+            await ws.recv()
+
+            await self.fetch_pools(ws)
+            await self.fetch_alerts(ws)
+            await self.fetch_services(ws)
+            await self.fetch_snapshots(ws)
+
     # Fetching HDD Pools
     async def fetch_pools(self, ws):
         await ws.send(json.dumps({
@@ -254,7 +287,82 @@ class Poller:
         }))
         response = json.loads(await ws.recv())
         self._set("pools", response.get("result", []))
-    
+
+    # Fetching active alerts (unresolved by definition — alert.list only
+    # ever returns alerts middlewared currently considers active).
+    async def fetch_alerts(self, ws):
+        await ws.send(json.dumps({
+            "id": "11", "msg": "method",
+            "method": "alert.list", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        alerts = [
+            {
+                "level": alert.get("level"),
+                "text": alert.get("formatted") or alert.get("text"),
+                "dismissed": alert.get("dismissed", False)
+            }
+            for alert in response.get("result", [])
+        ]
+        self._set("alerts", alerts)
+
+    # Fetching system service states (ssh, nfs, smb, etc.)
+    async def fetch_services(self, ws):
+        await ws.send(json.dumps({
+            "id": "12", "msg": "method",
+            "method": "service.query", "params": []
+        }))
+        response = json.loads(await ws.recv())
+        services = [
+            {"name": service.get("service"), "state": service.get("state"), "enable": service.get("enable")}
+            for service in response.get("result", [])
+        ]
+        self._set("services", services)
+
+    # Fetching per-pool snapshot health: the real latest snapshot (any
+    # dataset under the pool, whatever it actually is — including internal
+    # system snapshots, not just user data) plus whether an enabled
+    # scheduled task actually covers that pool. A pool can have a
+    # recent-looking snapshot yet still have zero real backup schedule —
+    # both facts matter, so both are reported rather than picking one.
+    async def fetch_snapshots(self, ws):
+        await ws.send(json.dumps({
+            "id": "13", "msg": "method",
+            "method": "zfs.snapshot.query", "params": [[], {"extra": {"properties": ["creation"]}}]
+        }))
+        snapshot_response = json.loads(await ws.recv())
+
+        await ws.send(json.dumps({
+            "id": "14", "msg": "method",
+            "method": "pool.snapshottask.query", "params": []
+        }))
+        task_response = json.loads(await ws.recv())
+
+        latest_by_pool = {}
+        for snap in snapshot_response.get("result", []):
+            pool = snap.get("pool")
+            creation = snap.get("properties", {}).get("creation", {}).get("rawvalue")
+            if not pool or not creation:
+                continue
+            creation = int(creation)
+            if pool not in latest_by_pool or creation > latest_by_pool[pool]:
+                latest_by_pool[pool] = creation
+
+        scheduled_pools = set()
+        for task in task_response.get("result", []):
+            if task.get("enabled") and task.get("dataset"):
+                scheduled_pools.add(task["dataset"].split("/")[0])
+
+        pool_names = [pool.get("name") for pool in self.latest_data.get("pools", [])]
+        snapshots = {
+            name: {
+                "last_snapshot": latest_by_pool.get(name),
+                "scheduled": name in scheduled_pools
+            }
+            for name in pool_names
+        }
+        self._set("snapshots", snapshots)
+
     # Fetching Server Top 10 Processes
     async def fetch_processes(self):
         result = await asyncio.to_thread(

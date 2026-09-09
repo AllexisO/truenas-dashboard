@@ -511,6 +511,19 @@ function buildPoolsTable(data) {
         bar.style.background = color;
 
         row.querySelector(".pools-table-percent").textContent = percent + "%";
+
+        // Real last-snapshot age (system snapshots included, not just user
+        // data — see poller.py's fetch_snapshots) plus whether an enabled
+        // scheduled task actually covers this pool. A recent-looking
+        // snapshot with no schedule behind it is still one missed manual
+        // step away from silently going stale.
+        let snapshotEl = row.querySelector(".pools-table-snapshot");
+        let snapshotInfo = data.snapshots && data.snapshots[pool.name];
+        if (snapshotEl && snapshotInfo) {
+            let hasSchedule = snapshotInfo.scheduled;
+            snapshotEl.textContent = formatAge(snapshotInfo.last_snapshot) + (hasSchedule ? "" : " · no schedule");
+            snapshotEl.className = `pools-table-snapshot ${hasSchedule ? "" : "is-warning"}`;
+        }
     });
 }
 

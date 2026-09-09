@@ -1378,6 +1378,15 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     text-align: right;
 }
 
+.pools-table-snapshot {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.pools-table-snapshot.is-warning {
+    color: var(--warning);
+}
+
 .panels-three .panel {
     flex: 1 1 calc((100% - 32px) / 3);
 }
@@ -1502,6 +1511,106 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     text-decoration: underline;
 }
 
+/* ---------/ Services Panel /--------- */
+
+.services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.service-row:last-child {
+    border-bottom: none;
+}
+
+.service-status-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-muted);
+}
+
+.service-status-dot.running {
+    background-color: var(--success);
+}
+
+.service-status-dot.stopped {
+    background-color: var(--failed);
+}
+
+.service-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.service-state {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* ---------/ Alerts Panel /--------- */
+
+.alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alert-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.alert-row:last-child {
+    border-bottom: none;
+}
+
+.alert-level-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--surface);
+}
+
+.alert-level-badge.level-critical,
+.alert-level-badge.level-error {
+    background-color: var(--failed);
+}
+
+.alert-level-badge.level-warning {
+    background-color: var(--warning);
+}
+
+.alert-level-badge.level-info {
+    background-color: var(--text-dim);
+}
+
+.alert-text {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.alerts-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
 /* ---------/ System Topology Panel /--------- */
 
 /* .panel's own flex-basis math assumes a row-direction parent (.panels);
@@ -1539,7 +1648,10 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     background-size: 22px 22px;
     background-position: -4px -4px;
     height: 465px;
+    min-height: 465px;
+    max-height: 900px;
     overflow: auto;
+    resize: vertical;
     cursor: grab;
     -webkit-overflow-scrolling: touch;
     touch-action: none;
@@ -1552,6 +1664,21 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .topology-canvas.is-dragging {
     cursor: grabbing;
     user-select: none;
+}
+
+/* The native resize handle browsers draw in this corner is barely visible
+   on a dark background — this sits on top of it purely to make the
+   affordance readable. pointer-events: none so it never steals the actual
+   drag from the real (invisible, native) handle underneath it. */
+.topology-resize-hint {
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 12px;
+    height: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 2;
 }
 
 .topology-canvas::-webkit-scrollbar {
@@ -1611,7 +1738,9 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 
 .topology-zoom {
     position: absolute;
-    right: 12px;
+    /* Left, not right — .topology-canvas's native resize handle (bottom
+       right corner) needs that corner free to stay grabbable. */
+    left: 12px;
     bottom: 12px;
     z-index: 3;
     display: flex;

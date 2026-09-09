@@ -661,6 +661,38 @@
 
     // ---- drag-to-pan (mouse + touch via Pointer Events) + zoom --------
 
+    // Persists the height the user drags .topology-canvas's native resize
+    // handle to, the same "remember it in localStorage" convention the
+    // theme and sidebar-collapsed state already use elsewhere. Scoped to
+    // desktop widths only — below the mobile breakpoint (style-updated.css's
+    // own 640px media query) the canvas height is fixed by CSS, not the
+    // user, so a ResizeObserver firing there is that breakpoint switching,
+    // not a real resize, and must not overwrite the saved desktop height.
+    var TOPOLOGY_HEIGHT_KEY = "topologyCanvasHeight";
+    var TOPOLOGY_MIN_HEIGHT = 465, TOPOLOGY_MAX_HEIGHT = 900, TOPOLOGY_MOBILE_BREAKPOINT = 640;
+
+    function initCanvasHeightPersistence(canvas) {
+        function isDesktopWidth() {
+            return window.innerWidth > TOPOLOGY_MOBILE_BREAKPOINT;
+        }
+
+        if (isDesktopWidth()) {
+            var stored = parseInt(localStorage.getItem(TOPOLOGY_HEIGHT_KEY), 10);
+            if (!isNaN(stored)) {
+                stored = Math.max(TOPOLOGY_MIN_HEIGHT, Math.min(TOPOLOGY_MAX_HEIGHT, stored));
+                canvas.style.height = stored + "px";
+            }
+        }
+
+        if (window.ResizeObserver) {
+            var observer = new ResizeObserver(function (entries) {
+                if (!isDesktopWidth()) return;
+                localStorage.setItem(TOPOLOGY_HEIGHT_KEY, Math.round(entries[0].contentRect.height));
+            });
+            observer.observe(canvas);
+        }
+    }
+
     function initPanZoom() {
         var canvas = document.getElementById("topology-canvas");
         var svg = document.getElementById("tp-svg");
@@ -668,6 +700,8 @@
         var zoomOutBtn = document.getElementById("tp-zoom-out");
         var zoomResetBtn = document.getElementById("tp-zoom-reset");
         if (!canvas || !svg || !zoomInBtn || !zoomOutBtn || !zoomResetBtn) return;
+
+        initCanvasHeightPersistence(canvas);
 
         var isDragging = false, startX = 0, startY = 0, startScrollX = 0, startScrollY = 0, moved = false;
         canvas.addEventListener("pointerdown", function (event) {

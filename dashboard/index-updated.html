@@ -209,6 +209,11 @@
                         </div>
                         <div class="topology-fade left"></div>
                         <div class="topology-fade right"></div>
+                        <svg class="topology-resize-hint" viewBox="0 0 16 16" aria-hidden="true" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            <line x1="4" y1="14" x2="14" y2="4"/>
+                            <line x1="8" y1="14" x2="14" y2="8"/>
+                            <line x1="12" y1="14" x2="14" y2="12"/>
+                        </svg>
                         <div class="topology-zoom">
                             <button type="button" id="tp-zoom-in" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg></button>
                             <button type="button" class="topology-zoom-level" id="tp-zoom-reset" aria-label="Reset zoom to 100%">100%</button>
@@ -690,6 +695,7 @@
                                     <th>Used</th>
                                     <th>Available</th>
                                     <th>Capacity</th>
+                                    <th>Last Snapshot</th>
                                 </tr>
                             </thead>
                             <tbody id="pools-table-body"></tbody>
@@ -711,6 +717,7 @@
                                     <span class="pools-table-percent"></span>
                                 </div>
                             </td>
+                            <td class="pools-table-snapshot"></td>
                         </tr>
                     </template>
                 </section>
@@ -747,9 +754,45 @@
                         <button class="panel-footer-link">View all processes →</button>
                     </div>
 
-                    <div class="panel"></div>
-                    <div class="panel"></div>
+                    <div class="panel" id="services-panel">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                            </span>
+                            <h2 class="summary-card-title">Services</h2>
+                        </header>
+
+                        <div class="services-list" id="services-list"></div>
+                    </div>
+
+                    <div class="panel" id="alerts-panel">
+                        <header class="summary-card-header">
+                            <span class="summary-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            </span>
+                            <h2 class="summary-card-title">Alerts</h2>
+                        </header>
+
+                        <div class="alerts-list" id="alerts-list"></div>
+                        <p class="alerts-empty" id="alerts-empty" hidden>No active alerts</p>
+                    </div>
                 </section>
+
+                <template id="service-row-template">
+                    <div class="service-row">
+                        <span class="service-status-dot"></span>
+                        <span class="service-name"></span>
+                        <span class="service-state"></span>
+                    </div>
+                </template>
+
+                <template id="alert-row-template">
+                    <div class="alert-row">
+                        <span class="alert-level-badge"></span>
+                        <span class="alert-text"></span>
+                    </div>
+                </template>
+
                 <template id="process-row-template">
                     <tr class="processes-table-row">
                         <td class="processes-table-index"></td>
@@ -774,6 +817,8 @@
     <script src="/js/format.js"></script>
     <script src="/js/new-apex.js"></script>
     <script src="/js/widgets/topology-widget.js"></script>
+    <script src="/js/widgets/services-widget.js"></script>
+    <script src="/js/widgets/alerts-widget.js"></script>
     <script src="/js/overview.js"></script>
     <script src="/js/app.js"></script>
 </body>
