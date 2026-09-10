@@ -32,10 +32,18 @@ function themeToggle() {
 }
 
 /* --- Accent Color Picker --- */
+function applyAccentColor(hex, colorInput) {
+    html.style.setProperty("--user-accent", hex);
+    html.setAttribute("data-accent", "custom");
+    localStorage.setItem("accentColor", hex);
+    colorInput.value = hex;
+}
+
 function accentPicker() {
     const popover = document.querySelector("#accent-popover");
     const colorInput = document.querySelector("#accent-color-input");
     const defaultButton = document.querySelector("#accent-default");
+    const presetGrid = document.querySelector("#accent-preset-grid");
 
     const savedAccent = localStorage.getItem("accentColor");
     if (savedAccent) colorInput.value = savedAccent;
@@ -51,9 +59,13 @@ function accentPicker() {
     });
 
     colorInput.addEventListener("input", () => {
-        html.style.setProperty("--user-accent", colorInput.value);
-        html.setAttribute("data-accent", "custom");
-        localStorage.setItem("accentColor", colorInput.value);
+        applyAccentColor(colorInput.value, colorInput);
+    });
+
+    presetGrid.addEventListener("click", (event) => {
+        const swatch = event.target.closest(".accent-preset-swatch-btn");
+        if (!swatch) return;
+        applyAccentColor(swatch.dataset.accentColor, colorInput);
     });
 
     defaultButton.addEventListener("click", () => {

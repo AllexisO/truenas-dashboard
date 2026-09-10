@@ -661,6 +661,34 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     box-shadow: inset 0 0 0 1px var(--border);
 }
 
+.accent-popover-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2px 0;
+}
+
+.accent-preset-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 168px;
+    padding: 4px 2px;
+}
+
+.accent-preset-swatch-btn {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--border);
+    cursor: pointer;
+}
+
+.accent-preset-swatch-btn:hover {
+    box-shadow: inset 0 0 0 1px var(--border), 0 0 0 2px var(--surface-hover);
+}
+
 .accent-custom input[type="color"] {
     width: 16px;
     height: 16px;
