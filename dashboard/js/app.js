@@ -42,7 +42,13 @@ function applyCustomAccent(hex, colorInput) {
     colorInput.value = hex;
 }
 
-function applyPalette(key, representativeColor, colorInput) {
+function markActiveChip(presetGrid, key) {
+    presetGrid.querySelectorAll(".accent-preset-chip").forEach(chip => {
+        chip.classList.toggle("active", chip.dataset.paletteKey === key);
+    });
+}
+
+function applyPalette(key, representativeColor, colorInput, presetGrid) {
     html.removeAttribute("data-accent");
     html.style.removeProperty("--user-accent");
     localStorage.removeItem("accentColor");
@@ -50,6 +56,7 @@ function applyPalette(key, representativeColor, colorInput) {
     html.setAttribute("data-palette", key);
     localStorage.setItem("accentPalette", key);
     colorInput.value = representativeColor;
+    markActiveChip(presetGrid, key);
 }
 
 function accentPicker() {
@@ -65,6 +72,7 @@ function accentPicker() {
     } else if (savedPalette) {
         const activeSwatch = presetGrid.querySelector(`[data-palette-key="${savedPalette}"]`);
         if (activeSwatch) colorInput.value = activeSwatch.dataset.accentColor;
+        markActiveChip(presetGrid, savedPalette);
     }
 
     getAccentToggle.addEventListener("click", () => {
@@ -79,12 +87,13 @@ function accentPicker() {
 
     colorInput.addEventListener("input", () => {
         applyCustomAccent(colorInput.value, colorInput);
+        markActiveChip(presetGrid, null);
     });
 
     presetGrid.addEventListener("click", (event) => {
-        const swatch = event.target.closest(".accent-preset-swatch-btn");
-        if (!swatch) return;
-        applyPalette(swatch.dataset.paletteKey, swatch.dataset.accentColor, colorInput);
+        const chip = event.target.closest(".accent-preset-chip");
+        if (!chip) return;
+        applyPalette(chip.dataset.paletteKey, chip.dataset.accentColor, colorInput, presetGrid);
     });
 
     defaultButton.addEventListener("click", () => {
@@ -94,6 +103,7 @@ function accentPicker() {
         localStorage.removeItem("accentColor");
         localStorage.removeItem("accentPalette");
         colorInput.value = "#06B6D4";
+        markActiveChip(presetGrid, null);
         popover.classList.remove("open");
     });
 }
