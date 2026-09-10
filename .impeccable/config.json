@@ -203,6 +203,210 @@
         "value": "#6a00f4",
         "createdAt": "2026-09-10T22:24:19.120Z",
         "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#03313a",
+        "createdAt": "2026-09-10T22:38:23.523Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#050505",
+        "createdAt": "2026-09-10T22:38:23.965Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#064e3b",
+        "createdAt": "2026-09-10T22:38:24.465Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#071a52",
+        "createdAt": "2026-09-10T22:38:24.972Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0b132b",
+        "createdAt": "2026-09-10T22:38:25.447Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0c134f",
+        "createdAt": "2026-09-10T22:38:25.953Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#111827",
+        "createdAt": "2026-09-10T22:38:26.473Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#152d35",
+        "createdAt": "2026-09-10T22:38:27.020Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#163300",
+        "createdAt": "2026-09-10T22:38:27.549Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#18251d",
+        "createdAt": "2026-09-10T22:38:28.474Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1a0b2e",
+        "createdAt": "2026-09-10T22:38:28.979Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1e1033",
+        "createdAt": "2026-09-10T22:38:29.518Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1f2329",
+        "createdAt": "2026-09-10T22:38:30.015Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#23262f",
+        "createdAt": "2026-09-10T22:38:30.534Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#25272c",
+        "createdAt": "2026-09-10T22:38:31.006Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#2e0f35",
+        "createdAt": "2026-09-10T22:38:31.841Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#98e8de",
+        "createdAt": "2026-09-10T22:38:32.386Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#b8f7e4",
+        "createdAt": "2026-09-10T22:38:32.944Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d6e3ff",
+        "createdAt": "2026-09-10T22:38:33.483Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d7ff00",
+        "createdAt": "2026-09-10T22:38:34.023Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d7ffe0",
+        "createdAt": "2026-09-10T22:38:34.567Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#dbf6ff",
+        "createdAt": "2026-09-10T22:38:35.076Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#dff7ff",
+        "createdAt": "2026-09-10T22:38:35.522Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e0f2fe",
+        "createdAt": "2026-09-10T22:38:36.044Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e8deff",
+        "createdAt": "2026-09-10T22:38:36.544Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f0f2f5",
+        "createdAt": "2026-09-10T22:38:37.045Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f7dcff",
+        "createdAt": "2026-09-10T22:38:37.568Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f8e7c9",
+        "createdAt": "2026-09-10T22:38:38.097Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f8f7f4",
+        "createdAt": "2026-09-10T22:38:38.584Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffd6a5",
+        "createdAt": "2026-09-10T22:38:39.119Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff0c9",
+        "createdAt": "2026-09-10T22:38:39.610Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff1a6",
+        "createdAt": "2026-09-10T22:38:40.073Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff275",
+        "createdAt": "2026-09-10T22:38:40.599Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fffaf3",
+        "createdAt": "2026-09-10T22:38:41.104Z",
+        "reason": "user confirmed: second color of the dual-tone preset swatch pairs, matches the 31-preset accent picker feature"
       }
     ]
   }
