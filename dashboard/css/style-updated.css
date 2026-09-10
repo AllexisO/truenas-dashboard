@@ -60,7 +60,7 @@ body {
 /* ---------/ Dark Theme /--------- */
 
 html[data-theme="dark"] {
-    --background: #0A0E1A;
+    --background: #070912;
     --surface: #111A2E;
     --surface-hover: #1A2541;
     --border: rgba(255, 255, 255, 0.08);
