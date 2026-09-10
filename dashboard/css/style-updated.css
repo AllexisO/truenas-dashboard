@@ -1292,6 +1292,15 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     color: var(--text);
 }
 
+.accent-preset-chip:focus {
+    outline: none;
+}
+
+.accent-preset-chip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+}
+
 .accent-preset-chip.active {
     border-color: var(--border);
     background: var(--surface-hover);
