@@ -1,0 +1,377 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "dashboard/css/style-updated.css"
+        ],
+        "createdAt": "2026-09-10T23:08:59.141Z",
+        "reason": "user confirmed: RAM bar transform and CPU ring-chart-progress transitions are single small elements, negligible perf cost, matches existing sidebar-collapse width-transition precedent in the project"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0038ff",
+        "createdAt": "2026-09-10T23:08:59.635Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0057ff",
+        "createdAt": "2026-09-10T23:09:00.172Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#03313a",
+        "createdAt": "2026-09-10T23:09:00.702Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#050505",
+        "createdAt": "2026-09-10T23:09:01.236Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#064e3b",
+        "createdAt": "2026-09-10T23:09:01.730Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#071a52",
+        "createdAt": "2026-09-10T23:09:02.197Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0b132b",
+        "createdAt": "2026-09-10T23:09:02.721Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0c134f",
+        "createdAt": "2026-09-10T23:09:03.266Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#111827",
+        "createdAt": "2026-09-10T23:09:03.744Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#152d35",
+        "createdAt": "2026-09-10T23:09:04.285Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#163300",
+        "createdAt": "2026-09-10T23:09:04.822Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#18251d",
+        "createdAt": "2026-09-10T23:09:05.309Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1a0b2e",
+        "createdAt": "2026-09-10T23:09:05.898Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1b4ef5",
+        "createdAt": "2026-09-10T23:09:06.375Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1e1033",
+        "createdAt": "2026-09-10T23:09:06.908Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#1f2329",
+        "createdAt": "2026-09-10T23:09:07.441Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#23262f",
+        "createdAt": "2026-09-10T23:09:07.987Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#243b8f",
+        "createdAt": "2026-09-10T23:09:08.536Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#2457ff",
+        "createdAt": "2026-09-10T23:09:09.063Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#25272c",
+        "createdAt": "2026-09-10T23:09:09.566Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#2e0f35",
+        "createdAt": "2026-09-10T23:09:10.068Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#39ff88",
+        "createdAt": "2026-09-10T23:09:10.574Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#3a0ca3",
+        "createdAt": "2026-09-10T23:09:11.109Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#5b3df5",
+        "createdAt": "2026-09-10T23:09:11.644Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#6a00f4",
+        "createdAt": "2026-09-10T23:09:12.172Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#6b352a",
+        "createdAt": "2026-09-10T23:09:12.672Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#6d28d9",
+        "createdAt": "2026-09-10T23:09:13.242Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#7a35ff",
+        "createdAt": "2026-09-10T23:09:13.724Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#8fffe0",
+        "createdAt": "2026-09-10T23:09:14.283Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#98e8de",
+        "createdAt": "2026-09-10T23:09:14.848Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#9fe870",
+        "createdAt": "2026-09-10T23:09:15.352Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#a7ff83",
+        "createdAt": "2026-09-10T23:09:15.924Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#b6ff2e",
+        "createdAt": "2026-09-10T23:09:16.466Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#b7ff72",
+        "createdAt": "2026-09-10T23:09:16.983Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#b8f7e4",
+        "createdAt": "2026-09-10T23:09:17.468Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#c2185b",
+        "createdAt": "2026-09-10T23:09:17.988Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d4adfc",
+        "createdAt": "2026-09-10T23:09:18.470Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d4ecdd",
+        "createdAt": "2026-09-10T23:09:18.980Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d6e3ff",
+        "createdAt": "2026-09-10T23:09:19.524Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d7ff00",
+        "createdAt": "2026-09-10T23:09:20.057Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d7ffe0",
+        "createdAt": "2026-09-10T23:09:20.574Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#dbf6ff",
+        "createdAt": "2026-09-10T23:09:21.072Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#dff7ff",
+        "createdAt": "2026-09-10T23:09:21.620Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e0f2fe",
+        "createdAt": "2026-09-10T23:09:22.151Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e8deff",
+        "createdAt": "2026-09-10T23:09:22.646Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f0f2f5",
+        "createdAt": "2026-09-10T23:09:23.145Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f62440",
+        "createdAt": "2026-09-10T23:09:23.648Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f7dcff",
+        "createdAt": "2026-09-10T23:09:24.174Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f8e7c9",
+        "createdAt": "2026-09-10T23:09:24.715Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f8f7f4",
+        "createdAt": "2026-09-10T23:09:25.291Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff2e3a",
+        "createdAt": "2026-09-10T23:09:25.823Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff4696",
+        "createdAt": "2026-09-10T23:09:26.730Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff7fec",
+        "createdAt": "2026-09-10T23:09:27.211Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff9030",
+        "createdAt": "2026-09-10T23:09:27.761Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffb7a5",
+        "createdAt": "2026-09-10T23:09:28.293Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffd6a5",
+        "createdAt": "2026-09-10T23:09:28.818Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff0c9",
+        "createdAt": "2026-09-10T23:09:29.351Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff1a6",
+        "createdAt": "2026-09-10T23:09:29.878Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff275",
+        "createdAt": "2026-09-10T23:09:30.346Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fffaf3",
+        "createdAt": "2026-09-10T23:09:30.850Z",
+        "reason": "user confirmed: literal swatch color for the 31-preset accent picker, not a design-system token"
+      }
+    ]
+  }
+}
