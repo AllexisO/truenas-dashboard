@@ -11,17 +11,6 @@ function updateRingProgress(elementId, progress) {
     ring.setAttribute('stroke-dashoffset', RING_CIRCUMFERENCE * (1 - clamped));
 }
 
-function updateDonutSegment(id, pct, offsetPct) {
-    let element = document.getElementById(id);
-    if (!element) return;
-
-    let dash = (pct / 100) * RING_CIRCUMFERENCE;
-    let offset = (offsetPct / 100) * RING_CIRCUMFERENCE;
-
-    element.setAttribute("stroke-dasharray", `${dash} ${RING_CIRCUMFERENCE - dash}`);
-    element.setAttribute("stroke-dashoffset", -offset);
-}
-
 function computeLinePoints(data, min, max, width, height, padding) {
     let range = max - min || 1;
     let drawHeight = height - padding * 2;
@@ -233,18 +222,10 @@ function buildDisksOverviewList(data) {
     // Build disk -> pool map
     const diskPoolMap = buildDiskPoolMap(pools);
 
-    let totalCapacity = 0;
-    let totalUsed = 0;
-    let healthyCount = 0;
-    let warningCount = 0;
-    let failedCount = 0;
-
     const shouldBuildList = list && list.children.length === 0;
     const template = shouldBuildList ? document.getElementById("disk-overview-item-template") : null;
-    
-    disks.forEach(disk => {
-        totalCapacity += disk.size;
 
+    disks.forEach(disk => {
         let pool = diskPoolMap[disk.name];
         let isBootDisk = bootDisks?.includes(disk.name);
 
@@ -254,15 +235,8 @@ function buildDisksOverviewList(data) {
         if (pool) {
             percent = Math.round((pool.allocated / pool.size) * 100);
             healthy = pool.healthy && !pool.warning;
-
-            if (!pool.healthy) failedCount++;
-            else if (pool.warning) warningCount++;
-            else healthyCount++;
         } else if (isBootDisk && bootDisk) {
             percent = Math.round((bootDisk.used / bootDisk.total) * 100);
-            healthyCount++;
-        } else {
-            healthyCount++;
         }
 
         if (!shouldBuildList) return;
@@ -313,52 +287,6 @@ function buildDisksOverviewList(data) {
 
         list.appendChild(clone);
     });
-
-    // Disks Overview panel totals + donut
-    pools?.forEach(pool => {
-        totalUsed += pool.allocated;
-    });
-
-    if (bootDisk) {
-        totalUsed += bootDisk.used;
-    }
-
-    let total = disks.length;
-
-    let totalCountElement = document.querySelector("#disks-total-count");
-    if (totalCountElement) totalCountElement.textContent = total;
-
-    let totalCapacityElement = document.querySelector("#disks-total-capacity");
-    if (totalCapacityElement) totalCapacityElement.textContent = formatBytes(totalCapacity);
-
-    let totalUsedElement = document.querySelector("#disks-total-used");
-    if (totalUsedElement) totalUsedElement.textContent = formatBytes(totalUsed);
-
-    let healthyCountElement = document.querySelector("#disks-healthy-count");
-    if (healthyCountElement) healthyCountElement.textContent = healthyCount;
-
-    let warningCountElement = document.querySelector("#disks-warning-count");
-    if (warningCountElement) warningCountElement.textContent = warningCount;
-
-    let failedCountElement = document.querySelector("#disks-failed-count");
-    if (failedCountElement) failedCountElement.textContent = failedCount;
-
-    let healthyPct = total > 0 ? Math.round((healthyCount / total) * 100) : 0;
-    let warningPct = total > 0 ? Math.round((warningCount / total) * 100) : 0;
-    let failedPct = total > 0 ? Math.round((failedCount / total) * 100) : 0;
-
-    let healthyPctElement = document.querySelector("#donut-healthy-pct");
-    if (healthyPctElement) healthyPctElement.textContent = healthyPct + '%';
-
-    let warningPctElement = document.querySelector("#donut-warning-pct");
-    if (warningPctElement) warningPctElement.textContent = warningPct + '%';
-
-    let failedPctElement = document.querySelector("#donut-failed-pct");
-    if (failedPctElement) failedPctElement.textContent = failedPct + '%';
-
-    updateDonutSegment("donut-healthy", healthyPct, 0);
-    updateDonutSegment("donut-warning", warningPct, healthyPct);
-    updateDonutSegment("donut-failed", failedPct, healthyPct + warningPct);
 }
 
 function updateDisksIO(disks) {

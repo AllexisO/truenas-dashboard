@@ -145,10 +145,6 @@ function handleRealtimeData(data) {
         buildPoolsTable(data);
     }
 
-    if (data.processes) {
-        buildProcessesTable(data.processes);
-    }
-
     if (data.services) {
         updateServices(data);
     }
