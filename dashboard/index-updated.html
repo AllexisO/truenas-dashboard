@@ -18,8 +18,11 @@
             if (localStorage.getItem("sidebar") === "collapsed") {
                 html.setAttribute("data-sidebar", "collapsed");
             }
+            const savedPalette = localStorage.getItem("accentPalette");
             const savedAccent = localStorage.getItem("accentColor");
-            if (savedAccent) {
+            if (savedPalette) {
+                html.setAttribute("data-palette", savedPalette);
+            } else if (savedAccent) {
                 html.style.setProperty("--user-accent", savedAccent);
                 html.setAttribute("data-accent", "custom");
             }
@@ -202,37 +205,37 @@
                             </button>
                             <div class="accent-popover-divider"></div>
                             <div class="accent-preset-grid" id="accent-preset-grid">
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#2457FF" data-accent-color="#2457FF" title="Quantum Blue" aria-label="Quantum Blue"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#2FA98C" data-accent-color="#2FA98C" title="Sky Mint" aria-label="Sky Mint"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#5B3DF5" data-accent-color="#5B3DF5" title="Electric Indigo" aria-label="Electric Indigo"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#3DDC7A" data-accent-color="#3DDC7A" title="Zero Black" aria-label="Zero Black"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#6D28D9" data-accent-color="#6D28D9" title="Cyber Grape" aria-label="Cyber Grape"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#B6FF2E" data-accent-color="#B6FF2E" title="Deep Graphite" aria-label="Deep Graphite"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#3A0CA3" data-accent-color="#3A0CA3" title="Butter Yellow" aria-label="Butter Yellow"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#9FE870" data-accent-color="#9FE870" title="Sulu" aria-label="Sulu"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#A7FF83" data-accent-color="#A7FF83" title="Midnight Navy" aria-label="Midnight Navy"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#6D28D9" data-accent-color="#6D28D9" title="Ultra Purple" aria-label="Ultra Purple"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#1B4EF5" data-accent-color="#1B4EF5" title="Vivid Azure" aria-label="Vivid Azure"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#D4ADFC" data-accent-color="#D4ADFC" title="Cosmic Navy" aria-label="Cosmic Navy"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#F62440" data-accent-color="#F62440" title="Signal Red" aria-label="Signal Red"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#D4ECDD" data-accent-color="#D4ECDD" title="Deep Teal" aria-label="Deep Teal"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF2E3A" data-accent-color="#FF2E3A" title="Machine Red" aria-label="Machine Red"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#0038FF" data-accent-color="#0038FF" title="Hyper Cobalt" aria-label="Hyper Cobalt"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF7FEC" data-accent-color="#FF7FEC" title="Dark Aubergine" aria-label="Dark Aubergine"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF9030" data-accent-color="#FF9030" title="Neon Orange" aria-label="Neon Orange"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#B7FF72" data-accent-color="#B7FF72" title="Forest Graphite" aria-label="Forest Graphite"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#7A35FF" data-accent-color="#7A35FF" title="Signal Violet" aria-label="Signal Violet"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#FFB7A5" data-accent-color="#FFB7A5" title="Inkberry" aria-label="Inkberry"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#39FF88" data-accent-color="#39FF88" title="Prompt Blue" aria-label="Prompt Blue"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#6B352A" data-accent-color="#6B352A" title="Clay Brown" aria-label="Clay Brown"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#C2185B" data-accent-color="#C2185B" title="Raspberry" aria-label="Raspberry"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#243B8F" data-accent-color="#243B8F" title="Blueberry" aria-label="Blueberry"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#8FFFE0" data-accent-color="#8FFFE0" title="Cyber Teal" aria-label="Cyber Teal"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#0057FF" data-accent-color="#0057FF" title="Signal Blue" aria-label="Signal Blue"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#B6FF2E" data-accent-color="#B6FF2E" title="Lime Spark" aria-label="Lime Spark"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF4696" data-accent-color="#FF4696" title="Dragonfruit" aria-label="Dragonfruit"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#22C55E" data-accent-color="#22C55E" title="Emerald Ink" aria-label="Emerald Ink"></button>
-                                <button type="button" class="accent-preset-swatch-btn" style="background:#6A00F4" data-accent-color="#6A00F4" title="Ultra Violet" aria-label="Ultra Violet"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#2457FF" data-palette-key="quantum" data-accent-color="#2457FF" title="Quantum Blue" aria-label="Quantum Blue"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#2FA98C" data-palette-key="mint" data-accent-color="#2FA98C" title="Sky Mint" aria-label="Sky Mint"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#5B3DF5" data-palette-key="indigo" data-accent-color="#5B3DF5" title="Electric Indigo" aria-label="Electric Indigo"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#3DDC7A" data-palette-key="zeroblack" data-accent-color="#3DDC7A" title="Zero Black" aria-label="Zero Black"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#6D28D9" data-palette-key="cybergrape" data-accent-color="#6D28D9" title="Cyber Grape" aria-label="Cyber Grape"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#B6FF2E" data-palette-key="deepgraphite" data-accent-color="#B6FF2E" title="Deep Graphite" aria-label="Deep Graphite"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#3A0CA3" data-palette-key="butteryellow" data-accent-color="#3A0CA3" title="Butter Yellow" aria-label="Butter Yellow"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#9FE870" data-palette-key="sulu" data-accent-color="#9FE870" title="Sulu" aria-label="Sulu"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#A7FF83" data-palette-key="midnightnavy" data-accent-color="#A7FF83" title="Midnight Navy" aria-label="Midnight Navy"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#6D28D9" data-palette-key="ultrapurple" data-accent-color="#6D28D9" title="Ultra Purple" aria-label="Ultra Purple"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#1B4EF5" data-palette-key="vividazure" data-accent-color="#1B4EF5" title="Vivid Azure" aria-label="Vivid Azure"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#D4ADFC" data-palette-key="cosmicnavy" data-accent-color="#D4ADFC" title="Cosmic Navy" aria-label="Cosmic Navy"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#F62440" data-palette-key="signalred" data-accent-color="#F62440" title="Signal Red" aria-label="Signal Red"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#D4ECDD" data-palette-key="deepteal" data-accent-color="#D4ECDD" title="Deep Teal" aria-label="Deep Teal"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF2E3A" data-palette-key="machinered" data-accent-color="#FF2E3A" title="Machine Red" aria-label="Machine Red"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#0038FF" data-palette-key="hypercobalt" data-accent-color="#0038FF" title="Hyper Cobalt" aria-label="Hyper Cobalt"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF7FEC" data-palette-key="darkaubergine" data-accent-color="#FF7FEC" title="Dark Aubergine" aria-label="Dark Aubergine"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF9030" data-palette-key="neonorange" data-accent-color="#FF9030" title="Neon Orange" aria-label="Neon Orange"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#B7FF72" data-palette-key="forestgraphite" data-accent-color="#B7FF72" title="Forest Graphite" aria-label="Forest Graphite"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#7A35FF" data-palette-key="signalviolet" data-accent-color="#7A35FF" title="Signal Violet" aria-label="Signal Violet"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#FFB7A5" data-palette-key="inkberry" data-accent-color="#FFB7A5" title="Inkberry" aria-label="Inkberry"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#39FF88" data-palette-key="promptblue" data-accent-color="#39FF88" title="Prompt Blue" aria-label="Prompt Blue"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#6B352A" data-palette-key="claybrown" data-accent-color="#6B352A" title="Clay Brown" aria-label="Clay Brown"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#C2185B" data-palette-key="raspberry" data-accent-color="#C2185B" title="Raspberry" aria-label="Raspberry"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#243B8F" data-palette-key="blueberry" data-accent-color="#243B8F" title="Blueberry" aria-label="Blueberry"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#8FFFE0" data-palette-key="cyberteal" data-accent-color="#8FFFE0" title="Cyber Teal" aria-label="Cyber Teal"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#0057FF" data-palette-key="signalblue" data-accent-color="#0057FF" title="Signal Blue" aria-label="Signal Blue"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#B6FF2E" data-palette-key="limespark" data-accent-color="#B6FF2E" title="Lime Spark" aria-label="Lime Spark"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#FF4696" data-palette-key="dragonfruit" data-accent-color="#FF4696" title="Dragonfruit" aria-label="Dragonfruit"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#22C55E" data-palette-key="emeraldink" data-accent-color="#22C55E" title="Emerald Ink" aria-label="Emerald Ink"></button>
+                                <button type="button" class="accent-preset-swatch-btn" style="background:#6A00F4" data-palette-key="ultraviolet" data-accent-color="#6A00F4" title="Ultra Violet" aria-label="Ultra Violet"></button>
                             </div>
                             <div class="accent-popover-divider"></div>
                             <label class="accent-custom" for="accent-color-input">

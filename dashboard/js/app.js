@@ -32,11 +32,24 @@ function themeToggle() {
 }
 
 /* --- Accent Color Picker --- */
-function applyAccentColor(hex, colorInput) {
+function applyCustomAccent(hex, colorInput) {
+    html.removeAttribute("data-palette");
+    localStorage.removeItem("accentPalette");
+
     html.style.setProperty("--user-accent", hex);
     html.setAttribute("data-accent", "custom");
     localStorage.setItem("accentColor", hex);
     colorInput.value = hex;
+}
+
+function applyPalette(key, representativeColor, colorInput) {
+    html.removeAttribute("data-accent");
+    html.style.removeProperty("--user-accent");
+    localStorage.removeItem("accentColor");
+
+    html.setAttribute("data-palette", key);
+    localStorage.setItem("accentPalette", key);
+    colorInput.value = representativeColor;
 }
 
 function accentPicker() {
@@ -45,8 +58,14 @@ function accentPicker() {
     const defaultButton = document.querySelector("#accent-default");
     const presetGrid = document.querySelector("#accent-preset-grid");
 
+    const savedPalette = localStorage.getItem("accentPalette");
     const savedAccent = localStorage.getItem("accentColor");
-    if (savedAccent) colorInput.value = savedAccent;
+    if (savedAccent) {
+        colorInput.value = savedAccent;
+    } else if (savedPalette) {
+        const activeSwatch = presetGrid.querySelector(`[data-palette-key="${savedPalette}"]`);
+        if (activeSwatch) colorInput.value = activeSwatch.dataset.accentColor;
+    }
 
     getAccentToggle.addEventListener("click", () => {
         popover.classList.toggle("open");
@@ -59,19 +78,21 @@ function accentPicker() {
     });
 
     colorInput.addEventListener("input", () => {
-        applyAccentColor(colorInput.value, colorInput);
+        applyCustomAccent(colorInput.value, colorInput);
     });
 
     presetGrid.addEventListener("click", (event) => {
         const swatch = event.target.closest(".accent-preset-swatch-btn");
         if (!swatch) return;
-        applyAccentColor(swatch.dataset.accentColor, colorInput);
+        applyPalette(swatch.dataset.paletteKey, swatch.dataset.accentColor, colorInput);
     });
 
     defaultButton.addEventListener("click", () => {
         html.removeAttribute("data-accent");
+        html.removeAttribute("data-palette");
         html.style.removeProperty("--user-accent");
         localStorage.removeItem("accentColor");
+        localStorage.removeItem("accentPalette");
         colorInput.value = "#06B6D4";
         popover.classList.remove("open");
     });
