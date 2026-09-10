@@ -113,6 +113,20 @@ html[data-theme="light"] {
 
 
 
+/* ---------/ Custom Accent /--------- */
+
+/* User-picked accent color overrides the theme's default cyan.
+   Left undefined here on purpose — Default is simply the absence of this attribute. */
+html[data-accent="custom"] {
+    --accent: var(--user-accent);
+    --accent-2: color-mix(in srgb, var(--user-accent) 78%, white);
+    --accent-background: color-mix(in srgb, var(--user-accent) 12%, transparent);
+    --accent-border: color-mix(in srgb, var(--user-accent) 28%, transparent);
+    --circle-cpu-progress: var(--user-accent);
+}
+
+
+
 /* ---------/ HTML Data /--------- */
 
 /* Toggle Theme */
@@ -586,6 +600,86 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .topbar-button-theme svg {
     width: 16px;
     height: 16px;
+}
+
+.topbar-accent-picker {
+    position: relative;
+}
+
+.topbar-accent-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 160px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+    z-index: 20;
+}
+
+.topbar-accent-popover.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.accent-preset,
+.accent-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.accent-preset:hover,
+.accent-custom:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.accent-preset-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #06B6D4;
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.accent-custom input[type="color"] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    overflow: hidden;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.accent-custom input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.accent-custom input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
 }
 
 .topbar-pill {

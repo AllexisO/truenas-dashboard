@@ -17,7 +17,12 @@
             if (savedTheme) html.setAttribute("data-theme", savedTheme);
             if (localStorage.getItem("sidebar") === "collapsed") {
                 html.setAttribute("data-sidebar", "collapsed");
-            } 
+            }
+            const savedAccent = localStorage.getItem("accentColor");
+            if (savedAccent) {
+                html.style.setProperty("--user-accent", savedAccent);
+                html.setAttribute("data-accent", "custom");
+            }
         })();
     </script>
 </head>
@@ -184,6 +189,23 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                         </svg>
                     </button>
+                    <div class="topbar-accent-picker">
+                        <button type="button" class="topbar-button" id="accent-toggle" aria-label="Choose accent color">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </button>
+                        <div class="topbar-accent-popover" id="accent-popover">
+                            <button type="button" class="accent-preset" id="accent-default">
+                                <span class="accent-preset-swatch"></span>
+                                Default
+                            </button>
+                            <label class="accent-custom" for="accent-color-input">
+                                <input type="color" id="accent-color-input" value="#06B6D4">
+                                Custom
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </header>
 

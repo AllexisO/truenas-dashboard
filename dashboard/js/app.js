@@ -10,6 +10,7 @@ const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
 const getThemeToggle = document.querySelector("#theme-toggle");
 const getCollpseToogle = document.querySelector("#sidebar-toggle");
+const getAccentToggle = document.querySelector("#accent-toggle");
 
 const html = document.documentElement;
 
@@ -27,6 +28,40 @@ function themeToggle() {
 
         html.setAttribute("data-theme", next);
         localStorage.setItem("theme", next);
+    });
+}
+
+/* --- Accent Color Picker --- */
+function accentPicker() {
+    const popover = document.querySelector("#accent-popover");
+    const colorInput = document.querySelector("#accent-color-input");
+    const defaultButton = document.querySelector("#accent-default");
+
+    const savedAccent = localStorage.getItem("accentColor");
+    if (savedAccent) colorInput.value = savedAccent;
+
+    getAccentToggle.addEventListener("click", () => {
+        popover.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".topbar-accent-picker")) {
+            popover.classList.remove("open");
+        }
+    });
+
+    colorInput.addEventListener("input", () => {
+        html.style.setProperty("--user-accent", colorInput.value);
+        html.setAttribute("data-accent", "custom");
+        localStorage.setItem("accentColor", colorInput.value);
+    });
+
+    defaultButton.addEventListener("click", () => {
+        html.removeAttribute("data-accent");
+        html.style.removeProperty("--user-accent");
+        localStorage.removeItem("accentColor");
+        colorInput.value = "#06B6D4";
+        popover.classList.remove("open");
     });
 }
 
@@ -164,6 +199,7 @@ loadConfig().then(config => {
 
     if (getThemeToggle) themeToggle();
     if (getCollpseToogle) collapseToggle();
+    if (getAccentToggle) accentPicker();
 
     connect();
  });
