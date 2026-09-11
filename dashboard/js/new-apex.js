@@ -19,7 +19,7 @@ function computeLinePoints(data, min, max, width, height, padding) {
         let x = (index / (data.length - 1)) * width;
         let y = padding + drawHeight - ((value - min) / range) * drawHeight;
 
-        return `${x.toFixed(2)},${y.toFixed(2)}`;
+        return [x, y];
     });
 }
 
@@ -28,7 +28,7 @@ function renderSparkline(svgElement, data) {
     let areaElement = svgElement.querySelector(".sparkline-area");
 
     if (!data || data.length < 2) {
-        lineElement.setAttribute("points", "");
+        lineElement.setAttribute("d", "");
         areaElement.setAttribute("d", "");
         return;
     }
@@ -40,9 +40,10 @@ function renderSparkline(svgElement, data) {
     const min = Math.min(...data);
     const max = Math.max(...data);
     const points = computeLinePoints(data, min, max, width, height, padding);
+    const linePath = smoothPath(points);
 
-    lineElement.setAttribute("points", points.join(" "));
-    areaElement.setAttribute("d", `M0,${height} L${points.join(" L")} L${width},${height} Z`);
+    lineElement.setAttribute("d", linePath);
+    areaElement.setAttribute("d", `${linePath} L${width},${height} L0,${height} Z`);
 }
 
 function formatNetworkSpeed(bytesPerSecond) {
