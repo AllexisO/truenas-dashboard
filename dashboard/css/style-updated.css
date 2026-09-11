@@ -60,7 +60,7 @@ body {
 /* ---------/ Dark Theme /--------- */
 
 html[data-theme="dark"] {
-    --background: #0A0E1A;
+    --background: #070912;
     --surface: #111A2E;
     --surface-hover: #1A2541;
     --border: rgba(255, 255, 255, 0.08);
@@ -109,6 +109,613 @@ html[data-theme="light"] {
     --tx-network-color: #10B981;
     --ring-track: rgba(15, 23, 42, 0.08);
     --disk-success-bar: #22C55E;
+}
+
+
+
+/* ---------/ Named Accent Presets /--------- */
+
+html[data-palette="quantum"] {
+    --accent: #2457FF;
+    --accent-2: #4A78FF;
+    --accent-background: rgba(36, 87, 255, 0.10);
+    --accent-border: rgba(36, 87, 255, 0.24);
+    --ram-color: #7C93FF;
+    --rx-network-color: #7C93FF;
+    --circle-cpu-progress: #2457FF;
+    --line-cpu-progress: #2457FF;
+}
+html[data-theme="light"][data-palette="quantum"] {
+    --accent-background: #DFF7FF;
+}
+
+html[data-palette="mint"] {
+    --accent: #2FA98C;
+    --accent-2: #4FC3A1;
+    --accent-background: rgba(184, 247, 228, 0.18);
+    --accent-border: rgba(47, 169, 140, 0.28);
+    --ram-color: #6FD9BC;
+    --rx-network-color: #6FD9BC;
+    --circle-cpu-progress: #2FA98C;
+    --line-cpu-progress: #2FA98C;
+}
+html[data-theme="light"][data-palette="mint"] {
+    --accent-background: #DFF9F0;
+}
+html[data-theme="dark"][data-palette="mint"] {
+    --background: #0F1114;
+    --surface: #16181D;
+    --surface-hover: #1F2126;
+}
+
+html[data-palette="indigo"] {
+    --accent: #5B3DF5;
+    --accent-2: #7C5CFF;
+    --accent-background: rgba(232, 222, 255, 0.16);
+    --accent-border: rgba(91, 61, 245, 0.28);
+    --ram-color: #B9A3FF;
+    --rx-network-color: #B9A3FF;
+    --circle-cpu-progress: #5B3DF5;
+    --line-cpu-progress: #5B3DF5;
+}
+html[data-theme="light"][data-palette="indigo"] {
+    --accent-background: #E8DEFF;
+}
+
+html[data-palette="zeroblack"] {
+    --accent: #3DDC7A;
+    --accent-2: #6EE89A;
+    --accent-background: rgba(215, 255, 224, 0.14);
+    --accent-border: rgba(61, 220, 122, 0.28);
+    --ram-color: #8EF0AE;
+    --rx-network-color: #8EF0AE;
+    --circle-cpu-progress: #3DDC7A;
+    --line-cpu-progress: #3DDC7A;
+}
+html[data-theme="light"][data-palette="zeroblack"] {
+    --accent-background: #D7FFE0;
+}
+html[data-theme="dark"][data-palette="zeroblack"] {
+    --background: #050505;
+    --surface: #0E0E0E;
+    --surface-hover: #171717;
+}
+
+html[data-palette="cybergrape"] {
+    --accent: #6D28D9;
+    --accent-2: #D7FF00;
+    --accent-background: rgba(215, 255, 0, 0.12);
+    --accent-border: rgba(109, 40, 217, 0.32);
+    --ram-color: #A78BFA;
+    --rx-network-color: #A78BFA;
+    --circle-cpu-progress: #6D28D9;
+    --line-cpu-progress: #6D28D9;
+}
+html[data-theme="light"][data-palette="cybergrape"] {
+    --accent-background: #EFE6FF;
+}
+
+html[data-palette="deepgraphite"] {
+    --accent: #B6FF2E;
+    --accent-2: #CFFF6B;
+    --accent-background: rgba(182, 255, 46, 0.14);
+    --accent-border: rgba(182, 255, 46, 0.3);
+    --ram-color: #C7FF6E;
+    --rx-network-color: #C7FF6E;
+    --circle-cpu-progress: #B6FF2E;
+    --line-cpu-progress: #B6FF2E;
+}
+html[data-theme="light"][data-palette="deepgraphite"] {
+    --accent-background: #EEFFD1;
+    --accent: #6B9500;
+    --circle-cpu-progress: #6B9500;
+    --line-cpu-progress: #6B9500;
+    --ram-color: #85B300;
+    --rx-network-color: #85B300;
+}
+html[data-theme="dark"][data-palette="deepgraphite"] {
+    --background: #1F2329;
+    --surface: #262B32;
+    --surface-hover: #303640;
+}
+
+html[data-palette="butteryellow"] {
+    --accent: #3A0CA3;
+    --accent-2: #5A2BC7;
+    --accent-background: rgba(255, 242, 117, 0.35);
+    --accent-border: rgba(58, 12, 163, 0.28);
+    --ram-color: #7B4FE0;
+    --rx-network-color: #7B4FE0;
+    --circle-cpu-progress: #3A0CA3;
+    --line-cpu-progress: #3A0CA3;
+}
+html[data-theme="light"][data-palette="butteryellow"] {
+    --accent-background: #FFF275;
+}
+html[data-theme="dark"][data-palette="butteryellow"] {
+    --background: #150733;
+    --surface: #1F0E44;
+    --surface-hover: #2A1758;
+    --accent: #FFF275;
+    --circle-cpu-progress: #FFF275;
+    --line-cpu-progress: #FFF275;
+    --ram-color: #FFE566;
+    --rx-network-color: #FFE566;
+}
+
+html[data-palette="sulu"] {
+    --accent: #9FE870;
+    --accent-2: #B8F291;
+    --accent-background: rgba(159, 232, 112, 0.16);
+    --accent-border: rgba(159, 232, 112, 0.3);
+    --ram-color: #B8F291;
+    --rx-network-color: #B8F291;
+    --circle-cpu-progress: #9FE870;
+    --line-cpu-progress: #9FE870;
+}
+html[data-theme="light"][data-palette="sulu"] {
+    --accent-background: #E9FADB;
+    --accent: #4B8A1F;
+    --circle-cpu-progress: #4B8A1F;
+    --line-cpu-progress: #4B8A1F;
+    --ram-color: #6BAE33;
+    --rx-network-color: #6BAE33;
+}
+html[data-theme="dark"][data-palette="sulu"] {
+    --background: #163300;
+    --surface: #1D4200;
+    --surface-hover: #275700;
+}
+
+html[data-palette="midnightnavy"] {
+    --accent: #A7FF83;
+    --accent-2: #C3FFA8;
+    --accent-background: rgba(167, 255, 131, 0.14);
+    --accent-border: rgba(167, 255, 131, 0.28);
+    --ram-color: #C3FFA8;
+    --rx-network-color: #C3FFA8;
+    --circle-cpu-progress: #A7FF83;
+    --line-cpu-progress: #A7FF83;
+}
+html[data-theme="light"][data-palette="midnightnavy"] {
+    --accent-background: #E4FFD9;
+    --accent: #071A52;
+    --circle-cpu-progress: #071A52;
+    --line-cpu-progress: #071A52;
+    --ram-color: #071A52;
+    --rx-network-color: #071A52;
+}
+html[data-theme="dark"][data-palette="midnightnavy"] {
+    --background: #071A52;
+    --surface: #0D2470;
+    --surface-hover: #132E8E;
+}
+
+html[data-palette="ultrapurple"] {
+    --accent: #6D28D9;
+    --accent-2: #8B54EA;
+    --accent-background: rgba(152, 232, 222, 0.16);
+    --accent-border: rgba(109, 40, 217, 0.28);
+    --ram-color: #B79AFF;
+    --rx-network-color: #B79AFF;
+    --circle-cpu-progress: #6D28D9;
+    --line-cpu-progress: #6D28D9;
+}
+html[data-theme="light"][data-palette="ultrapurple"] {
+    --accent-background: #98E8DE;
+}
+
+html[data-palette="vividazure"] {
+    --accent: #1B4EF5;
+    --accent-2: #4E72FF;
+    --accent-background: rgba(27, 78, 245, 0.12);
+    --accent-border: rgba(27, 78, 245, 0.26);
+    --ram-color: #8DA6FF;
+    --rx-network-color: #8DA6FF;
+    --circle-cpu-progress: #1B4EF5;
+    --line-cpu-progress: #1B4EF5;
+}
+html[data-theme="light"][data-palette="vividazure"] {
+    --accent-background: #F7DCFF;
+}
+
+html[data-palette="cosmicnavy"] {
+    --accent: #D4ADFC;
+    --accent-2: #E2C4FF;
+    --accent-background: rgba(212, 173, 252, 0.16);
+    --accent-border: rgba(212, 173, 252, 0.3);
+    --ram-color: #EDD9FF;
+    --rx-network-color: #EDD9FF;
+    --circle-cpu-progress: #D4ADFC;
+    --line-cpu-progress: #D4ADFC;
+}
+html[data-theme="light"][data-palette="cosmicnavy"] {
+    --accent-background: #D4ADFC;
+    --accent: #0C134F;
+    --circle-cpu-progress: #0C134F;
+    --line-cpu-progress: #0C134F;
+    --ram-color: #0C134F;
+    --rx-network-color: #0C134F;
+}
+html[data-theme="dark"][data-palette="cosmicnavy"] {
+    --background: #0C134F;
+    --surface: #141C6B;
+    --surface-hover: #1C2789;
+}
+
+html[data-palette="signalred"] {
+    --accent: #F62440;
+    --accent-2: #FF5468;
+    --accent-background: rgba(246, 36, 64, 0.1);
+    --accent-border: rgba(246, 36, 64, 0.26);
+    --ram-color: #FF98A5;
+    --rx-network-color: #FF98A5;
+    --circle-cpu-progress: #F62440;
+    --line-cpu-progress: #F62440;
+}
+html[data-theme="light"][data-palette="signalred"] {
+    --accent-background: #FFFAF3;
+}
+
+html[data-palette="deepteal"] {
+    --accent: #D4ECDD;
+    --accent-2: #E3F3E9;
+    --accent-background: rgba(212, 236, 221, 0.18);
+    --accent-border: rgba(212, 236, 221, 0.3);
+    --ram-color: #EAF6EE;
+    --rx-network-color: #EAF6EE;
+    --circle-cpu-progress: #D4ECDD;
+    --line-cpu-progress: #D4ECDD;
+}
+html[data-theme="light"][data-palette="deepteal"] {
+    --accent-background: #D4ECDD;
+    --accent: #152D35;
+    --circle-cpu-progress: #152D35;
+    --line-cpu-progress: #152D35;
+    --ram-color: #152D35;
+    --rx-network-color: #152D35;
+}
+html[data-theme="dark"][data-palette="deepteal"] {
+    --background: #152D35;
+    --surface: #1D3D47;
+    --surface-hover: #274E59;
+}
+
+html[data-palette="machinered"] {
+    --accent: #FF2E3A;
+    --accent-2: #FF5C66;
+    --accent-background: rgba(255, 46, 58, 0.1);
+    --accent-border: rgba(255, 46, 58, 0.26);
+    --ram-color: #FFA0A6;
+    --rx-network-color: #FFA0A6;
+    --circle-cpu-progress: #FF2E3A;
+    --line-cpu-progress: #FF2E3A;
+}
+html[data-theme="light"][data-palette="machinered"] {
+    --accent-background: #DBF6FF;
+}
+
+html[data-palette="hypercobalt"] {
+    --accent: #0038FF;
+    --accent-2: #3D63FF;
+    --accent-background: rgba(0, 56, 255, 0.12);
+    --accent-border: rgba(0, 56, 255, 0.26);
+    --ram-color: #8AA3FF;
+    --rx-network-color: #8AA3FF;
+    --circle-cpu-progress: #0038FF;
+    --line-cpu-progress: #0038FF;
+}
+html[data-theme="light"][data-palette="hypercobalt"] {
+    --accent-background: #D6E3FF;
+}
+
+html[data-palette="darkaubergine"] {
+    --accent: #FF7FEC;
+    --accent-2: #FF9BF1;
+    --accent-background: rgba(255, 127, 236, 0.14);
+    --accent-border: rgba(255, 127, 236, 0.28);
+    --ram-color: #FFC0F7;
+    --rx-network-color: #FFC0F7;
+    --circle-cpu-progress: #FF7FEC;
+    --line-cpu-progress: #FF7FEC;
+}
+html[data-theme="light"][data-palette="darkaubergine"] {
+    --accent-background: #FF7FEC;
+    --accent: #2E0F35;
+    --circle-cpu-progress: #2E0F35;
+    --line-cpu-progress: #2E0F35;
+    --ram-color: #2E0F35;
+    --rx-network-color: #2E0F35;
+}
+html[data-theme="dark"][data-palette="darkaubergine"] {
+    --background: #2E0F35;
+    --surface: #3A1444;
+    --surface-hover: #481A56;
+}
+
+html[data-palette="neonorange"] {
+    --accent: #FF9030;
+    --accent-2: #FFA85C;
+    --accent-background: rgba(255, 144, 48, 0.14);
+    --accent-border: rgba(255, 144, 48, 0.28);
+    --ram-color: #FFC796;
+    --rx-network-color: #FFC796;
+    --circle-cpu-progress: #FF9030;
+    --line-cpu-progress: #FF9030;
+}
+html[data-theme="light"][data-palette="neonorange"] {
+    --accent-background: #FFE1C2;
+}
+html[data-theme="dark"][data-palette="neonorange"] {
+    --background: #111827;
+    --surface: #1F2937;
+    --surface-hover: #374151;
+}
+
+html[data-palette="forestgraphite"] {
+    --accent: #B7FF72;
+    --accent-2: #C8FF97;
+    --accent-background: rgba(183, 255, 114, 0.14);
+    --accent-border: rgba(183, 255, 114, 0.28);
+    --ram-color: #DBFFC0;
+    --rx-network-color: #DBFFC0;
+    --circle-cpu-progress: #B7FF72;
+    --line-cpu-progress: #B7FF72;
+}
+html[data-theme="light"][data-palette="forestgraphite"] {
+    --accent-background: #EAFFDA;
+    --accent: #4B8A1F;
+    --circle-cpu-progress: #4B8A1F;
+    --line-cpu-progress: #4B8A1F;
+    --ram-color: #4B8A1F;
+    --rx-network-color: #4B8A1F;
+}
+html[data-theme="dark"][data-palette="forestgraphite"] {
+    --background: #18251D;
+    --surface: #203020;
+    --surface-hover: #2A3E2A;
+}
+
+html[data-palette="signalviolet"] {
+    --accent: #7A35FF;
+    --accent-2: #9A5CFF;
+    --accent-background: rgba(122, 53, 255, 0.12);
+    --accent-border: rgba(122, 53, 255, 0.26);
+    --ram-color: #C4A6FF;
+    --rx-network-color: #C4A6FF;
+    --circle-cpu-progress: #7A35FF;
+    --line-cpu-progress: #7A35FF;
+}
+html[data-theme="light"][data-palette="signalviolet"] {
+    --accent-background: #F0F2F5;
+}
+
+html[data-palette="inkberry"] {
+    --accent: #FFB7A5;
+    --accent-2: #FFCBBE;
+    --accent-background: rgba(255, 183, 165, 0.16);
+    --accent-border: rgba(255, 183, 165, 0.3);
+    --ram-color: #FFE0D6;
+    --rx-network-color: #FFE0D6;
+    --circle-cpu-progress: #FFB7A5;
+    --line-cpu-progress: #FFB7A5;
+}
+html[data-theme="light"][data-palette="inkberry"] {
+    --accent-background: #FFB7A5;
+    --accent: #1A0B2E;
+    --circle-cpu-progress: #1A0B2E;
+    --line-cpu-progress: #1A0B2E;
+    --ram-color: #1A0B2E;
+    --rx-network-color: #1A0B2E;
+}
+html[data-theme="dark"][data-palette="inkberry"] {
+    --background: #1A0B2E;
+    --surface: #25123F;
+    --surface-hover: #311A52;
+}
+
+html[data-palette="promptblue"] {
+    --accent: #39FF88;
+    --accent-2: #6FFFA8;
+    --accent-background: rgba(57, 255, 136, 0.14);
+    --accent-border: rgba(57, 255, 136, 0.28);
+    --ram-color: #A3FFC7;
+    --rx-network-color: #A3FFC7;
+    --circle-cpu-progress: #39FF88;
+    --line-cpu-progress: #39FF88;
+}
+html[data-theme="light"][data-palette="promptblue"] {
+    --accent-background: #DFFFEA;
+    --accent: #0B132B;
+    --circle-cpu-progress: #0B132B;
+    --line-cpu-progress: #0B132B;
+    --ram-color: #0B132B;
+    --rx-network-color: #0B132B;
+}
+html[data-theme="dark"][data-palette="promptblue"] {
+    --background: #0B132B;
+    --surface: #132038;
+    --surface-hover: #1D2F4D;
+}
+
+html[data-palette="claybrown"] {
+    --accent: #6B352A;
+    --accent-2: #8B4A3A;
+    --accent-background: rgba(107, 53, 42, 0.12);
+    --accent-border: rgba(107, 53, 42, 0.26);
+    --ram-color: #C08972;
+    --rx-network-color: #C08972;
+    --circle-cpu-progress: #6B352A;
+    --line-cpu-progress: #6B352A;
+}
+html[data-theme="light"][data-palette="claybrown"] {
+    --accent-background: #FFF1A6;
+}
+
+html[data-palette="raspberry"] {
+    --accent: #C2185B;
+    --accent-2: #E2377E;
+    --accent-background: rgba(194, 24, 91, 0.1);
+    --accent-border: rgba(194, 24, 91, 0.26);
+    --ram-color: #F291BC;
+    --rx-network-color: #F291BC;
+    --circle-cpu-progress: #C2185B;
+    --line-cpu-progress: #C2185B;
+}
+html[data-theme="light"][data-palette="raspberry"] {
+    --accent-background: #E0F2FE;
+}
+
+html[data-palette="blueberry"] {
+    --accent: #243B8F;
+    --accent-2: #3C56B8;
+    --accent-background: rgba(36, 59, 143, 0.12);
+    --accent-border: rgba(36, 59, 143, 0.26);
+    --ram-color: #8CA0E6;
+    --rx-network-color: #8CA0E6;
+    --circle-cpu-progress: #243B8F;
+    --line-cpu-progress: #243B8F;
+}
+html[data-theme="light"][data-palette="blueberry"] {
+    --accent-background: #FFF0C9;
+}
+
+html[data-palette="cyberteal"] {
+    --accent: #8FFFE0;
+    --accent-2: #ADFFE9;
+    --accent-background: rgba(143, 255, 224, 0.16);
+    --accent-border: rgba(143, 255, 224, 0.3);
+    --ram-color: #CBFFF1;
+    --rx-network-color: #CBFFF1;
+    --circle-cpu-progress: #8FFFE0;
+    --line-cpu-progress: #8FFFE0;
+}
+html[data-theme="light"][data-palette="cyberteal"] {
+    --accent-background: #8FFFE0;
+    --accent: #03313A;
+    --circle-cpu-progress: #03313A;
+    --line-cpu-progress: #03313A;
+    --ram-color: #03313A;
+    --rx-network-color: #03313A;
+}
+html[data-theme="dark"][data-palette="cyberteal"] {
+    --background: #03313A;
+    --surface: #0A4650;
+    --surface-hover: #115A66;
+}
+
+html[data-palette="signalblue"] {
+    --accent: #0057FF;
+    --accent-2: #3D78FF;
+    --accent-background: rgba(0, 87, 255, 0.12);
+    --accent-border: rgba(0, 87, 255, 0.26);
+    --ram-color: #8FB3FF;
+    --rx-network-color: #8FB3FF;
+    --circle-cpu-progress: #0057FF;
+    --line-cpu-progress: #0057FF;
+}
+html[data-theme="light"][data-palette="signalblue"] {
+    --accent-background: #F8F7F4;
+}
+
+html[data-palette="limespark"] {
+    --accent: #B6FF2E;
+    --accent-2: #CFFF6B;
+    --accent-background: rgba(182, 255, 46, 0.14);
+    --accent-border: rgba(182, 255, 46, 0.3);
+    --ram-color: #C7FF6E;
+    --rx-network-color: #C7FF6E;
+    --circle-cpu-progress: #B6FF2E;
+    --line-cpu-progress: #B6FF2E;
+}
+html[data-theme="light"][data-palette="limespark"] {
+    --accent-background: #EFFFD6;
+    --accent: #6B9500;
+    --circle-cpu-progress: #6B9500;
+    --line-cpu-progress: #6B9500;
+    --ram-color: #6B9500;
+    --rx-network-color: #6B9500;
+}
+html[data-theme="dark"][data-palette="limespark"] {
+    --background: #23262F;
+    --surface: #2C303B;
+    --surface-hover: #383D4A;
+}
+
+html[data-palette="dragonfruit"] {
+    --accent: #FF4696;
+    --accent-2: #FF6FAE;
+    --accent-background: rgba(255, 70, 150, 0.14);
+    --accent-border: rgba(255, 70, 150, 0.28);
+    --ram-color: #FF9EC7;
+    --rx-network-color: #FF9EC7;
+    --circle-cpu-progress: #FF4696;
+    --line-cpu-progress: #FF4696;
+}
+html[data-theme="light"][data-palette="dragonfruit"] {
+    --accent-background: #FFDCEF;
+    --accent: #1E1033;
+    --circle-cpu-progress: #1E1033;
+    --line-cpu-progress: #1E1033;
+    --ram-color: #1E1033;
+    --rx-network-color: #1E1033;
+}
+html[data-theme="dark"][data-palette="dragonfruit"] {
+    --background: #1E1033;
+    --surface: #291640;
+    --surface-hover: #352052;
+}
+
+html[data-palette="emeraldink"] {
+    --accent: #22C55E;
+    --accent-2: #4ADE80;
+    --accent-background: rgba(34, 197, 94, 0.14);
+    --accent-border: rgba(34, 197, 94, 0.28);
+    --ram-color: #86EFB0;
+    --rx-network-color: #86EFB0;
+    --circle-cpu-progress: #22C55E;
+    --line-cpu-progress: #22C55E;
+}
+html[data-theme="light"][data-palette="emeraldink"] {
+    --accent-background: #F8E7C9;
+    --accent: #064E3B;
+    --circle-cpu-progress: #064E3B;
+    --line-cpu-progress: #064E3B;
+    --ram-color: #064E3B;
+    --rx-network-color: #064E3B;
+}
+html[data-theme="dark"][data-palette="emeraldink"] {
+    --background: #064E3B;
+    --surface: #0A6B50;
+    --surface-hover: #0F8563;
+}
+
+html[data-palette="ultraviolet"] {
+    --accent: #6A00F4;
+    --accent-2: #8B33FF;
+    --accent-background: rgba(106, 0, 244, 0.12);
+    --accent-border: rgba(106, 0, 244, 0.26);
+    --ram-color: #C297FF;
+    --rx-network-color: #C297FF;
+    --circle-cpu-progress: #6A00F4;
+    --line-cpu-progress: #6A00F4;
+}
+html[data-theme="light"][data-palette="ultraviolet"] {
+    --accent-background: #FFD6A5;
+}
+
+
+
+/* ---------/ Custom Accent /--------- */
+
+/* User-picked accent color overrides the theme's default cyan.
+   Left undefined here on purpose — Default is simply the absence of this attribute. */
+html[data-accent="custom"] {
+    --accent: var(--user-accent);
+    --accent-2: color-mix(in srgb, var(--user-accent) 78%, white);
+    --accent-background: color-mix(in srgb, var(--user-accent) 12%, transparent);
+    --accent-border: color-mix(in srgb, var(--user-accent) 28%, transparent);
+    --circle-cpu-progress: var(--user-accent);
 }
 
 
@@ -586,6 +1193,153 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .topbar-button-theme svg {
     width: 16px;
     height: 16px;
+}
+
+.topbar-accent-picker {
+    position: relative;
+}
+
+.topbar-accent-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: min(620px, calc(100vw - 32px));
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+    z-index: 20;
+}
+
+.topbar-accent-popover.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.accent-preset,
+.accent-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.accent-preset:hover,
+.accent-custom:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.accent-preset-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #06B6D4;
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.accent-popover-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2px 0;
+}
+
+.accent-preset-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px 2px;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.accent-preset-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 150px;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+}
+
+.accent-preset-chip:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.accent-preset-chip:focus {
+    outline: none;
+}
+
+.accent-preset-chip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+}
+
+.accent-preset-chip.active {
+    border-color: var(--border);
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.accent-preset-chip-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.accent-preset-chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.accent-custom input[type="color"] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    overflow: hidden;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.accent-custom input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.accent-custom input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
 }
 
 .topbar-pill {
