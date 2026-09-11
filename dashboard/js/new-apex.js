@@ -280,7 +280,7 @@ function buildDisksOverviewList(data) {
         clone.querySelector(".disk-overview-temp").textContent = temp !== undefined ? Math.round(temp) + "°C" : "";
 
         let bar = clone.querySelector(".disk-overview-bar");
-        bar.style.width = (percent ?? 0) + "%";
+        bar.style.transform = `scaleX(${(percent ?? 0) / 100})`;
         bar.style.background = color;
 
         clone.querySelector(".disk-overview-percent").textContent = percent !== null ? percent + "%" : "";
@@ -435,7 +435,7 @@ function buildPoolsTable(data) {
         row.querySelector(".pool-card-available").textContent = formatBytes(pool.free);
 
         let bar = row.querySelector(".disk-overview-bar");
-        bar.style.width = percent + "%";
+        bar.style.transform = `scaleX(${percent / 100})`;
         bar.style.background = color;
 
         row.querySelector(".pool-card-percent").textContent = percent + "%";
