@@ -1192,85 +1192,111 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 }
 
 /* Pools */
-.pools-table {
-    width: 100%;
-    border-collapse: collapse;
+.pools-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-top: 16px;
 }
 
-.pools-table thead th {
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+.pool-card {
+    flex: 1 1 240px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-hover);
 }
 
-.pools-table-row td {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
+.pool-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.pool-card-name {
+    font-family: monospace;
+    font-weight: 700;
     font-size: 14px;
     color: var(--text);
 }
 
-.pools-table-row:last-child td {
-    border-bottom: none;
-}
-
-.pools-table-name {
-    font-weight: 600;
-}
-
-.pools-table-used,
-.pools-table-available {
-    color: var(--text-muted);
-}
-
-.pools-table-capacity-wrap {
+.pool-card-capacity {
     display: flex;
     align-items: center;
-    gap: 10px;   
+    gap: 10px;
 }
 
-.pools-table-capacity-wrap .disk-overview-bar-wrap {
+.pool-card-capacity .disk-overview-bar-wrap {
     flex: 1;
-    max-width: 160px;
 }
 
-.pools-table-percent {
-    font-weight: 600;
+.pool-card-percent {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 13px;
     min-width: 36px;
     text-align: right;
+    color: var(--text);
 }
 
-.pools-table-snapshot {
+.pool-card-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.pool-card-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pool-card-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--text-muted);
+}
+
+.pool-card-stat-value {
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.pool-card-snapshot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.pool-card-snapshot-label {
+    color: var(--text-muted);
+}
+
+.pool-card-snapshot-value {
+    color: var(--text-dim);
+    font-weight: 500;
     white-space: nowrap;
 }
 
-.pools-table-snapshot.is-warning {
+.pool-card-snapshot-value.is-warning {
     color: var(--warning);
 }
 
-@media (max-width: 768px) {
-    .pools-table {
-        font-size: 12px;
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .pools-table thead th,
-    .pools-table-row td {
-        padding: 10px 6px;
-        white-space: nowrap;
-    }
-
-    .pools-table-capacity-wrap .disk-overview-bar-wrap {
-        max-width: 60px;
+@media (max-width: 640px) {
+    .pool-card {
+        flex-basis: 100%;
     }
 }
 

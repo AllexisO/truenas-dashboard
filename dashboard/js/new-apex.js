@@ -397,7 +397,7 @@ function computeFixedWindowPoints(data, min, max, width, height, padding, totalS
 }
 
 function buildPoolsTable(data) {
-    let tbody = document.getElementById("pools-table-body");
+    let tbody = document.getElementById("pools-grid");
     if (!tbody) return;
 
     let pools = data.pools;
@@ -424,33 +424,33 @@ function buildPoolsTable(data) {
 
         if (!row) return;
 
-        row.querySelector(".pools-table-name").textContent = pool.name;
+        row.querySelector(".pool-card-name").textContent = pool.name;
 
         let statusElement = row.querySelector(".disk-overview-status");
         statusElement.textContent = healthy ? "Healthy" : "Warning";
         statusElement.className = `disk-overview-status ${healthy ? "healthy" : "warning"}`;
 
-        row.querySelector(".pools-table-total").textContent = formatBytes(pool.size);
-        row.querySelector(".pools-table-used").textContent = formatBytes(pool.allocated);
-        row.querySelector(".pools-table-available").textContent = formatBytes(pool.free);
+        row.querySelector(".pool-card-total").textContent = formatBytes(pool.size);
+        row.querySelector(".pool-card-used").textContent = formatBytes(pool.allocated);
+        row.querySelector(".pool-card-available").textContent = formatBytes(pool.free);
 
         let bar = row.querySelector(".disk-overview-bar");
         bar.style.width = percent + "%";
         bar.style.background = color;
 
-        row.querySelector(".pools-table-percent").textContent = percent + "%";
+        row.querySelector(".pool-card-percent").textContent = percent + "%";
 
         // Real last-snapshot age (system snapshots included, not just user
         // data — see poller.py's fetch_snapshots) plus whether an enabled
         // scheduled task actually covers this pool. A recent-looking
         // snapshot with no schedule behind it is still one missed manual
         // step away from silently going stale.
-        let snapshotEl = row.querySelector(".pools-table-snapshot");
+        let snapshotEl = row.querySelector(".pool-card-snapshot-value");
         let snapshotInfo = data.snapshots && data.snapshots[pool.name];
         if (snapshotEl && snapshotInfo) {
             let hasSchedule = snapshotInfo.scheduled;
             snapshotEl.textContent = formatAge(snapshotInfo.last_snapshot) + (hasSchedule ? "" : " · no schedule");
-            snapshotEl.className = `pools-table-snapshot ${hasSchedule ? "" : "is-warning"}`;
+            snapshotEl.className = `pool-card-snapshot-value ${hasSchedule ? "" : "is-warning"}`;
         }
     });
 }

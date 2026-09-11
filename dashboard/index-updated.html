@@ -564,39 +564,43 @@
                             <h2 class="summary-card-title">Pools</h2>
                         </header>
 
-                        <table class="pools-table">
-                            <thead>
-                                <tr>
-                                    <th>Pool</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Used</th>
-                                    <th>Available</th>
-                                    <th>Capacity</th>
-                                    <th>Last Snapshot</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pools-table-body"></tbody>
-                        </table>
+                        <div class="pools-grid" id="pools-grid"></div>
                     </div>
 
                     <template id="pool-row-template">
-                        <tr class="pools-table-row">
-                            <td class="pools-table-name"></td>
-                            <td><span class="disk-overview-status"></span></td>
-                            <td class="pools-table-total"></td>
-                            <td class="pools-table-used"></td>
-                            <td class="pools-table-available"></td>
-                            <td class="pools-table-capacity">
-                                <div class="pools-table-capacity-wrap">
-                                    <div class="disk-overview-bar-wrap">
-                                        <div class="disk-overview-bar"></div>
-                                    </div>
-                                    <span class="pools-table-percent"></span>
+                        <article class="pool-card">
+                            <header class="pool-card-header">
+                                <span class="pool-card-name"></span>
+                                <span class="disk-overview-status"></span>
+                            </header>
+
+                            <div class="pool-card-capacity">
+                                <div class="disk-overview-bar-wrap">
+                                    <div class="disk-overview-bar"></div>
                                 </div>
-                            </td>
-                            <td class="pools-table-snapshot"></td>
-                        </tr>
+                                <span class="pool-card-percent"></span>
+                            </div>
+
+                            <div class="pool-card-stats">
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Total</span>
+                                    <span class="pool-card-stat-value pool-card-total"></span>
+                                </div>
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Used</span>
+                                    <span class="pool-card-stat-value pool-card-used"></span>
+                                </div>
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Available</span>
+                                    <span class="pool-card-stat-value pool-card-available"></span>
+                                </div>
+                            </div>
+
+                            <footer class="pool-card-snapshot">
+                                <span class="pool-card-snapshot-label">Last Snapshot</span>
+                                <span class="pool-card-snapshot-value"></span>
+                            </footer>
+                        </article>
                     </template>
                 </section>
 
