@@ -1221,7 +1221,7 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .pool-card-name {
     font-family: monospace;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text);
 }
 
@@ -1256,7 +1256,7 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 }
 
 .pool-card-stat-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1277,7 +1277,7 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     gap: 8px;
     padding-top: 12px;
     border-top: 1px solid var(--border);
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .pool-card-snapshot-label {
