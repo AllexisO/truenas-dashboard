@@ -743,7 +743,7 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     fill: none;
     stroke-width: 8;
     stroke-linecap: round;
-    transition: stroke-dashoffset 0.4s ease;
+    transition: stroke-dashoffset 1.8s ease-out;
 }
 
 .ring-chart-value {

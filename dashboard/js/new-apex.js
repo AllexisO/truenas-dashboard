@@ -76,9 +76,44 @@ function updateNetworkTotals(totalRx, totalTx) {
     if (txEl) txEl.textContent = formatBytes(totalTx);
 }
 
+const RING_VALUE_REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Counts the ring's center readout from whatever it currently shows to the
+// new value over the same 1.8s the ring's own stroke-dashoffset transition
+// runs (.ring-chart-progress) — otherwise the digits snap instantly ahead
+// of the dial and the two stop reading as one instrument. Re-entrant: a
+// tick that lands mid-count re-reads the live displayed value (not the
+// previous target) so it retargets smoothly instead of jumping back first.
+function animateRingValue(el, target) {
+    if (!el) return;
+    target = Math.round(target);
+
+    if (el._ringAnim) cancelAnimationFrame(el._ringAnim);
+
+    if (RING_VALUE_REDUCED_MOTION) {
+        el.textContent = target;
+        return;
+    }
+
+    const start = parseFloat(el.textContent) || 0;
+    if (start === target) return;
+
+    const duration = 1800;
+    const startTime = performance.now();
+
+    function tick(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic, matches the ring's own easing
+        el.textContent = Math.round(start + (target - start) * eased);
+        el._ringAnim = t < 1 ? requestAnimationFrame(tick) : null;
+    }
+
+    el._ringAnim = requestAnimationFrame(tick);
+}
+
 function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
     updateRingProgress('cpu-load-ring', percent / 100);
-    document.getElementById('cpu-load-percent').textContent = Math.round(percent);
+    animateRingValue(document.getElementById('cpu-load-percent'), percent);
     renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-load-min').textContent = `${min}%`;
     document.getElementById('cpu-load-max').textContent = `${max}%`;
@@ -88,7 +123,7 @@ function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
 
 function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
     updateRingProgress('cpu-temp-ring', degrees / 100);
-    document.getElementById('cpu-temp-degrees').textContent = Math.round(degrees);
+    animateRingValue(document.getElementById('cpu-temp-degrees'), degrees);
     renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-temp-min').textContent = `${min}°C`;
     document.getElementById('cpu-temp-max').textContent = `${max}°C`;
