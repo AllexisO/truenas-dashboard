@@ -24,6 +24,116 @@ function pushSample(buffer, value) {
     if (buffer.length > BUFFER_SIZE) buffer.shift();
 }
 
+// ---- Recent-history preload ----
+// Sparklines otherwise start empty and rebuild themselves over the
+// following ~2 minutes of live ticks. Netdata's own per-graph resolution
+// (~1 sample/sec) is finer than the 60-slot buffer, so each preload is
+// downsampled evenly across the fetched window rather than just keeping
+// the tail, which would silently shrink the covered span to whatever 60
+// seconds happens to fit in the buffer's slot count.
+const HISTORY_PRELOAD_SECONDS = 130;
+
+async function fetchHistoryGraph(graph, identifier) {
+    try {
+        const identifierParam = identifier ? `&identifier=${encodeURIComponent(identifier)}` : "";
+        const response = await fetch(`/history?graph=${graph}&hours=${HISTORY_PRELOAD_SECONDS / 3600}&live=true${identifierParam}`);
+        const result = await response.json();
+        return result?.[0] || null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function downsampleToBufferSize(points) {
+    const step = Math.max(1, Math.floor(points.length / BUFFER_SIZE));
+    const sampled = [];
+    for (let i = 0; i < points.length; i += step) sampled.push(points[i]);
+    return sampled;
+}
+
+// Prepends historical samples ahead of whatever pushSample has already
+// added — safe regardless of whether the first live tick beat the
+// history fetch back — then trims from the front to the shared cap.
+function seedBuffer(buffer, samples) {
+    if (!samples.length) return;
+    buffer.unshift(...samples);
+    if (buffer.length > BUFFER_SIZE) {
+        buffer.splice(0, buffer.length - BUFFER_SIZE);
+    }
+}
+
+// CPU load/temp need no data from the live feed to seed themselves — the
+// graph's "cpu" column (looked up by name, since its position differs
+// between the "cpu" and "cputemp" legends) is already the same unit the
+// ring/sparkline render, so this can run immediately rather than waiting
+// on the first WebSocket tick like RAM/network below.
+function preloadCpuLoadHistory() {
+    fetchHistoryGraph("cpu").then(entry => {
+        if (!entry || !entry.data.length) return;
+        const idx = entry.legend.indexOf("cpu");
+        if (idx === -1) return;
+        const samples = downsampleToBufferSize(entry.data).map(point => ({ value: point[idx], time: point[0] * 1000 }));
+        seedBuffer(buffers.cpuLoad, samples);
+    });
+}
+
+function preloadCpuTempHistory() {
+    fetchHistoryGraph("cputemp").then(entry => {
+        if (!entry || !entry.data.length) return;
+        const idx = entry.legend.indexOf("cpu");
+        if (idx === -1) return;
+        const samples = downsampleToBufferSize(entry.data).map(point => ({ value: point[idx], time: point[0] * 1000 }));
+        seedBuffer(buffers.cpuTemp, samples);
+    });
+}
+
+preloadCpuLoadHistory();
+preloadCpuTempHistory();
+
+// RAM history comes back as "available" bytes, not percent — converting
+// it needs physical_memory_total, which is only known once the first
+// realtime tick lands, so the fetch starts eagerly (no identifier needed)
+// but the actual seeding waits for handleRealtimeData below.
+let ramHistoryPoints = null;
+let ramHistorySeeded = false;
+
+function preloadRamHistory() {
+    fetchHistoryGraph("memory").then(entry => {
+        ramHistoryPoints = entry ? entry.data : [];
+    });
+}
+
+function seedRamBuffer(total) {
+    const samples = downsampleToBufferSize(ramHistoryPoints).map(([time, available]) => ({
+        value: ((total - available) / total) * 100,
+        time: time * 1000
+    }));
+    seedBuffer(buffers.ram, samples);
+}
+
+preloadRamHistory();
+
+// Network history needs the interface's own name as the graph identifier,
+// which (like RAM's total above) is only known once the first realtime
+// tick names it — so both the fetch and the seed wait for that tick,
+// guarded by ramHistorySeeded's sibling flag below so a second tick
+// arriving before the fetch resolves doesn't refire it.
+// Netdata reports interface throughput in kilobits/sec; realtime reports
+// bytes/sec (received_bytes_rate / sent_bytes_rate) — confirmed against
+// this server's own middlewared: history and realtime samples at the same
+// second differ by a constant 125x (1000/8), not sampling noise.
+const NETDATA_KBITS_TO_BYTES = 125;
+let netHistoryStarted = false;
+
+function preloadNetworkHistory(ifaceName) {
+    fetchHistoryGraph("interface", ifaceName).then(entry => {
+        if (!entry || !entry.data.length) return;
+        const points = downsampleToBufferSize(entry.data);
+        seedBuffer(buffers.netRx, points.map(point => ({ value: point[1] * NETDATA_KBITS_TO_BYTES, time: point[0] * 1000 })));
+        seedBuffer(buffers.netTx, points.map(point => ({ value: point[2] * NETDATA_KBITS_TO_BYTES, time: point[0] * 1000 })));
+    });
+}
+
 function formatTime(timestamp) {
     const date = new Date(timestamp);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -73,6 +183,11 @@ function handleRealtimeData(data) {
         let arc = memory.arc_size;
         let percent = (used / total) * 100;
 
+        if (!ramHistorySeeded && ramHistoryPoints !== null) {
+            seedRamBuffer(total);
+            ramHistorySeeded = true;
+        }
+
         pushSample(buffers.ram, percent);
 
         updateRamCard({
@@ -99,8 +214,13 @@ function handleRealtimeData(data) {
 
     if (interfaces) {
         const ifaceName = Object.keys(interfaces)[0];
-        
+
         if (ifaceName) {
+            if (!netHistoryStarted) {
+                netHistoryStarted = true;
+                preloadNetworkHistory(ifaceName);
+            }
+
             const iface = interfaces[ifaceName];
             const rx = iface.received_bytes_rate;
             const tx = iface.sent_bytes_rate;
