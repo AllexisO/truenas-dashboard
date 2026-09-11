@@ -456,6 +456,16 @@ html[data-sidebar="collapsed"] .sidebar-footer {
     background: var(--surface);
 }
 
+.sidebar-nav-item:disabled {
+    color: var(--text-muted);
+    opacity: 0.45;
+    cursor: default;
+}
+
+.sidebar-nav-item:disabled:hover {
+    background: none;
+}
+
 .sidebar-nav-item.active {
     color: var(--text);
     background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), color-mix(in srgb, var(--accent-2) 9%, transparent));
@@ -651,6 +661,7 @@ html[data-sidebar="collapsed"] .sidebar-footer {
 .summary-cards {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 16px;
 }
 
