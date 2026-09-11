@@ -10,6 +10,7 @@ const WS_URL = `ws://${window.location.hostname}:${WS_PORT}`;
 
 const getThemeToggle = document.querySelector("#theme-toggle");
 const getCollpseToogle = document.querySelector("#sidebar-toggle");
+const getAccentToggle = document.querySelector("#accent-toggle");
 
 const html = document.documentElement;
 
@@ -27,6 +28,83 @@ function themeToggle() {
 
         html.setAttribute("data-theme", next);
         localStorage.setItem("theme", next);
+    });
+}
+
+/* --- Accent Color Picker --- */
+function applyCustomAccent(hex, colorInput) {
+    html.removeAttribute("data-palette");
+    localStorage.removeItem("accentPalette");
+
+    html.style.setProperty("--user-accent", hex);
+    html.setAttribute("data-accent", "custom");
+    localStorage.setItem("accentColor", hex);
+    colorInput.value = hex;
+}
+
+function markActiveChip(presetGrid, key) {
+    presetGrid.querySelectorAll(".accent-preset-chip").forEach(chip => {
+        chip.classList.toggle("active", chip.dataset.paletteKey === key);
+    });
+}
+
+function applyPalette(key, representativeColor, colorInput, presetGrid) {
+    html.removeAttribute("data-accent");
+    html.style.removeProperty("--user-accent");
+    localStorage.removeItem("accentColor");
+
+    html.setAttribute("data-palette", key);
+    localStorage.setItem("accentPalette", key);
+    colorInput.value = representativeColor;
+    markActiveChip(presetGrid, key);
+}
+
+function accentPicker() {
+    const popover = document.querySelector("#accent-popover");
+    const colorInput = document.querySelector("#accent-color-input");
+    const defaultButton = document.querySelector("#accent-default");
+    const presetGrid = document.querySelector("#accent-preset-grid");
+
+    const savedPalette = localStorage.getItem("accentPalette");
+    const savedAccent = localStorage.getItem("accentColor");
+    if (savedAccent) {
+        colorInput.value = savedAccent;
+    } else if (savedPalette) {
+        const activeSwatch = presetGrid.querySelector(`[data-palette-key="${savedPalette}"]`);
+        if (activeSwatch) colorInput.value = activeSwatch.dataset.accentColor;
+        markActiveChip(presetGrid, savedPalette);
+    }
+
+    getAccentToggle.addEventListener("click", () => {
+        popover.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".topbar-accent-picker")) {
+            popover.classList.remove("open");
+        }
+    });
+
+    colorInput.addEventListener("input", () => {
+        applyCustomAccent(colorInput.value, colorInput);
+        markActiveChip(presetGrid, null);
+    });
+
+    presetGrid.addEventListener("click", (event) => {
+        const chip = event.target.closest(".accent-preset-chip");
+        if (!chip) return;
+        applyPalette(chip.dataset.paletteKey, chip.dataset.accentColor, colorInput, presetGrid);
+    });
+
+    defaultButton.addEventListener("click", () => {
+        html.removeAttribute("data-accent");
+        html.removeAttribute("data-palette");
+        html.style.removeProperty("--user-accent");
+        localStorage.removeItem("accentColor");
+        localStorage.removeItem("accentPalette");
+        colorInput.value = "#06B6D4";
+        markActiveChip(presetGrid, null);
+        popover.classList.remove("open");
     });
 }
 
@@ -164,6 +242,7 @@ loadConfig().then(config => {
 
     if (getThemeToggle) themeToggle();
     if (getCollpseToogle) collapseToggle();
+    if (getAccentToggle) accentPicker();
 
     document.querySelectorAll(".sidebar-nav-item[data-href]").forEach(item => {
         item.addEventListener("click", () => {

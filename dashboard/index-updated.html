@@ -17,7 +17,15 @@
             if (savedTheme) html.setAttribute("data-theme", savedTheme);
             if (localStorage.getItem("sidebar") === "collapsed") {
                 html.setAttribute("data-sidebar", "collapsed");
-            } 
+            }
+            const savedPalette = localStorage.getItem("accentPalette");
+            const savedAccent = localStorage.getItem("accentColor");
+            if (savedPalette) {
+                html.setAttribute("data-palette", savedPalette);
+            } else if (savedAccent) {
+                html.style.setProperty("--user-accent", savedAccent);
+                html.setAttribute("data-accent", "custom");
+            }
         })();
     </script>
 </head>
@@ -184,6 +192,58 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                         </svg>
                     </button>
+                    <div class="topbar-accent-picker">
+                        <button type="button" class="topbar-button" id="accent-toggle" aria-label="Choose accent color">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </button>
+                        <div class="topbar-accent-popover" id="accent-popover">
+                            <button type="button" class="accent-preset" id="accent-default">
+                                <span class="accent-preset-swatch"></span>
+                                Default
+                            </button>
+                            <div class="accent-popover-divider"></div>
+                            <div class="accent-preset-grid" id="accent-preset-grid">
+                                <button type="button" class="accent-preset-chip" data-palette-key="quantum" data-accent-color="#2457FF" title="Quantum Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #2457FF 50%, #DFF7FF 50%)"></span><span class="accent-preset-chip-label">Quantum Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="mint" data-accent-color="#B8F7E4" title="Sky Mint"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #B8F7E4 50%, #25272C 50%)"></span><span class="accent-preset-chip-label">Sky Mint</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="indigo" data-accent-color="#5B3DF5" title="Electric Indigo"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #5B3DF5 50%, #E8DEFF 50%)"></span><span class="accent-preset-chip-label">Electric Indigo</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="zeroblack" data-accent-color="#050505" title="Zero Black"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #050505 50%, #D7FFE0 50%)"></span><span class="accent-preset-chip-label">Zero Black</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cybergrape" data-accent-color="#6D28D9" title="Cyber Grape"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6D28D9 50%, #D7FF00 50%)"></span><span class="accent-preset-chip-label">Cyber Grape</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="deepgraphite" data-accent-color="#1F2329" title="Deep Graphite"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1F2329 50%, #B6FF2E 50%)"></span><span class="accent-preset-chip-label">Deep Graphite</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="butteryellow" data-accent-color="#FFF275" title="Butter Yellow"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FFF275 50%, #3A0CA3 50%)"></span><span class="accent-preset-chip-label">Butter Yellow</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="sulu" data-accent-color="#9FE870" title="Sulu"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #9FE870 50%, #163300 50%)"></span><span class="accent-preset-chip-label">Sulu</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="midnightnavy" data-accent-color="#071A52" title="Midnight Navy"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #071A52 50%, #A7FF83 50%)"></span><span class="accent-preset-chip-label">Midnight Navy</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="ultrapurple" data-accent-color="#6D28D9" title="Ultra Purple"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6D28D9 50%, #98E8DE 50%)"></span><span class="accent-preset-chip-label">Ultra Purple</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="vividazure" data-accent-color="#1B4EF5" title="Vivid Azure"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1B4EF5 50%, #F7DCFF 50%)"></span><span class="accent-preset-chip-label">Vivid Azure</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cosmicnavy" data-accent-color="#0C134F" title="Cosmic Navy"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0C134F 50%, #D4ADFC 50%)"></span><span class="accent-preset-chip-label">Cosmic Navy</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalred" data-accent-color="#F62440" title="Signal Red"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #F62440 50%, #FFFAF3 50%)"></span><span class="accent-preset-chip-label">Signal Red</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="deepteal" data-accent-color="#152D35" title="Deep Teal"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #152D35 50%, #D4ECDD 50%)"></span><span class="accent-preset-chip-label">Deep Teal</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="machinered" data-accent-color="#FF2E3A" title="Machine Red"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF2E3A 50%, #DBF6FF 50%)"></span><span class="accent-preset-chip-label">Machine Red</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="hypercobalt" data-accent-color="#0038FF" title="Hyper Cobalt"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0038FF 50%, #D6E3FF 50%)"></span><span class="accent-preset-chip-label">Hyper Cobalt</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="darkaubergine" data-accent-color="#2E0F35" title="Dark Aubergine"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #2E0F35 50%, #FF7FEC 50%)"></span><span class="accent-preset-chip-label">Dark Aubergine</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="neonorange" data-accent-color="#FF9030" title="Neon Orange"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF9030 50%, #111827 50%)"></span><span class="accent-preset-chip-label">Neon Orange</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="forestgraphite" data-accent-color="#18251D" title="Forest Graphite"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #18251D 50%, #B7FF72 50%)"></span><span class="accent-preset-chip-label">Forest Graphite</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalviolet" data-accent-color="#7A35FF" title="Signal Violet"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #7A35FF 50%, #F0F2F5 50%)"></span><span class="accent-preset-chip-label">Signal Violet</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="inkberry" data-accent-color="#1A0B2E" title="Inkberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1A0B2E 50%, #FFB7A5 50%)"></span><span class="accent-preset-chip-label">Inkberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="promptblue" data-accent-color="#0B132B" title="Prompt Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0B132B 50%, #39FF88 50%)"></span><span class="accent-preset-chip-label">Prompt Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="claybrown" data-accent-color="#6B352A" title="Clay Brown"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6B352A 50%, #FFF1A6 50%)"></span><span class="accent-preset-chip-label">Clay Brown</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="raspberry" data-accent-color="#C2185B" title="Raspberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #C2185B 50%, #E0F2FE 50%)"></span><span class="accent-preset-chip-label">Raspberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="blueberry" data-accent-color="#243B8F" title="Blueberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #243B8F 50%, #FFF0C9 50%)"></span><span class="accent-preset-chip-label">Blueberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cyberteal" data-accent-color="#03313A" title="Cyber Teal"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #03313A 50%, #8FFFE0 50%)"></span><span class="accent-preset-chip-label">Cyber Teal</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalblue" data-accent-color="#0057FF" title="Signal Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0057FF 50%, #F8F7F4 50%)"></span><span class="accent-preset-chip-label">Signal Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="limespark" data-accent-color="#B6FF2E" title="Lime Spark"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #B6FF2E 50%, #23262F 50%)"></span><span class="accent-preset-chip-label">Lime Spark</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="dragonfruit" data-accent-color="#FF4696" title="Dragonfruit"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF4696 50%, #1E1033 50%)"></span><span class="accent-preset-chip-label">Dragonfruit</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="emeraldink" data-accent-color="#064E3B" title="Emerald Ink"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #064E3B 50%, #F8E7C9 50%)"></span><span class="accent-preset-chip-label">Emerald Ink</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="ultraviolet" data-accent-color="#6A00F4" title="Ultra Violet"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6A00F4 50%, #FFD6A5 50%)"></span><span class="accent-preset-chip-label">Ultra Violet</span></button>
+                            </div>
+                            <div class="accent-popover-divider"></div>
+                            <label class="accent-custom" for="accent-color-input">
+                                <input type="color" id="accent-color-input" value="#06B6D4">
+                                Custom
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </header>
 
