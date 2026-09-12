@@ -11,14 +11,17 @@
 function updateAlerts(data) {
     if (!data.alerts) return;
 
+    let panel = document.getElementById("alerts-panel");
     let list = document.getElementById("alerts-list");
-    let empty = document.getElementById("alerts-empty");
     let template = document.getElementById("alert-row-template");
-    if (!list || !template) return;
+    if (!panel || !list || !template) return;
 
     let alerts = data.alerts.filter(alert => !alert.dismissed);
 
-    if (empty) empty.hidden = alerts.length > 0;
+    panel.hidden = alerts.length === 0;
+
+    let servicesPanel = document.getElementById("services-panel");
+    if (servicesPanel) servicesPanel.classList.toggle("panel-solo", alerts.length === 0);
 
     list.textContent = "";
     alerts.forEach(alert => {

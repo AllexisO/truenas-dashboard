@@ -63,7 +63,7 @@
                         </span>
                         <span class="sidebar-nav-label">Overview</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="cpu">
+                    <button type="button" class="sidebar-nav-item" data-section="cpu" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="4" y="4" width="16" height="16" rx="2"/>
@@ -73,7 +73,7 @@
                         </span>
                         <span class="sidebar-nav-label">CPU</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="memory">
+                    <button type="button" class="sidebar-nav-item" data-section="memory" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="8" width="20" height="9" rx="1"/>
@@ -82,7 +82,7 @@
                         </span>
                         <span class="sidebar-nav-label">Memory</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="network">
+                    <button type="button" class="sidebar-nav-item" data-section="network" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="18" cy="5" r="3"/>
@@ -94,7 +94,7 @@
                         </span>
                         <span class="sidebar-nav-label">Network</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="storage">
+                    <button type="button" class="sidebar-nav-item" data-section="storage" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <ellipse cx="12" cy="5" rx="9" ry="3"/>
@@ -104,7 +104,7 @@
                         </span>
                         <span class="sidebar-nav-label">Storage</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="processes">
+                    <button type="button" class="sidebar-nav-item" data-section="processes" data-href="/processes.html">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="8" y1="6" x2="21" y2="6"/>
@@ -117,7 +117,7 @@
                         </span>
                         <span class="sidebar-nav-label">Processes</span>
                     </button>
-                    <button type="button" class="sidebar-nav-item" data-section="system">
+                    <button type="button" class="sidebar-nav-item" data-section="system" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="3" width="20" height="14" rx="2"/>
@@ -132,7 +132,7 @@
                 <div class="sidebar-nav-devider"></div>
 
                 <div class="sidebar-nav-group">
-                    <button type="button" class="sidebar-nav-item" data-section="settings">
+                    <button type="button" class="sidebar-nav-item" data-section="settings" disabled title="Coming soon">
                         <span class="sidebar-nav-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
@@ -326,7 +326,7 @@
                                             </linearGradient>
                                         </defs>
                                         <path class="sparkline-area" id="cpu-load-sparkline-area" fill="url(#sparkline-gradient-cpu-load)"/>
-                                        <polyline class="sparkline-line" id="cpu-load-sparkline"/>
+                                        <path class="sparkline-line" id="cpu-load-sparkline"/>
                                         <line class="sparkline-cursor" id="cpu-load-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
                                     </svg>
                                     <div class="sparkline-dot" id="cpu-load-dot"></div>
@@ -365,7 +365,7 @@
                                             </linearGradient>
                                         </defs>
                                         <path class="sparkline-area" id="cpu-temp-sparkline-area" fill="url(#sparkline-gradient-cpu-temp)"/>
-                                        <polyline class="sparkline-line" id="cpu-temp-sparkline"/>
+                                        <path class="sparkline-line" id="cpu-temp-sparkline"/>
                                         <line class="sparkline-cursor" id="cpu-temp-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
                                     </svg>
                                     <div class="sparkline-dot" id="cpu-temp-dot"></div>
@@ -425,7 +425,7 @@
                                     </linearGradient>
                                 </defs>
                                 <path class="sparkline-area" id="ram-sparkline-area" fill="url(#sparkline-gradient-ram)"/>
-                                <polyline class="sparkline-line" id="ram-sparkline"/>
+                                <path class="sparkline-line" id="ram-sparkline"/>
                                 <line class="sparkline-cursor" id="ram-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
                             </svg>
                             <div class="sparkline-dot" id="ram-dot"></div>
@@ -474,7 +474,7 @@
                                         </linearGradient>
                                     </defs>
                                     <path class="sparkline-area" id="net-rx-sparkline-area" fill="url(#sparkline-gradient-rx)"/>
-                                    <polyline class="sparkline-line" id="net-rx-sparkline"/>
+                                    <path class="sparkline-line" id="net-rx-sparkline"/>
                                     <line class="sparkline-cursor" id="net-rx-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
                                 </svg>
                                 <div class="sparkline-dot" id="net-rx-dot"></div>
@@ -500,7 +500,7 @@
                                         </linearGradient>
                                     </defs>
                                     <path class="sparkline-area" id="net-tx-sparkline-area" fill="url(#sparkline-gradient-tx)"/>
-                                    <polyline class="sparkline-line" id="net-tx-sparkline"/>
+                                    <path class="sparkline-line" id="net-tx-sparkline"/>
                                     <line class="sparkline-cursor" id="net-tx-cursor" x1="0" y1="0" x2="0" y2="40" visibility="hidden"/>
                                 </svg>
                                 <div class="sparkline-dot" id="net-tx-dot"></div>
@@ -570,6 +570,30 @@
                                 <span class="disks-io-unit">%</span>
                             </div>
                         </div>
+
+                        <div class="disks-overview-chart-header">
+                            <div class="disks-overview-chart-legend">
+                                <div class="disks-overview-chart-container" style="color: var(--accent);">
+                                    <span class="disk-chart-read-line"></span>
+                                    <span class="disks-overview-chart-legend-item">Read <span id="disk-chart-read">0</span> MB/s</span>
+                                </div>
+                                <div class="disks-overview-chart-container" style="color: var(--success);">
+                                    <span class="disk-chart-write-line"></span>
+                                    <span class="disks-overview-chart-legend-item">Write <span id="disk-chart-write">0</span> MB/s</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sparkline-wrap" style="height: 90px;">
+                            <svg class="disks-overview-chart sparkline" id="disks-overview-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
+                                <polyline class="disks-chart-read-line" fill="none" stroke="var(--accent)" stroke-width="2"></polyline>
+                                <polyline class="disks-chart-write-line" fill="none" stroke="var(--success)" stroke-width="2"></polyline>
+                                <line class="sparkline-cursor" id="disks-chart-cursor" x1="0" y1="0" x2="0" y2="200" visibility="hidden"/>
+                            </svg>
+                            <div class="sparkline-dot" id="disks-chart-read-dot" style="background: var(--accent);"></div>
+                            <div class="sparkline-dot" id="disks-chart-write-dot" style="background: var(--success);"></div>
+                        </div>
+
                         <template id="disk-overview-item-template">
                             <div class="disk-overview-item">
                                 <svg class="disk-status-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -588,153 +612,7 @@
                 </section>
 
                 <section class="panels">
-                    <div class="panel" id="disks-overview-panel">
-                        <header class="summary-card-header">
-                            <span class="summary-card-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                                </svg>
-                            </span>
-                            <h2 class="summary-card-title">Disks Overview</h2>
-                        </header>
-
-                        <div class="disks-overview-top">
-                            <div class="disks-overview-stats">
-                                <div class="disks-overview-stat-row">
-                                    <!-- Total Disks -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <line x1="22" y1="12" x2="2" y2="12"/>
-                                                <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
-                                                <line x1="6" y1="16" x2="6.01" y2="16"/>
-                                                <line x1="10" y1="16" x2="10.01" y2="16"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-total-count">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Total Disks</span>
-                                    </div>
-                                    <!-- Total Capacity -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
-                                                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
-                                                <line x1="6" y1="6" x2="6.01" y2="6"/>
-                                                <line x1="6" y1="18" x2="6.01" y2="18"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-total-capacity">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Total Capacity</span>
-                                    </div>
-                                    <!-- Total Used -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
-                                                <path d="M22 12A10 10 0 0 0 12 2v10z"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-total-used">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Used</span>
-                                    </div>
-                                </div>
-
-                                <div class="disks-overview-stat-row">
-                                    <!-- Total Healthy -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                                <polyline points="22 4 12 14.01 9 11.01"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-healthy-count" style="color: var(--success);">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Healthy</span>
-                                    </div>
-                                    <!-- Total Warning -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                                                <line x1="12" y1="9" x2="12" y2="13"/>
-                                                <line x1="12" y1="17" x2="12.01" y2="17"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-warning-count" style="color: var(--warning);">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Warning</span>
-                                    </div>
-                                    <!-- Total Failed -->
-                                    <div class="disks-overview-stat">
-                                        <div class="disks-overview-stat-top">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="var(--failed)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                                <circle cx="12" cy="12" r="10"/>
-                                                <line x1="15" y1="9" x2="9" y2="15"/>
-                                                <line x1="9" y1="9" x2="15" y2="15"/>
-                                            </svg>
-                                            <span class="disks-overview-stat-value" id="disks-failed-count" style="color: var(--failed);">0</span>
-                                        </div>
-                                        <span class="disks-overview-stat-label">Failed</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="disks-overview-donut-wrap">
-                                <div class="disks-overview-legend">
-                                    <div class="disks-overview-legend-item">
-                                        <span class="disks-overview-legend-dot" style="background: var(--success);"></span>
-                                        <span>Healthy</span>
-                                        <span id="donut-healthy-pct">0%</span>
-                                    </div>
-                                    <div class="disks-overview-legend-item">
-                                        <span class="disks-overview-legend-dot" style="background: var(--warning);"></span>
-                                        <span>Warning</span>
-                                        <span id="donut-warning-pct">0%</span>
-                                    </div>
-                                    <div class="disks-overview-legend-item">
-                                        <span class="disks-overview-legend-dot" style="background: var(--failed);"></span>
-                                        <span>Failed</span>
-                                        <span id="donut-failed-pct">0%</span>
-                                    </div>
-                                </div>
-                                <svg class="disks-overview-donut" viewBox="0 0 120 120">
-                                    <circle class="donut-track" cx="60" cy="60" r="50"/>
-                                    <circle class="donut-healthy" id="donut-healthy" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
-                                    <circle class="donut-warning" id="donut-warning" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
-                                    <circle class="donut-failed" id="donut-failed" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="metric-divider"></div>
-
-                        <div class="disks-overview-chart-header">
-                            <div class="disks-overview-chart-legend">
-                                <div class="disks-overview-chart-container" style="color: var(--accent);">
-                                    <span class="disk-chart-read-line"></span>
-                                    <span class="disks-overview-chart-legend-item">Read <span id="disk-chart-read">0</span> MB/s</span>
-                                </div>
-                                <div class="disks-overview-chart-container" style="color: var(--success);">
-                                    <span class="disk-chart-write-line"></span>
-                                    <span class="disks-overview-chart-legend-item">Write <span id="disk-chart-write">0</span> MB/s</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="sparkline-wrap" style="height: 200px;">
-                            <svg class="disks-overview-chart sparkline" id="disks-overview-chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
-                                <polyline class="disks-chart-read-line" fill="none" stroke="var(--accent)" stroke-width="2"></polyline>
-                                <polyline class="disks-chart-write-line" fill="none" stroke="var(--success)" stroke-width="2"></polyline>
-                                <line class="sparkline-cursor" id="disks-chart-cursor" x1="0" y1="0" x2="0" y2="200" visibility="hidden"/>
-                            </svg>
-                            <div class="sparkline-dot" id="disks-chart-read-dot" style="background: var(--accent);"></div>
-                            <div class="sparkline-dot" id="disks-chart-write-dot" style="background: var(--success);"></div>
-                        </div>
-                    </div>
-
-                    <div class="panel" id="pools-overview-panel">
+                    <div class="panel panel-solo" id="pools-overview-panel">
                         <header class="summary-card-header">
                             <span class="summary-card-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -746,74 +624,47 @@
                             <h2 class="summary-card-title">Pools</h2>
                         </header>
 
-                        <table class="pools-table">
-                            <thead>
-                                <tr>
-                                    <th>Pool</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Used</th>
-                                    <th>Available</th>
-                                    <th>Capacity</th>
-                                    <th>Last Snapshot</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pools-table-body"></tbody>
-                        </table>
+                        <div class="pools-grid" id="pools-grid"></div>
                     </div>
 
                     <template id="pool-row-template">
-                        <tr class="pools-table-row">
-                            <td class="pools-table-name"></td>
-                            <td><span class="disk-overview-status"></span></td>
-                            <td class="pools-table-total"></td>
-                            <td class="pools-table-used"></td>
-                            <td class="pools-table-available"></td>
-                            <td class="pools-table-capacity">
-                                <div class="pools-table-capacity-wrap">
-                                    <div class="disk-overview-bar-wrap">
-                                        <div class="disk-overview-bar"></div>
-                                    </div>
-                                    <span class="pools-table-percent"></span>
+                        <article class="pool-card">
+                            <header class="pool-card-header">
+                                <span class="pool-card-name"></span>
+                                <span class="disk-overview-status"></span>
+                            </header>
+
+                            <div class="pool-card-capacity">
+                                <div class="disk-overview-bar-wrap">
+                                    <div class="disk-overview-bar"></div>
                                 </div>
-                            </td>
-                            <td class="pools-table-snapshot"></td>
-                        </tr>
+                                <span class="pool-card-percent"></span>
+                            </div>
+
+                            <div class="pool-card-stats">
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Total</span>
+                                    <span class="pool-card-stat-value pool-card-total"></span>
+                                </div>
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Used</span>
+                                    <span class="pool-card-stat-value pool-card-used"></span>
+                                </div>
+                                <div class="pool-card-stat">
+                                    <span class="pool-card-stat-label">Available</span>
+                                    <span class="pool-card-stat-value pool-card-available"></span>
+                                </div>
+                            </div>
+
+                            <footer class="pool-card-snapshot">
+                                <span class="pool-card-snapshot-label">Last Snapshot</span>
+                                <span class="pool-card-snapshot-value"></span>
+                            </footer>
+                        </article>
                     </template>
                 </section>
 
-                <section class="panels panels-three">
-                    <div class="panel" id="process-panel">
-                        <header class="summary-card-header">
-                            <span class="summary-card-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="8" y1="6" x2="21" y2="6"/>
-                                    <line x1="8" y1="12" x2="21" y2="12"/>
-                                    <line x1="8" y1="18" x2="21" y2="18"/>
-                                    <line x1="3" y1="6" x2="3.01" y2="6"/>
-                                    <line x1="3" y1="12" x2="3.01" y2="12"/>
-                                    <line x1="3" y1="18" x2="3.01" y2="18"/>
-                                </svg>
-                            </span>
-                            <h2 class="summary-card-title">Top 10 Processes</h2>
-                        </header>
-
-                        <table class="processes-table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Process</th>
-                                    <th>CPU %</th>
-                                    <th>RAM %</th>
-                                    <th>PID</th>
-                                </tr>
-                            </thead>
-                            <tbody id="processes-table-body"></tbody>
-                        </table>
-
-                        <button class="panel-footer-link">View all processes →</button>
-                    </div>
-
+                <section class="panels">
                     <div class="panel" id="services-panel">
                         <header class="summary-card-header">
                             <span class="summary-card-icon">
@@ -834,7 +685,6 @@
                         </header>
 
                         <div class="alerts-list" id="alerts-list"></div>
-                        <p class="alerts-empty" id="alerts-empty" hidden>No active alerts</p>
                     </div>
                 </section>
 
@@ -853,18 +703,6 @@
                     </div>
                 </template>
 
-                <template id="process-row-template">
-                    <tr class="processes-table-row">
-                        <td class="processes-table-index"></td>
-                        <td class="processes-table-name-cell">
-                            <span class="process-avatar"></span>
-                            <span class="processes-table-name"></span>
-                        </td>
-                        <td class="processes-table-cpu"></td>
-                        <td class="processes-table-mem"></td>
-                        <td class="processes-table-pid"></td>
-                    </tr>
-                </template>
             </div>
         </main>
     </div>

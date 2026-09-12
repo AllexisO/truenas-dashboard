@@ -11,17 +11,6 @@ function updateRingProgress(elementId, progress) {
     ring.setAttribute('stroke-dashoffset', RING_CIRCUMFERENCE * (1 - clamped));
 }
 
-function updateDonutSegment(id, pct, offsetPct) {
-    let element = document.getElementById(id);
-    if (!element) return;
-
-    let dash = (pct / 100) * RING_CIRCUMFERENCE;
-    let offset = (offsetPct / 100) * RING_CIRCUMFERENCE;
-
-    element.setAttribute("stroke-dasharray", `${dash} ${RING_CIRCUMFERENCE - dash}`);
-    element.setAttribute("stroke-dashoffset", -offset);
-}
-
 function computeLinePoints(data, min, max, width, height, padding) {
     let range = max - min || 1;
     let drawHeight = height - padding * 2;
@@ -30,7 +19,7 @@ function computeLinePoints(data, min, max, width, height, padding) {
         let x = (index / (data.length - 1)) * width;
         let y = padding + drawHeight - ((value - min) / range) * drawHeight;
 
-        return `${x.toFixed(2)},${y.toFixed(2)}`;
+        return [x, y];
     });
 }
 
@@ -39,7 +28,7 @@ function renderSparkline(svgElement, data) {
     let areaElement = svgElement.querySelector(".sparkline-area");
 
     if (!data || data.length < 2) {
-        lineElement.setAttribute("points", "");
+        lineElement.setAttribute("d", "");
         areaElement.setAttribute("d", "");
         return;
     }
@@ -51,9 +40,10 @@ function renderSparkline(svgElement, data) {
     const min = Math.min(...data);
     const max = Math.max(...data);
     const points = computeLinePoints(data, min, max, width, height, padding);
+    const linePath = smoothPath(points);
 
-    lineElement.setAttribute("points", points.join(" "));
-    areaElement.setAttribute("d", `M0,${height} L${points.join(" L")} L${width},${height} Z`);
+    lineElement.setAttribute("d", linePath);
+    areaElement.setAttribute("d", `${linePath} L${width},${height} L0,${height} Z`);
 }
 
 function formatNetworkSpeed(bytesPerSecond) {
@@ -87,9 +77,44 @@ function updateNetworkTotals(totalRx, totalTx) {
     if (txEl) txEl.textContent = formatBytes(totalTx);
 }
 
+const RING_VALUE_REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Counts the ring's center readout from whatever it currently shows to the
+// new value over the same 1.8s the ring's own stroke-dashoffset transition
+// runs (.ring-chart-progress) — otherwise the digits snap instantly ahead
+// of the dial and the two stop reading as one instrument. Re-entrant: a
+// tick that lands mid-count re-reads the live displayed value (not the
+// previous target) so it retargets smoothly instead of jumping back first.
+function animateRingValue(el, target) {
+    if (!el) return;
+    target = Math.round(target);
+
+    if (el._ringAnim) cancelAnimationFrame(el._ringAnim);
+
+    if (RING_VALUE_REDUCED_MOTION) {
+        el.textContent = target;
+        return;
+    }
+
+    const start = parseFloat(el.textContent) || 0;
+    if (start === target) return;
+
+    const duration = 1800;
+    const startTime = performance.now();
+
+    function tick(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic, matches the ring's own easing
+        el.textContent = Math.round(start + (target - start) * eased);
+        el._ringAnim = t < 1 ? requestAnimationFrame(tick) : null;
+    }
+
+    el._ringAnim = requestAnimationFrame(tick);
+}
+
 function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
     updateRingProgress('cpu-load-ring', percent / 100);
-    document.getElementById('cpu-load-percent').textContent = Math.round(percent);
+    animateRingValue(document.getElementById('cpu-load-percent'), percent);
     renderSparkline(document.getElementById('cpu-load-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-load-min').textContent = `${min}%`;
     document.getElementById('cpu-load-max').textContent = `${max}%`;
@@ -99,7 +124,7 @@ function updateCpuLoad({ percent, history, min, max, minTime, maxTime }) {
 
 function updateCpuTemp({ degrees, history, min, max, minTime, maxTime }) {
     updateRingProgress('cpu-temp-ring', degrees / 100);
-    document.getElementById('cpu-temp-degrees').textContent = Math.round(degrees);
+    animateRingValue(document.getElementById('cpu-temp-degrees'), degrees);
     renderSparkline(document.getElementById('cpu-temp-sparkline').closest('.sparkline'), history);
     document.getElementById('cpu-temp-min').textContent = `${min}°C`;
     document.getElementById('cpu-temp-max').textContent = `${max}°C`;
@@ -233,18 +258,10 @@ function buildDisksOverviewList(data) {
     // Build disk -> pool map
     const diskPoolMap = buildDiskPoolMap(pools);
 
-    let totalCapacity = 0;
-    let totalUsed = 0;
-    let healthyCount = 0;
-    let warningCount = 0;
-    let failedCount = 0;
-
     const shouldBuildList = list && list.children.length === 0;
     const template = shouldBuildList ? document.getElementById("disk-overview-item-template") : null;
-    
-    disks.forEach(disk => {
-        totalCapacity += disk.size;
 
+    disks.forEach(disk => {
         let pool = diskPoolMap[disk.name];
         let isBootDisk = bootDisks?.includes(disk.name);
 
@@ -254,15 +271,8 @@ function buildDisksOverviewList(data) {
         if (pool) {
             percent = Math.round((pool.allocated / pool.size) * 100);
             healthy = pool.healthy && !pool.warning;
-
-            if (!pool.healthy) failedCount++;
-            else if (pool.warning) warningCount++;
-            else healthyCount++;
         } else if (isBootDisk && bootDisk) {
             percent = Math.round((bootDisk.used / bootDisk.total) * 100);
-            healthyCount++;
-        } else {
-            healthyCount++;
         }
 
         if (!shouldBuildList) return;
@@ -306,59 +316,13 @@ function buildDisksOverviewList(data) {
         clone.querySelector(".disk-overview-temp").textContent = temp !== undefined ? Math.round(temp) + "°C" : "";
 
         let bar = clone.querySelector(".disk-overview-bar");
-        bar.style.width = (percent ?? 0) + "%";
+        bar.style.transform = `scaleX(${(percent ?? 0) / 100})`;
         bar.style.background = color;
 
         clone.querySelector(".disk-overview-percent").textContent = percent !== null ? percent + "%" : "";
 
         list.appendChild(clone);
     });
-
-    // Disks Overview panel totals + donut
-    pools?.forEach(pool => {
-        totalUsed += pool.allocated;
-    });
-
-    if (bootDisk) {
-        totalUsed += bootDisk.used;
-    }
-
-    let total = disks.length;
-
-    let totalCountElement = document.querySelector("#disks-total-count");
-    if (totalCountElement) totalCountElement.textContent = total;
-
-    let totalCapacityElement = document.querySelector("#disks-total-capacity");
-    if (totalCapacityElement) totalCapacityElement.textContent = formatBytes(totalCapacity);
-
-    let totalUsedElement = document.querySelector("#disks-total-used");
-    if (totalUsedElement) totalUsedElement.textContent = formatBytes(totalUsed);
-
-    let healthyCountElement = document.querySelector("#disks-healthy-count");
-    if (healthyCountElement) healthyCountElement.textContent = healthyCount;
-
-    let warningCountElement = document.querySelector("#disks-warning-count");
-    if (warningCountElement) warningCountElement.textContent = warningCount;
-
-    let failedCountElement = document.querySelector("#disks-failed-count");
-    if (failedCountElement) failedCountElement.textContent = failedCount;
-
-    let healthyPct = total > 0 ? Math.round((healthyCount / total) * 100) : 0;
-    let warningPct = total > 0 ? Math.round((warningCount / total) * 100) : 0;
-    let failedPct = total > 0 ? Math.round((failedCount / total) * 100) : 0;
-
-    let healthyPctElement = document.querySelector("#donut-healthy-pct");
-    if (healthyPctElement) healthyPctElement.textContent = healthyPct + '%';
-
-    let warningPctElement = document.querySelector("#donut-warning-pct");
-    if (warningPctElement) warningPctElement.textContent = warningPct + '%';
-
-    let failedPctElement = document.querySelector("#donut-failed-pct");
-    if (failedPctElement) failedPctElement.textContent = failedPct + '%';
-
-    updateDonutSegment("donut-healthy", healthyPct, 0);
-    updateDonutSegment("donut-warning", warningPct, healthyPct);
-    updateDonutSegment("donut-failed", failedPct, healthyPct + warningPct);
 }
 
 function updateDisksIO(disks) {
@@ -469,7 +433,7 @@ function computeFixedWindowPoints(data, min, max, width, height, padding, totalS
 }
 
 function buildPoolsTable(data) {
-    let tbody = document.getElementById("pools-table-body");
+    let tbody = document.getElementById("pools-grid");
     if (!tbody) return;
 
     let pools = data.pools;
@@ -496,33 +460,33 @@ function buildPoolsTable(data) {
 
         if (!row) return;
 
-        row.querySelector(".pools-table-name").textContent = pool.name;
+        row.querySelector(".pool-card-name").textContent = pool.name;
 
         let statusElement = row.querySelector(".disk-overview-status");
         statusElement.textContent = healthy ? "Healthy" : "Warning";
         statusElement.className = `disk-overview-status ${healthy ? "healthy" : "warning"}`;
 
-        row.querySelector(".pools-table-total").textContent = formatBytes(pool.size);
-        row.querySelector(".pools-table-used").textContent = formatBytes(pool.allocated);
-        row.querySelector(".pools-table-available").textContent = formatBytes(pool.free);
+        row.querySelector(".pool-card-total").textContent = formatBytes(pool.size);
+        row.querySelector(".pool-card-used").textContent = formatBytes(pool.allocated);
+        row.querySelector(".pool-card-available").textContent = formatBytes(pool.free);
 
         let bar = row.querySelector(".disk-overview-bar");
-        bar.style.width = percent + "%";
+        bar.style.transform = `scaleX(${percent / 100})`;
         bar.style.background = color;
 
-        row.querySelector(".pools-table-percent").textContent = percent + "%";
+        row.querySelector(".pool-card-percent").textContent = percent + "%";
 
         // Real last-snapshot age (system snapshots included, not just user
         // data — see poller.py's fetch_snapshots) plus whether an enabled
         // scheduled task actually covers this pool. A recent-looking
         // snapshot with no schedule behind it is still one missed manual
         // step away from silently going stale.
-        let snapshotEl = row.querySelector(".pools-table-snapshot");
+        let snapshotEl = row.querySelector(".pool-card-snapshot-value");
         let snapshotInfo = data.snapshots && data.snapshots[pool.name];
         if (snapshotEl && snapshotInfo) {
             let hasSchedule = snapshotInfo.scheduled;
             snapshotEl.textContent = formatAge(snapshotInfo.last_snapshot) + (hasSchedule ? "" : " · no schedule");
-            snapshotEl.className = `pools-table-snapshot ${hasSchedule ? "" : "is-warning"}`;
+            snapshotEl.className = `pool-card-snapshot-value ${hasSchedule ? "" : "is-warning"}`;
         }
     });
 }

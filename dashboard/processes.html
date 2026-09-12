@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueNAS Dashboard — Processes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/style-updated.css">
+
+    <script>
+        (function() {
+            const html = document.documentElement;
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme) html.setAttribute("data-theme", savedTheme);
+            if (localStorage.getItem("sidebar") === "collapsed") {
+                html.setAttribute("data-sidebar", "collapsed");
+            }
+            const savedPalette = localStorage.getItem("accentPalette");
+            const savedAccent = localStorage.getItem("accentColor");
+            if (savedPalette) {
+                html.setAttribute("data-palette", savedPalette);
+            } else if (savedAccent) {
+                html.style.setProperty("--user-accent", savedAccent);
+                html.setAttribute("data-accent", "custom");
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
+                        <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
+                        <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
+                        <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
+                        <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
+                        <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
+                        <circle id="led-cpu" cx="20" cy="14" r="2.5" fill="#1D9E75" data-tooltip="CPU: 0"></circle>
+                        <circle id="led-ram" cx="20" cy="26" r="2.5" fill="#1D9E75" data-tooltip="RAM: 0"></circle>
+                        <circle id="led-disk" cx="20" cy="38" r="2.5" fill="#1D9E75" data-tooltip="Disks: 0"></circle>
+                        <circle id="led-network" cx="20" cy="50" r="2.5" fill="#1D9E75" data-tooltip="Network: 0"></circle>
+                    </svg>
+                </div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">TrueNAS Dashboard</div>
+                    <div class="sidebar-brand-version">v0.1</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-nav-group">
+                    <button type="button" class="sidebar-nav-item" data-section="overview" data-href="/index-updated.html">
+                        <span class="sidebar-nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Overview</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item" data-section="cpu" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                <rect x="9" y="9" width="6" height="6"/>
+                                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">CPU</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item" data-section="memory" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="8" width="20" height="9" rx="1"/>
+                                <path d="M6 12v2M10 12v2M14 12v2M18 12v2"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Memory</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item" data-section="network" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Network</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item" data-section="storage" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Storage</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item active" data-section="processes">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Processes</span>
+                    </button>
+                    <button type="button" class="sidebar-nav-item" data-section="system" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">System</span>
+                    </button>
+                </div>
+
+                <div class="sidebar-nav-devider"></div>
+
+                <div class="sidebar-nav-group">
+                    <button type="button" class="sidebar-nav-item" data-section="settings" disabled title="Coming soon">
+                        <span class="sidebar-nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </span>
+                        <span class="sidebar-nav-label">Settings</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="server-card">
+                    <div class="server-card-row">
+                        <span class="server-card-label">HOST</span>
+                        <span class="server-card-value" id="server-ip"></span>
+                    </div>
+                    <div class="server-card-row">
+                        <span class="server-card-label">Server Version</span>
+                        <span class="server-card-value" id="server-version"></span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button type="button" class="topbar-button" id="sidebar-toggle" aria-label="Toggle sidebar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="topbar-title">Processes</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="topbar-pill">
+                        <div class="topbar-pill-dot" id="server-status-dot"></div>
+                        <span class="topbar-pill-dot-text" id="server-status-text">Online</span>
+                    </div>
+                    <div class="topbar-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span id="server-uptime">...</span>
+                    </div>
+                    <button type="button" class="topbar-button topbar-button-theme" id="theme-toggle" aria-label="Toggle theme">
+                        <svg class="topbar-theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/>
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                        </svg>
+                        <svg class="topbar-theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <div class="topbar-accent-picker">
+                        <button type="button" class="topbar-button" id="accent-toggle" aria-label="Choose accent color">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </button>
+                        <div class="topbar-accent-popover" id="accent-popover">
+                            <button type="button" class="accent-preset" id="accent-default">
+                                <span class="accent-preset-swatch"></span>
+                                Default
+                            </button>
+                            <div class="accent-popover-divider"></div>
+                            <div class="accent-preset-grid" id="accent-preset-grid">
+                                <button type="button" class="accent-preset-chip" data-palette-key="quantum" data-accent-color="#2457FF" title="Quantum Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #2457FF 50%, #DFF7FF 50%)"></span><span class="accent-preset-chip-label">Quantum Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="mint" data-accent-color="#B8F7E4" title="Sky Mint"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #B8F7E4 50%, #25272C 50%)"></span><span class="accent-preset-chip-label">Sky Mint</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="indigo" data-accent-color="#5B3DF5" title="Electric Indigo"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #5B3DF5 50%, #E8DEFF 50%)"></span><span class="accent-preset-chip-label">Electric Indigo</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="zeroblack" data-accent-color="#050505" title="Zero Black"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #050505 50%, #D7FFE0 50%)"></span><span class="accent-preset-chip-label">Zero Black</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cybergrape" data-accent-color="#6D28D9" title="Cyber Grape"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6D28D9 50%, #D7FF00 50%)"></span><span class="accent-preset-chip-label">Cyber Grape</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="deepgraphite" data-accent-color="#1F2329" title="Deep Graphite"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1F2329 50%, #B6FF2E 50%)"></span><span class="accent-preset-chip-label">Deep Graphite</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="butteryellow" data-accent-color="#FFF275" title="Butter Yellow"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FFF275 50%, #3A0CA3 50%)"></span><span class="accent-preset-chip-label">Butter Yellow</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="sulu" data-accent-color="#9FE870" title="Sulu"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #9FE870 50%, #163300 50%)"></span><span class="accent-preset-chip-label">Sulu</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="midnightnavy" data-accent-color="#071A52" title="Midnight Navy"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #071A52 50%, #A7FF83 50%)"></span><span class="accent-preset-chip-label">Midnight Navy</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="ultrapurple" data-accent-color="#6D28D9" title="Ultra Purple"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6D28D9 50%, #98E8DE 50%)"></span><span class="accent-preset-chip-label">Ultra Purple</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="vividazure" data-accent-color="#1B4EF5" title="Vivid Azure"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1B4EF5 50%, #F7DCFF 50%)"></span><span class="accent-preset-chip-label">Vivid Azure</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cosmicnavy" data-accent-color="#0C134F" title="Cosmic Navy"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0C134F 50%, #D4ADFC 50%)"></span><span class="accent-preset-chip-label">Cosmic Navy</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalred" data-accent-color="#F62440" title="Signal Red"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #F62440 50%, #FFFAF3 50%)"></span><span class="accent-preset-chip-label">Signal Red</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="deepteal" data-accent-color="#152D35" title="Deep Teal"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #152D35 50%, #D4ECDD 50%)"></span><span class="accent-preset-chip-label">Deep Teal</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="machinered" data-accent-color="#FF2E3A" title="Machine Red"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF2E3A 50%, #DBF6FF 50%)"></span><span class="accent-preset-chip-label">Machine Red</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="hypercobalt" data-accent-color="#0038FF" title="Hyper Cobalt"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0038FF 50%, #D6E3FF 50%)"></span><span class="accent-preset-chip-label">Hyper Cobalt</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="darkaubergine" data-accent-color="#2E0F35" title="Dark Aubergine"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #2E0F35 50%, #FF7FEC 50%)"></span><span class="accent-preset-chip-label">Dark Aubergine</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="neonorange" data-accent-color="#FF9030" title="Neon Orange"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF9030 50%, #111827 50%)"></span><span class="accent-preset-chip-label">Neon Orange</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="forestgraphite" data-accent-color="#18251D" title="Forest Graphite"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #18251D 50%, #B7FF72 50%)"></span><span class="accent-preset-chip-label">Forest Graphite</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalviolet" data-accent-color="#7A35FF" title="Signal Violet"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #7A35FF 50%, #F0F2F5 50%)"></span><span class="accent-preset-chip-label">Signal Violet</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="inkberry" data-accent-color="#1A0B2E" title="Inkberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #1A0B2E 50%, #FFB7A5 50%)"></span><span class="accent-preset-chip-label">Inkberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="promptblue" data-accent-color="#0B132B" title="Prompt Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0B132B 50%, #39FF88 50%)"></span><span class="accent-preset-chip-label">Prompt Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="claybrown" data-accent-color="#6B352A" title="Clay Brown"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6B352A 50%, #FFF1A6 50%)"></span><span class="accent-preset-chip-label">Clay Brown</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="raspberry" data-accent-color="#C2185B" title="Raspberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #C2185B 50%, #E0F2FE 50%)"></span><span class="accent-preset-chip-label">Raspberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="blueberry" data-accent-color="#243B8F" title="Blueberry"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #243B8F 50%, #FFF0C9 50%)"></span><span class="accent-preset-chip-label">Blueberry</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="cyberteal" data-accent-color="#03313A" title="Cyber Teal"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #03313A 50%, #8FFFE0 50%)"></span><span class="accent-preset-chip-label">Cyber Teal</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="signalblue" data-accent-color="#0057FF" title="Signal Blue"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #0057FF 50%, #F8F7F4 50%)"></span><span class="accent-preset-chip-label">Signal Blue</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="limespark" data-accent-color="#B6FF2E" title="Lime Spark"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #B6FF2E 50%, #23262F 50%)"></span><span class="accent-preset-chip-label">Lime Spark</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="dragonfruit" data-accent-color="#FF4696" title="Dragonfruit"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #FF4696 50%, #1E1033 50%)"></span><span class="accent-preset-chip-label">Dragonfruit</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="emeraldink" data-accent-color="#064E3B" title="Emerald Ink"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #064E3B 50%, #F8E7C9 50%)"></span><span class="accent-preset-chip-label">Emerald Ink</span></button>
+                                <button type="button" class="accent-preset-chip" data-palette-key="ultraviolet" data-accent-color="#6A00F4" title="Ultra Violet"><span class="accent-preset-chip-swatch" style="background:linear-gradient(135deg, #6A00F4 50%, #FFD6A5 50%)"></span><span class="accent-preset-chip-label">Ultra Violet</span></button>
+                            </div>
+                            <div class="accent-popover-divider"></div>
+                            <label class="accent-custom" for="accent-color-input">
+                                <input type="color" id="accent-color-input" value="#06B6D4">
+                                Custom
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <section class="panel" id="process-panel">
+                    <header class="summary-card-header">
+                        <span class="summary-card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                            </svg>
+                        </span>
+                        <h2 class="summary-card-title">Top 10 Processes</h2>
+                    </header>
+
+                    <table class="processes-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Process</th>
+                                <th>CPU %</th>
+                                <th>RAM %</th>
+                                <th>PID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="processes-table-body"></tbody>
+                    </table>
+                </section>
+
+                <template id="process-row-template">
+                    <tr class="processes-table-row">
+                        <td class="processes-table-index"></td>
+                        <td class="processes-table-name-cell">
+                            <span class="process-avatar"></span>
+                            <span class="processes-table-name"></span>
+                        </td>
+                        <td class="processes-table-cpu"></td>
+                        <td class="processes-table-mem"></td>
+                        <td class="processes-table-pid"></td>
+                    </tr>
+                </template>
+            </div>
+        </main>
+    </div>
+
+    <div class="logo-tooltip" id="logo-tooltip"></div>
+
+    <script src="/js/header.js"></script>
+    <script src="/js/new-apex.js"></script>
+    <script src="/js/processes-page.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
