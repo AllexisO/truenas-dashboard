@@ -730,12 +730,17 @@ html[data-theme="light"] .topbar-theme-icon-sun {
 
 /* Collapsed Sidebar */
 html[data-sidebar="collapsed"] .sidebar {
-    width: 84px;
+    width: 100px;
 }
 
-/* html[data-sidebar="collapsed"] .sidebar-brand {
+html[data-sidebar="collapsed"] .sidebar-brand {
     justify-content: center;
-} */
+}
+
+html[data-sidebar="collapsed"] .sidebar-brand-logo {
+    width: 76px;
+    height: 76px;
+}
 
 .sidebar-nav-label,
 .sidebar-brand-text,

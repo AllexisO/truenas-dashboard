@@ -1,18 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
-  
-  <!-- Rack frame -->
-  <rect x="10" y="6" width="44" height="52" rx="6" fill="none" stroke="#3B8BD4" stroke-width="4"/>
-
-  <!-- Server units -->
-  <rect x="16" y="10" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.35"/>
-  <rect x="16" y="22" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.55"/>
-  <rect x="16" y="34" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.75"/>
-  <rect x="16" y="46" width="32" height="8" rx="2" fill="#3B8BD4" opacity="0.95"/>
-
-  <!-- LEDs -->
-  <circle cx="20" cy="14" r="2.5" fill="#1D9E75"/>
-  <circle cx="20" cy="26" r="2.5" fill="#1D9E75"/>
-  <circle cx="20" cy="38" r="2.5" fill="#EF9F27"/>
-  <circle cx="20" cy="50" r="2.5" fill="#e94a1e"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="228 188 568 648" role="img" aria-label="TrueNAS Dashboard — Rack">
+<title>TrueNAS Dashboard — Rack</title>
+<style>
+  .ld { transform-box: fill-box; transform-origin: left center;
+        animation-name: load; animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite; animation-direction: alternate; }
+  .led { transform-box: fill-box; transform-origin: center;
+         animation: blink 2.2s ease-out infinite; }
+  .l0 { animation-duration: 2.60s; animation-delay: -0.0s; }
+  .n0 { animation-delay: 0.00s; }
+  .l1 { animation-duration: 3.15s; animation-delay: -0.7s; }
+  .n1 { animation-delay: 0.34s; }
+  .l2 { animation-duration: 3.70s; animation-delay: -1.4s; }
+  .n2 { animation-delay: 0.68s; }
+  @keyframes load  { from { transform: scaleX(.22); } to { transform: scaleX(1); } }
+  @keyframes blink { 0%,55% { opacity:.35; transform: scale(.85); }
+                      68% { opacity:1; transform: scale(1.1); }
+                      100% { opacity:.35; transform: scale(.85); } }
+  @media (prefers-reduced-motion: reduce) { .ld, .led { animation: none; } }
+</style>
+<g transform="translate(0, 512) scale(1, 1.1515) translate(0, -512)">
+  <rect x="248" y="248" width="528" height="528" rx="30" fill="#335C95" stroke="#5FA0DA" stroke-width="6"/>
+  <rect x="282" y="282" width="460" height="132" rx="24" fill="#4883BF"/>
+  <rect x="316" y="320" width="150" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect x="316" y="342" width="112" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect class="ld l0" x="316" y="364" width="150" height="12" rx="6" fill="#4AB4C8"/>
+  <rect x="282" y="446" width="460" height="132" rx="24" fill="#4883BF"/>
+  <rect x="316" y="484" width="150" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect x="316" y="506" width="112" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect class="ld l1" x="316" y="528" width="150" height="12" rx="6" fill="#4AB4C8"/>
+  <rect x="282" y="610" width="460" height="132" rx="24" fill="#4883BF"/>
+  <rect x="316" y="648" width="150" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect x="316" y="670" width="112" height="12" rx="6" fill="#FEFEFE" opacity=".85"/>
+  <rect class="ld l2" x="316" y="692" width="150" height="12" rx="6" fill="#4AB4C8"/>
+</g>
+<circle class="led n0" cx="694" cy="323.15" r="19" fill="#4AB4C8"/>
+<circle class="led n1" cx="694" cy="512" r="19" fill="#4AB4C8"/>
+<circle class="led n2" cx="694" cy="700.85" r="19" fill="#4AB4C8"/>
 </svg>

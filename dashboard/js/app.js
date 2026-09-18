@@ -188,7 +188,7 @@ function connect() {
         Object.assign(latestData, JSON.parse(event.data));
 
         updateHeader(latestData);
-        updateLeds(latestData);
+        updateLogo(latestData);
         if (typeof handleRealtimeData === 'function') handleRealtimeData(latestData);
         if (typeof updateCPU === 'function') updateCPU(latestData);
         if (typeof updateCores === 'function') updateCores(latestData.realtime?.cpu);
