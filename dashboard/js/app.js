@@ -216,7 +216,7 @@ function connect() {
 loadConfig().then(config => {
     appConfig = config;
 
-    initSettings(config);
+    if (typeof initSettings === 'function') initSettings(config);
 
     if (config.widgets.cpu.enabled) {
         createWidget('cpu-card-template', 1);
@@ -243,6 +243,12 @@ loadConfig().then(config => {
     if (getThemeToggle) themeToggle();
     if (getCollpseToogle) collapseToggle();
     if (getAccentToggle) accentPicker();
+
+    document.querySelectorAll(".sidebar-nav-item[data-href]").forEach(item => {
+        item.addEventListener("click", () => {
+            window.location.href = item.dataset.href;
+        });
+    });
 
     connect();
  });
